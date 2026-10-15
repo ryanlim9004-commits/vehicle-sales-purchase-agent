@@ -1,0 +1,195 @@
+[
+  {
+    "case": "seller_900m",
+    "input": "I want to sell my Perodua Alza 1.5 SE, manufactured in 2020, automatic, 900m, fair condition. No major accident and no flood damage.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": 2020,
+      "transmission": "Automatic",
+      "mileage_km": 0.9,
+      "condition": "fair",
+      "major_accident_reported": false,
+      "flood_damage_reported": false,
+      "clarification_notes": [],
+      "input_validation_notes": [
+        "Mileage source '900m' normalized to 0.9 km.",
+        "Manufacturing year checked against an explicit manufacturing statement."
+      ]
+    },
+    "seconds": 22.33
+  },
+  {
+    "case": "seller_50000m",
+    "input": "I want to sell my Perodua Alza 1.5 SE, manufactured in 2020, automatic, 50000 m, fair condition. No major accident and no flood damage.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": 2020,
+      "transmission": "Automatic",
+      "mileage_km": 50.0,
+      "condition": "fair",
+      "major_accident_reported": false,
+      "flood_damage_reported": false,
+      "clarification_notes": [],
+      "input_validation_notes": [
+        "Mileage source '50000 m' normalized to 50 km.",
+        "Manufacturing year checked against an explicit manufacturing statement."
+      ]
+    },
+    "seconds": 7.29
+  },
+  {
+    "case": "seller_miles",
+    "input": "I want to sell my Perodua Alza 1.5 SE, manufactured in 2020, automatic, 900 miles, fair condition. No major accident and no flood damage.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": 2020,
+      "transmission": "Automatic",
+      "mileage_km": 1448.4096,
+      "condition": "fair",
+      "major_accident_reported": false,
+      "flood_damage_reported": false,
+      "clarification_notes": [],
+      "input_validation_notes": [
+        "Mileage source '900 miles' normalized to 1448.4096 km.",
+        "Manufacturing year checked against an explicit manufacturing statement."
+      ]
+    },
+    "seconds": 7.03
+  },
+  {
+    "case": "seller_no_unit",
+    "input": "I want to sell my Perodua Alza 1.5 SE, manufactured in 2020, automatic, odometer 90000, unit not specified, fair condition. No major accident and no flood damage.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": 2020,
+      "transmission": "Automatic",
+      "mileage_km": null,
+      "condition": "fair",
+      "major_accident_reported": false,
+      "flood_damage_reported": false,
+      "clarification_notes": [
+        "Please state the odometer reading with an explicit unit (km, m/metres, or mi/miles); no supported mileage evidence was found."
+      ],
+      "input_validation_notes": [
+        "Manufacturing year checked against an explicit manufacturing statement."
+      ]
+    },
+    "seconds": 7.06
+  },
+  {
+    "case": "seller_registration",
+    "input": "I want to sell a Perodua Alza 1.5 SE, registered in 2021, automatic, 90000 km, fair condition. Manufacturing year is unknown.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": null,
+      "transmission": "Automatic",
+      "mileage_km": 90000.0,
+      "condition": "fair",
+      "major_accident_reported": null,
+      "flood_damage_reported": null,
+      "clarification_notes": [
+        "Manufacturing year is unknown",
+        "Only registration-year evidence is available. Please confirm the manufacturing year."
+      ],
+      "input_validation_notes": [
+        "Mileage source '90000 km' normalized to 90000 km."
+      ]
+    },
+    "seconds": 7.58
+  },
+  {
+    "case": "seller_ambiguous_damage",
+    "input": "I want to sell my 2020 Perodua Alza 1.5 SE automatic, 90000 km, good condition. I am not sure whether it had a major accident or flood damage.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": 2020,
+      "transmission": "Automatic",
+      "mileage_km": 90000.0,
+      "condition": "good",
+      "major_accident_reported": null,
+      "flood_damage_reported": null,
+      "clarification_notes": [
+        "User is not sure whether it had a major accident or flood damage"
+      ],
+      "input_validation_notes": [
+        "Mileage source '90000 km' normalized to 90000 km."
+      ]
+    },
+    "seconds": 7.09
+  },
+  {
+    "case": "buyer_usd",
+    "input": "Budget USD50000, five seats, city commuting.",
+    "actual": {
+      "budget_myr": null,
+      "family_size": null,
+      "required_seats": null,
+      "usage": [],
+      "fuel_priority": null,
+      "space_priority": null,
+      "preferred_brands": [],
+      "excluded_brands": [],
+      "clarification_notes": [
+        "Budget is given in USD, but the schema requires MYR (Malaysian Ringgit) budget. Conversion not specified.",
+        "A non-MYR or ambiguous currency was supplied. Please confirm a total purchase budget in MYR; no exchange conversion is performed."
+      ],
+      "input_validation_notes": []
+    },
+    "seconds": 7.38
+  },
+  {
+    "case": "buyer_monthly_total",
+    "input": "My monthly budget is RM800, and my maximum total purchase budget is RM50000. Five seats, city commuting.",
+    "actual": {
+      "budget_myr": 50000.0,
+      "family_size": null,
+      "required_seats": 5,
+      "usage": [
+        "city_commute"
+      ],
+      "fuel_priority": null,
+      "space_priority": null,
+      "preferred_brands": [],
+      "excluded_brands": [],
+      "clarification_notes": [],
+      "input_validation_notes": [
+        "Budget source 'RM50000' normalized to MYR 50000."
+      ]
+    },
+    "seconds": 8.04
+  },
+  {
+    "case": "buyer_no_currency",
+    "input": "Budget 50000, five seats, city commuting. Currency not specified.",
+    "actual": {
+      "budget_myr": null,
+      "family_size": null,
+      "required_seats": 5,
+      "usage": [
+        "city_commute"
+      ],
+      "fuel_priority": null,
+      "space_priority": null,
+      "preferred_brands": [],
+      "excluded_brands": [],
+      "clarification_notes": [
+        "Currency not specified",
+        "Please specify the total purchase budget with an explicit MYR/RM currency; a monthly payment alone is not a purchase budget."
+      ],
+      "input_validation_notes": []
+    },
+    "seconds": 6.82
+  }
+]

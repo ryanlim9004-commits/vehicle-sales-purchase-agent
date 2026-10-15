@@ -1,0 +1,10 @@
+[
+  {"vehicle_id":"DEMO001","brand":"Perodua","model":"Teaching MPV A","year":2020,"price_myr":45000,"seats":7,"source_kind":"synthetic_demo","source_reference":"Hand-authored Stage 2 fixture; all values invented","observed_on":"2026-10-14"},
+  {"vehicle_id":"DEMO002","brand":"Toyota","model":"Teaching MPV B","year":2019,"price_myr":58000,"seats":7,"source_kind":"synthetic_demo","source_reference":"Hand-authored Stage 2 fixture; all values invented","observed_on":"2026-10-14"},
+  {"vehicle_id":"DEMO003","brand":"Honda","model":"Teaching MPV C","year":2021,"price_myr":72000,"seats":7,"source_kind":"synthetic_demo","source_reference":"Hand-authored Stage 2 fixture; all values invented","observed_on":"2026-10-14"},
+  {"vehicle_id":"DEMO004","brand":"Proton","model":"Teaching Sedan D","year":2022,"price_myr":42000,"seats":5,"source_kind":"synthetic_demo","source_reference":"Hand-authored Stage 2 fixture; all values invented","observed_on":"2026-10-14"},
+  {"vehicle_id":"DEMO005","brand":"Toyota","model":"Teaching Sedan E","year":2020,"price_myr":55000,"seats":5,"source_kind":"synthetic_demo","source_reference":"Hand-authored Stage 2 fixture; all values invented","observed_on":"2026-10-14"},
+  {"vehicle_id":"DEMO006","brand":"Nissan","model":"Teaching MPV F","year":2018,"price_myr":60000,"seats":7,"source_kind":"synthetic_demo","source_reference":"Hand-authored Stage 2 fixture; all values invented","observed_on":"2026-10-14"},
+  {"vehicle_id":"DEMO007","brand":"Proton","model":"Teaching Unknown Price G","year":2020,"price_myr":null,"seats":7,"source_kind":"synthetic_demo","source_reference":"Hand-authored Stage 2 fixture; all values invented","observed_on":"2026-10-14"},
+  {"vehicle_id":"DEMO008","brand":"Honda","model":"Teaching Unknown Seats H","year":2020,"price_myr":50000,"seats":null,"source_kind":"synthetic_demo","source_reference":"Hand-authored Stage 2 fixture; all values invented","observed_on":"2026-10-14"}
+]

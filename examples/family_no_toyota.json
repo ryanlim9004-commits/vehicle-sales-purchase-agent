@@ -1,0 +1,10 @@
+{
+  "budget_myr": 60000,
+  "family_size": 6,
+  "required_seats": null,
+  "usage": ["city_commute"],
+  "fuel_priority": "high",
+  "preferred_brands": [],
+  "excluded_brands": ["Toyota"],
+  "clarification_notes": []
+}

@@ -1,0 +1,220 @@
+{
+  "status": "reference_only",
+  "seller_profile": {
+    "brand": "Perodua",
+    "model": "Alza",
+    "variant": "1.5 SE",
+    "year": 2020,
+    "transmission": "Automatic",
+    "mileage_km": 90000,
+    "condition": "fair",
+    "major_accident_reported": false,
+    "flood_damage_reported": false,
+    "clarification_notes": []
+  },
+  "as_of": "2026-10-15",
+  "policy": {
+    "version": "valuation-v1-educational",
+    "minimum_comparables": 3,
+    "maximum_source_age_days": 90,
+    "mileage_rate_per_10000_km": 0.01,
+    "maximum_mileage_adjustment": 0.1,
+    "good_factor": 1.0,
+    "fair_factor": 0.95,
+    "poor_factor": 0.85
+  },
+  "comparables": [
+    {
+      "vehicle_id": "CL18923892",
+      "asking_price_myr": 35888.0,
+      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+      "source_updated_on": "2026-09-21",
+      "mileage_km": null,
+      "mileage_min_km": 65000,
+      "mileage_max_km": 70000,
+      "condition": null
+    },
+    {
+      "vehicle_id": "CL19122669",
+      "asking_price_myr": 45000.0,
+      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669",
+      "source_updated_on": "2026-09-21",
+      "mileage_km": null,
+      "mileage_min_km": 100000,
+      "mileage_max_km": 105000,
+      "condition": null
+    },
+    {
+      "vehicle_id": "CL19418670",
+      "asking_price_myr": 44800.0,
+      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670",
+      "source_updated_on": "2026-09-20",
+      "mileage_km": null,
+      "mileage_min_km": 120000,
+      "mileage_max_km": 125000,
+      "condition": null
+    }
+  ],
+  "excluded_records": [
+    {
+      "vehicle_id": "CL18751444",
+      "reasons": [
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+        "Source update is outside the permitted valuation window."
+      ]
+    },
+    {
+      "vehicle_id": "CL18249652",
+      "reasons": [
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+      ]
+    },
+    {
+      "vehicle_id": "CL18624149",
+      "reasons": [
+        "Not an eligible listed snapshot (sold, reserved or unknown).",
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+        "Source update date is unknown; freshness cannot be checked for valuation."
+      ]
+    },
+    {
+      "vehicle_id": "CL18807978",
+      "reasons": [
+        "Not an eligible listed snapshot (sold, reserved or unknown).",
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+        "Source update date is unknown; freshness cannot be checked for valuation."
+      ]
+    },
+    {
+      "vehicle_id": "CL18603852",
+      "reasons": [
+        "Not an eligible listed snapshot (sold, reserved or unknown).",
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+        "Source update date is unknown; freshness cannot be checked for valuation."
+      ]
+    },
+    {
+      "vehicle_id": "CL18939959",
+      "reasons": [
+        "model does not exactly match.",
+        "variant does not exactly match.",
+        "transmission does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+      ]
+    },
+    {
+      "vehicle_id": "CL18625566",
+      "reasons": [
+        "model does not exactly match.",
+        "variant does not exactly match.",
+        "transmission does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+      ]
+    },
+    {
+      "vehicle_id": "CL18902191",
+      "reasons": [
+        "Not an eligible listed snapshot (sold, reserved or unknown).",
+        "model does not exactly match.",
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+        "Source update date is unknown; freshness cannot be checked for valuation."
+      ]
+    },
+    {
+      "vehicle_id": "CS_C606800",
+      "reasons": [
+        "model does not exactly match.",
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+        "Source update date is unknown; freshness cannot be checked for valuation."
+      ]
+    },
+    {
+      "vehicle_id": "PT_LP63L6X1P7",
+      "reasons": [
+        "model does not exactly match.",
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+      ]
+    },
+    {
+      "vehicle_id": "PT_K4EDNMNYPG",
+      "reasons": [
+        "model does not exactly match.",
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+      ]
+    },
+    {
+      "vehicle_id": "PT_7PRLM3GLPK",
+      "reasons": [
+        "model does not exactly match.",
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+      ]
+    },
+    {
+      "vehicle_id": "CS_C6RA000",
+      "reasons": [
+        "Not an eligible listed snapshot (sold, reserved or unknown).",
+        "brand does not exactly match.",
+        "model does not exactly match.",
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+        "Source update date is unknown; freshness cannot be checked for valuation."
+      ]
+    },
+    {
+      "vehicle_id": "CS_CBFS600",
+      "reasons": [
+        "Not an eligible listed snapshot (sold, reserved or unknown).",
+        "brand does not exactly match.",
+        "model does not exactly match.",
+        "variant does not exactly match.",
+        "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+        "Source update date is unknown; freshness cannot be checked for valuation."
+      ]
+    }
+  ],
+  "fired_rules": [
+    {
+      "rule_id": "VAL_COMPARABLES",
+      "reason": "Same brand/model/variant/year/transmission, eligible real listings, known recent source dates, unique source/ID.",
+      "accepted_count": 3
+    },
+    {
+      "rule_id": "VAL_MEDIAN",
+      "reason": "Median asking price and observed min/max are calculated from the selected listings; no second age-depreciation deduction.",
+      "median_myr": 44800.0
+    },
+    {
+      "rule_id": "VAL_NO_CALIBRATION",
+      "reason": "No verified market mileage/condition factors. Default mode returns the unadjusted listing reference only."
+    }
+  ],
+  "clarification_questions": [],
+  "reference": {
+    "price_basis": "asking",
+    "comparable_count": 3,
+    "median_asking_price_myr": 44800.0,
+    "observed_asking_range_myr": [
+      35888.0,
+      45000.0
+    ],
+    "personalized_for_mileage_or_condition": false
+  },
+  "adjusted_scenario": null,
+  "limitations": [
+    "Listing asking-price reference, not a confirmed transaction price, guaranteed sale price or professional appraisal.",
+    "References are advertisement snapshots; distinct IDs do not prove VIN-distinct cars.",
+    "Independent comparable condition labels and calibrated adjustment coefficients are unavailable.",
+    "Price ranges are observed/assumption-based ranges, not statistical confidence intervals.",
+    "Comparable price spread exceeds 20% of the median; investigate differences rather than treating the median as precise."
+  ]
+}

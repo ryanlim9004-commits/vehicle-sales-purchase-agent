@@ -1,0 +1,281 @@
+{
+  "model": "qwen3:4b",
+  "cases": [
+    {
+      "case": "family",
+      "input": "预算RM60000，家里六个人，主要城市通勤，希望省油。",
+      "expected": {
+        "budget_myr": 60000,
+        "family_size": 6,
+        "required_seats": null,
+        "usage": [
+          "city_commute"
+        ],
+        "fuel_priority": "high"
+      },
+      "actual": {
+        "budget_myr": 60000.0,
+        "family_size": 6,
+        "required_seats": null,
+        "usage": [
+          "city_commute"
+        ],
+        "fuel_priority": "high",
+        "preferred_brands": [],
+        "excluded_brands": [],
+        "clarification_notes": []
+      },
+      "passed": true,
+      "mismatches": {},
+      "reasoning": {
+        "extracted_profile": {
+          "budget_myr": 60000.0,
+          "family_size": 6,
+          "required_seats": null,
+          "usage": [
+            "city_commute"
+          ],
+          "fuel_priority": "high",
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": []
+        },
+        "derived_facts": {
+          "budget_myr": 60000.0,
+          "family_size": 6,
+          "required_seats": 6,
+          "usage": [
+            "city_commute"
+          ],
+          "fuel_priority": "high",
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": [],
+          "minimum_vehicle_seats": 6,
+          "lifestyle_profile": "economical_city_commuter"
+        },
+        "fired_rules": [
+          {
+            "rule_id": "BUY_01",
+            "reason": "All stated household members are assumed to travel together; confirm if different.",
+            "derived_fact": {
+              "required_seats": 6
+            }
+          },
+          {
+            "rule_id": "BUY_02",
+            "reason": "Vehicle capacity must satisfy the passenger requirement.",
+            "derived_fact": {
+              "minimum_vehicle_seats": 6
+            }
+          },
+          {
+            "rule_id": "BUY_03",
+            "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+            "derived_fact": {
+              "lifestyle_profile": "economical_city_commuter"
+            }
+          }
+        ],
+        "missing_slots": [],
+        "clarification_questions": [],
+        "ready_for_matching": true
+      },
+      "seconds": 18.13
+    },
+    {
+      "case": "missing",
+      "input": "想买省油车。",
+      "expected": {
+        "budget_myr": null,
+        "family_size": null,
+        "required_seats": null,
+        "usage": [],
+        "fuel_priority": "high"
+      },
+      "actual": {
+        "budget_myr": null,
+        "family_size": null,
+        "required_seats": null,
+        "usage": [],
+        "fuel_priority": "high",
+        "preferred_brands": [],
+        "excluded_brands": [],
+        "clarification_notes": []
+      },
+      "passed": true,
+      "mismatches": {},
+      "reasoning": {
+        "extracted_profile": {
+          "budget_myr": null,
+          "family_size": null,
+          "required_seats": null,
+          "usage": [],
+          "fuel_priority": "high",
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": []
+        },
+        "derived_facts": {
+          "budget_myr": null,
+          "family_size": null,
+          "required_seats": null,
+          "usage": [],
+          "fuel_priority": "high",
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": []
+        },
+        "fired_rules": [],
+        "missing_slots": [
+          "budget_myr",
+          "required_seats",
+          "usage"
+        ],
+        "clarification_questions": [
+          "你的最高购车预算是多少 MYR？",
+          "至少需要几个座位？",
+          "主要用途是城市通勤、家庭出游，还是长途驾驶？"
+        ],
+        "ready_for_matching": false
+      },
+      "seconds": 4.74
+    },
+    {
+      "case": "negation",
+      "input": "Budget RM50k, at least five seats for city commuting. Do not recommend Toyota.",
+      "expected": {
+        "budget_myr": 50000,
+        "required_seats": 5,
+        "usage": [
+          "city_commute"
+        ],
+        "excluded_brands": [
+          "Toyota"
+        ],
+        "preferred_brands": []
+      },
+      "actual": {
+        "budget_myr": 50000.0,
+        "family_size": null,
+        "required_seats": 5,
+        "usage": [
+          "city_commute"
+        ],
+        "fuel_priority": null,
+        "preferred_brands": [],
+        "excluded_brands": [
+          "Toyota"
+        ],
+        "clarification_notes": []
+      },
+      "passed": true,
+      "mismatches": {},
+      "reasoning": {
+        "extracted_profile": {
+          "budget_myr": 50000.0,
+          "family_size": null,
+          "required_seats": 5,
+          "usage": [
+            "city_commute"
+          ],
+          "fuel_priority": null,
+          "preferred_brands": [],
+          "excluded_brands": [
+            "Toyota"
+          ],
+          "clarification_notes": []
+        },
+        "derived_facts": {
+          "budget_myr": 50000.0,
+          "family_size": null,
+          "required_seats": 5,
+          "usage": [
+            "city_commute"
+          ],
+          "fuel_priority": null,
+          "preferred_brands": [],
+          "excluded_brands": [
+            "Toyota"
+          ],
+          "clarification_notes": [],
+          "minimum_vehicle_seats": 5
+        },
+        "fired_rules": [
+          {
+            "rule_id": "BUY_02",
+            "reason": "Vehicle capacity must satisfy the passenger requirement.",
+            "derived_fact": {
+              "minimum_vehicle_seats": 5
+            }
+          }
+        ],
+        "missing_slots": [],
+        "clarification_questions": [],
+        "ready_for_matching": true
+      },
+      "seconds": 5.88
+    },
+    {
+      "case": "monthly",
+      "input": "每月只能付RM800，想买车。",
+      "expected": {
+        "budget_myr": null
+      },
+      "actual": {
+        "budget_myr": null,
+        "family_size": null,
+        "required_seats": null,
+        "usage": [],
+        "fuel_priority": null,
+        "preferred_brands": [],
+        "excluded_brands": [],
+        "clarification_notes": [
+          "每月只能付RM800，想买车。"
+        ]
+      },
+      "passed": true,
+      "mismatches": {},
+      "reasoning": {
+        "extracted_profile": {
+          "budget_myr": null,
+          "family_size": null,
+          "required_seats": null,
+          "usage": [],
+          "fuel_priority": null,
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": [
+            "每月只能付RM800，想买车。"
+          ]
+        },
+        "derived_facts": {
+          "budget_myr": null,
+          "family_size": null,
+          "required_seats": null,
+          "usage": [],
+          "fuel_priority": null,
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": [
+            "每月只能付RM800，想买车。"
+          ]
+        },
+        "fired_rules": [],
+        "missing_slots": [
+          "budget_myr",
+          "required_seats",
+          "usage"
+        ],
+        "clarification_questions": [
+          "每月只能付RM800，想买车。",
+          "你的最高购车预算是多少 MYR？",
+          "至少需要几个座位？",
+          "主要用途是城市通勤、家庭出游，还是长途驾驶？"
+        ],
+        "ready_for_matching": false
+      },
+      "seconds": 5.54
+    }
+  ]
+}

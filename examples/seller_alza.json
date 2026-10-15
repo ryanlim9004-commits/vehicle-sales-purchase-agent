@@ -1,0 +1,11 @@
+{
+  "brand": "Perodua",
+  "model": "Alza",
+  "variant": "1.5 SE",
+  "year": 2020,
+  "transmission": "Automatic",
+  "mileage_km": 90000,
+  "condition": "fair",
+  "major_accident_reported": false,
+  "flood_damage_reported": false
+}

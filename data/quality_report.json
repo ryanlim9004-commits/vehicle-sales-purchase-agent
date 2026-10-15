@@ -1,0 +1,72 @@
+{
+  "snapshot_date": "2026-10-15",
+  "row_count": 17,
+  "grain": "one source advertisement/inventory ID; cross-platform VIN identity is not verified",
+  "unique_ids": 17,
+  "unique_source_urls": 17,
+  "availability": {
+    "listed_snapshot": 11,
+    "sold": 5,
+    "reserved": 1
+  },
+  "price_type": {
+    "asking": 17
+  },
+  "by_model": {
+    "Perodua Alza": 8,
+    "Perodua Myvi": 3,
+    "Perodua Bezza": 4,
+    "Toyota Avanza": 2
+  },
+  "missingness": {
+    "variant": {
+      "null_count": 0,
+      "null_percent": 0.0
+    },
+    "price_myr": {
+      "null_count": 0,
+      "null_percent": 0.0
+    },
+    "seats": {
+      "null_count": 3,
+      "null_percent": 17.65
+    },
+    "mileage_km": {
+      "null_count": 11,
+      "null_percent": 64.71
+    },
+    "fuel_km_per_l": {
+      "null_count": 7,
+      "null_percent": 41.18
+    },
+    "boot_litres": {
+      "null_count": 7,
+      "null_percent": 41.18
+    },
+    "condition": {
+      "null_count": 17,
+      "null_percent": 100.0
+    },
+    "source_updated_on": {
+      "null_count": 7,
+      "null_percent": 41.18
+    }
+  },
+  "mileage_exact_or_range_count": 16,
+  "source_update_older_than_60_days_ids": [
+    "CL18751444",
+    "CL18249652",
+    "CL18939959",
+    "CL18625566"
+  ],
+  "possible_duplicate_signatures": [],
+  "critical_issues": [],
+  "limitations": [
+    "Small convenience sample, not representative of the Malaysian market.",
+    "No verified transaction prices or independently inspected condition labels.",
+    "No VIN-based cross-platform deduplication; distinct ads do not prove distinct cars.",
+    "Source update dates and retrieved cached pages cannot confirm current stock.",
+    "Fuel claims use different conditions; scoring disables mixed-basis fuel comparison.",
+    "Missing mileage points may be available as ranges; no midpoint imputation."
+  ]
+}

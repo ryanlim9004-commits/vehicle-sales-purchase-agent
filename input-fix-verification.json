@@ -1,0 +1,198 @@
+{
+  "model": "qwen3:4b",
+  "post_fix_audit_checks": [
+    {
+      "case": "seller_900m",
+      "expected": {
+        "mileage_km": 0.9
+      },
+      "actual": {
+        "mileage_km": 0.9
+      },
+      "passed": true
+    },
+    {
+      "case": "seller_50000m",
+      "expected": {
+        "mileage_km": 50
+      },
+      "actual": {
+        "mileage_km": 50.0
+      },
+      "passed": true
+    },
+    {
+      "case": "seller_miles",
+      "expected": {
+        "mileage_km": 1448.4096
+      },
+      "actual": {
+        "mileage_km": 1448.4096
+      },
+      "passed": true
+    },
+    {
+      "case": "seller_no_unit",
+      "expected": {
+        "mileage_km": null
+      },
+      "actual": {
+        "mileage_km": null
+      },
+      "passed": true
+    },
+    {
+      "case": "seller_registration",
+      "expected": {
+        "year": null
+      },
+      "actual": {
+        "year": null
+      },
+      "passed": true
+    },
+    {
+      "case": "seller_ambiguous_damage",
+      "expected": {
+        "major_accident_reported": null,
+        "flood_damage_reported": null
+      },
+      "actual": {
+        "major_accident_reported": null,
+        "flood_damage_reported": null
+      },
+      "passed": true
+    },
+    {
+      "case": "buyer_usd",
+      "expected": {
+        "budget_myr": null
+      },
+      "actual": {
+        "budget_myr": null
+      },
+      "passed": true
+    },
+    {
+      "case": "buyer_monthly_total",
+      "expected": {
+        "budget_myr": 50000
+      },
+      "actual": {
+        "budget_myr": 50000.0
+      },
+      "passed": true
+    },
+    {
+      "case": "buyer_no_currency",
+      "expected": {
+        "budget_myr": null
+      },
+      "actual": {
+        "budget_myr": null
+      },
+      "passed": true
+    }
+  ],
+  "pipeline_regressions": [
+    {
+      "case": "buyer_normal",
+      "input": "Budget RM50000, at least five seats, mainly city commuting. Fuel economy and a spacious boot are high priorities.",
+      "expected": {
+        "budget_myr": 50000,
+        "required_seats": 5,
+        "usage": [
+          "city_commute"
+        ],
+        "fuel_priority": "high",
+        "space_priority": "high"
+      },
+      "actual": {
+        "budget_myr": 50000.0,
+        "family_size": null,
+        "required_seats": 5,
+        "usage": [
+          "city_commute"
+        ],
+        "fuel_priority": "high",
+        "space_priority": "high",
+        "preferred_brands": [],
+        "excluded_brands": [],
+        "clarification_notes": [],
+        "input_validation_notes": [
+          "Budget source 'RM50000' normalized to MYR 50000."
+        ]
+      },
+      "errors": {},
+      "passed": true,
+      "tool_status": "matches_found",
+      "seconds": 6.41
+    },
+    {
+      "case": "seller_normal",
+      "input": "I want to sell my Perodua Alza 1.5 SE, manufactured in 2020, automatic, 90000 km, fair condition. No major accident and no flood damage.",
+      "expected": {
+        "mileage_km": 90000,
+        "year": 2020,
+        "major_accident_reported": false,
+        "flood_damage_reported": false
+      },
+      "actual": {
+        "brand": "Perodua",
+        "model": "Alza",
+        "variant": "1.5 SE",
+        "year": 2020,
+        "transmission": "Automatic",
+        "mileage_km": 90000.0,
+        "condition": "fair",
+        "major_accident_reported": false,
+        "flood_damage_reported": false,
+        "clarification_notes": [],
+        "input_validation_notes": [
+          "Mileage source '90000 km' normalized to 90000 km.",
+          "Manufacturing year checked against an explicit manufacturing statement."
+        ]
+      },
+      "errors": {},
+      "passed": true,
+      "tool_status": "reference_only",
+      "seconds": 6.7
+    },
+    {
+      "case": "buyer_foreign_keep_other_facts",
+      "input": "Budget USD50000, five seats, city commuting.",
+      "expected": {
+        "budget_myr": null,
+        "required_seats": 5,
+        "usage": [
+          "city_commute"
+        ]
+      },
+      "actual": {
+        "budget_myr": null,
+        "family_size": null,
+        "required_seats": 5,
+        "usage": [
+          "city_commute"
+        ],
+        "fuel_priority": null,
+        "space_priority": null,
+        "preferred_brands": [],
+        "excluded_brands": [],
+        "clarification_notes": [
+          "Budget in MYR is omitted; ask for MYR budget",
+          "A non-MYR or ambiguous currency was supplied. Please confirm a total purchase budget in MYR; no exchange conversion is performed."
+        ],
+        "input_validation_notes": [
+          "Recovered an explicit seat-count requirement from the original message.",
+          "Recovered explicit usage phrase: city_commute."
+        ]
+      },
+      "errors": {},
+      "passed": true,
+      "tool_status": "needs_clarification",
+      "seconds": 6.39
+    }
+  ],
+  "passed": true
+}

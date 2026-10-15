@@ -1,0 +1,281 @@
+{
+  "model": "qwen3:4b",
+  "cases": [
+    {
+      "case": "family",
+      "input": "Budget RM60000, six-person family, mainly city commuting, save fuel.",
+      "expected": {
+        "budget_myr": 60000,
+        "family_size": 6,
+        "required_seats": null,
+        "usage": [
+          "city_commute"
+        ],
+        "fuel_priority": "high"
+      },
+      "actual": {
+        "budget_myr": 60000.0,
+        "family_size": 6,
+        "required_seats": null,
+        "usage": [
+          "city_commute"
+        ],
+        "fuel_priority": "high",
+        "preferred_brands": [],
+        "excluded_brands": [],
+        "clarification_notes": []
+      },
+      "passed": true,
+      "mismatches": {},
+      "reasoning": {
+        "extracted_profile": {
+          "budget_myr": 60000.0,
+          "family_size": 6,
+          "required_seats": null,
+          "usage": [
+            "city_commute"
+          ],
+          "fuel_priority": "high",
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": []
+        },
+        "derived_facts": {
+          "budget_myr": 60000.0,
+          "family_size": 6,
+          "required_seats": 6,
+          "usage": [
+            "city_commute"
+          ],
+          "fuel_priority": "high",
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": [],
+          "minimum_vehicle_seats": 6,
+          "lifestyle_profile": "economical_city_commuter"
+        },
+        "fired_rules": [
+          {
+            "rule_id": "BUY_01",
+            "reason": "All stated household members are assumed to travel together; confirm if different.",
+            "derived_fact": {
+              "required_seats": 6
+            }
+          },
+          {
+            "rule_id": "BUY_02",
+            "reason": "Vehicle capacity must satisfy the passenger requirement.",
+            "derived_fact": {
+              "minimum_vehicle_seats": 6
+            }
+          },
+          {
+            "rule_id": "BUY_03",
+            "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+            "derived_fact": {
+              "lifestyle_profile": "economical_city_commuter"
+            }
+          }
+        ],
+        "missing_slots": [],
+        "clarification_questions": [],
+        "ready_for_matching": true
+      },
+      "seconds": 16.27
+    },
+    {
+      "case": "missing",
+      "input": "I want to buy a fuel-efficient car.",
+      "expected": {
+        "budget_myr": null,
+        "family_size": null,
+        "required_seats": null,
+        "usage": [],
+        "fuel_priority": "high"
+      },
+      "actual": {
+        "budget_myr": null,
+        "family_size": null,
+        "required_seats": null,
+        "usage": [],
+        "fuel_priority": "high",
+        "preferred_brands": [],
+        "excluded_brands": [],
+        "clarification_notes": []
+      },
+      "passed": true,
+      "mismatches": {},
+      "reasoning": {
+        "extracted_profile": {
+          "budget_myr": null,
+          "family_size": null,
+          "required_seats": null,
+          "usage": [],
+          "fuel_priority": "high",
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": []
+        },
+        "derived_facts": {
+          "budget_myr": null,
+          "family_size": null,
+          "required_seats": null,
+          "usage": [],
+          "fuel_priority": "high",
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": []
+        },
+        "fired_rules": [],
+        "missing_slots": [
+          "budget_myr",
+          "required_seats",
+          "usage"
+        ],
+        "clarification_questions": [
+          "What is your maximum total purchase budget in MYR?",
+          "How many seats do you need at minimum?",
+          "Will you mainly use the car for city commuting, family travel, or long-distance driving?"
+        ],
+        "ready_for_matching": false
+      },
+      "seconds": 4.02
+    },
+    {
+      "case": "negation",
+      "input": "Budget RM50k, at least five seats for city commuting. Do not recommend Toyota.",
+      "expected": {
+        "budget_myr": 50000,
+        "required_seats": 5,
+        "usage": [
+          "city_commute"
+        ],
+        "excluded_brands": [
+          "Toyota"
+        ],
+        "preferred_brands": []
+      },
+      "actual": {
+        "budget_myr": 50000.0,
+        "family_size": null,
+        "required_seats": 5,
+        "usage": [
+          "city_commute"
+        ],
+        "fuel_priority": null,
+        "preferred_brands": [],
+        "excluded_brands": [
+          "Toyota"
+        ],
+        "clarification_notes": []
+      },
+      "passed": true,
+      "mismatches": {},
+      "reasoning": {
+        "extracted_profile": {
+          "budget_myr": 50000.0,
+          "family_size": null,
+          "required_seats": 5,
+          "usage": [
+            "city_commute"
+          ],
+          "fuel_priority": null,
+          "preferred_brands": [],
+          "excluded_brands": [
+            "Toyota"
+          ],
+          "clarification_notes": []
+        },
+        "derived_facts": {
+          "budget_myr": 50000.0,
+          "family_size": null,
+          "required_seats": 5,
+          "usage": [
+            "city_commute"
+          ],
+          "fuel_priority": null,
+          "preferred_brands": [],
+          "excluded_brands": [
+            "Toyota"
+          ],
+          "clarification_notes": [],
+          "minimum_vehicle_seats": 5
+        },
+        "fired_rules": [
+          {
+            "rule_id": "BUY_02",
+            "reason": "Vehicle capacity must satisfy the passenger requirement.",
+            "derived_fact": {
+              "minimum_vehicle_seats": 5
+            }
+          }
+        ],
+        "missing_slots": [],
+        "clarification_questions": [],
+        "ready_for_matching": true
+      },
+      "seconds": 4.68
+    },
+    {
+      "case": "monthly",
+      "input": "I can only pay RM800 per month and want to buy a car.",
+      "expected": {
+        "budget_myr": null
+      },
+      "actual": {
+        "budget_myr": null,
+        "family_size": null,
+        "required_seats": null,
+        "usage": [],
+        "fuel_priority": null,
+        "preferred_brands": [],
+        "excluded_brands": [],
+        "clarification_notes": [
+          "Monthly budget of RM800 is not a total purchase budget; budget_myr should be the total purchase budget in MYR."
+        ]
+      },
+      "passed": true,
+      "mismatches": {},
+      "reasoning": {
+        "extracted_profile": {
+          "budget_myr": null,
+          "family_size": null,
+          "required_seats": null,
+          "usage": [],
+          "fuel_priority": null,
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": [
+            "Monthly budget of RM800 is not a total purchase budget; budget_myr should be the total purchase budget in MYR."
+          ]
+        },
+        "derived_facts": {
+          "budget_myr": null,
+          "family_size": null,
+          "required_seats": null,
+          "usage": [],
+          "fuel_priority": null,
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": [
+            "Monthly budget of RM800 is not a total purchase budget; budget_myr should be the total purchase budget in MYR."
+          ]
+        },
+        "fired_rules": [],
+        "missing_slots": [
+          "budget_myr",
+          "required_seats",
+          "usage"
+        ],
+        "clarification_questions": [
+          "Monthly budget of RM800 is not a total purchase budget; budget_myr should be the total purchase budget in MYR.",
+          "What is your maximum total purchase budget in MYR?",
+          "How many seats do you need at minimum?",
+          "Will you mainly use the car for city commuting, family travel, or long-distance driving?"
+        ],
+        "ready_for_matching": false
+      },
+      "seconds": 5.69
+    }
+  ]
+}

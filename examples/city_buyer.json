@@ -1,0 +1,9 @@
+{
+  "budget_myr": 50000,
+  "required_seats": 5,
+  "usage": ["city_commute"],
+  "fuel_priority": "high",
+  "space_priority": "high",
+  "preferred_brands": [],
+  "excluded_brands": []
+}

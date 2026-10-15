@@ -1,0 +1,166 @@
+[
+  {
+    "case": "seller_900m",
+    "input": "I want to sell my Perodua Alza 1.5 SE, manufactured in 2020, automatic, 900m, fair condition. No major accident and no flood damage.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": 2020,
+      "transmission": "Automatic",
+      "mileage_km": 90000,
+      "condition": "fair",
+      "major_accident_reported": false,
+      "flood_damage_reported": false,
+      "clarification_notes": []
+    },
+    "seconds": 29.02
+  },
+  {
+    "case": "seller_50000m",
+    "input": "I want to sell my Perodua Alza 1.5 SE, manufactured in 2020, automatic, 50000 m, fair condition. No major accident and no flood damage.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": 2020,
+      "transmission": "Automatic",
+      "mileage_km": 50000,
+      "condition": "fair",
+      "major_accident_reported": false,
+      "flood_damage_reported": false,
+      "clarification_notes": []
+    },
+    "seconds": 7.25
+  },
+  {
+    "case": "seller_miles",
+    "input": "I want to sell my Perodua Alza 1.5 SE, manufactured in 2020, automatic, 900 miles, fair condition. No major accident and no flood damage.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": 2020,
+      "transmission": "Automatic",
+      "mileage_km": 900,
+      "condition": "fair",
+      "major_accident_reported": false,
+      "flood_damage_reported": false,
+      "clarification_notes": []
+    },
+    "seconds": 6.79
+  },
+  {
+    "case": "seller_no_unit",
+    "input": "I want to sell my Perodua Alza 1.5 SE, manufactured in 2020, automatic, odometer 90000, unit not specified, fair condition. No major accident and no flood damage.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": 2020,
+      "transmission": "Automatic",
+      "mileage_km": 90000,
+      "condition": "fair",
+      "major_accident_reported": false,
+      "flood_damage_reported": false,
+      "clarification_notes": [
+        "unit not specified"
+      ]
+    },
+    "seconds": 7.72
+  },
+  {
+    "case": "seller_registration",
+    "input": "I want to sell a Perodua Alza 1.5 SE, registered in 2021, automatic, 90000 km, fair condition. Manufacturing year is unknown.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": null,
+      "transmission": "Automatic",
+      "mileage_km": 90000,
+      "condition": "fair",
+      "major_accident_reported": null,
+      "flood_damage_reported": null,
+      "clarification_notes": [
+        "Manufacturing year is unknown"
+      ]
+    },
+    "seconds": 7.62
+  },
+  {
+    "case": "seller_ambiguous_damage",
+    "input": "I want to sell my 2020 Perodua Alza 1.5 SE automatic, 90000 km, good condition. I am not sure whether it had a major accident or flood damage.",
+    "actual": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": 2020,
+      "transmission": "Automatic",
+      "mileage_km": 90000,
+      "condition": "good",
+      "major_accident_reported": null,
+      "flood_damage_reported": null,
+      "clarification_notes": [
+        "I am not sure whether it had a major accident or flood damage."
+      ]
+    },
+    "seconds": 7.03
+  },
+  {
+    "case": "buyer_usd",
+    "input": "Budget USD50000, five seats, city commuting.",
+    "actual": {
+      "budget_myr": null,
+      "family_size": null,
+      "required_seats": null,
+      "usage": [],
+      "fuel_priority": null,
+      "space_priority": null,
+      "preferred_brands": [],
+      "excluded_brands": [],
+      "clarification_notes": []
+    },
+    "seconds": 4.93
+  },
+  {
+    "case": "buyer_monthly_total",
+    "input": "My monthly budget is RM800, and my maximum total purchase budget is RM50000. Five seats, city commuting.",
+    "actual": {
+      "budget_myr": 50000.0,
+      "family_size": null,
+      "required_seats": 5,
+      "usage": [
+        "city_commute"
+      ],
+      "fuel_priority": null,
+      "space_priority": null,
+      "preferred_brands": [],
+      "excluded_brands": [],
+      "clarification_notes": [
+        "The user mentions a monthly budget of RM800, but the task specifies that budget_myr is the total purchase budget in MYR, not a monthly instalment. This is noted for clarification."
+      ]
+    },
+    "seconds": 7.75
+  },
+  {
+    "case": "buyer_no_currency",
+    "input": "Budget 50000, five seats, city commuting. Currency not specified.",
+    "actual": {
+      "budget_myr": 50000.0,
+      "family_size": null,
+      "required_seats": 5,
+      "usage": [
+        "city_commute"
+      ],
+      "fuel_priority": null,
+      "space_priority": null,
+      "preferred_brands": [],
+      "excluded_brands": [],
+      "clarification_notes": [
+        "Currency not specified"
+      ]
+    },
+    "seconds": 6.61
+  }
+]
