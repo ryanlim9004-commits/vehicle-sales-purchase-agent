@@ -8,6 +8,7 @@ class BuyerProfileFrame(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True, allow_inf_nan=False)
     budget_myr: float | None = Field(default=None, gt=0)
     family_size: int | None = Field(default=None, ge=1, le=20)
+    household_travels_together: bool | None = None
     required_seats: int | None = Field(default=None, ge=1, le=20)
     usage: list[Literal['city_commute', 'family_travel', 'long_distance']] = Field(default_factory=list)
     fuel_priority: Literal['high', 'medium', 'low'] | None = None
@@ -24,11 +25,13 @@ def reason_about_profile(profile: BuyerProfileFrame) -> dict:
     trace = []
     conflicts = list(profile.clarification_notes)
     if profile.family_size is not None:
-        if profile.required_seats is None:
+        if profile.required_seats is None and profile.household_travels_together is not False:
             facts['required_seats'] = profile.family_size
             trace.append({'rule_id': 'BUY_01', 'reason': 'All stated household members are assumed to travel together; confirm if different.', 'derived_fact': {'required_seats': profile.family_size}})
-        elif profile.required_seats < profile.family_size:
+        elif profile.required_seats is not None and profile.required_seats < profile.family_size and profile.household_travels_together is not False:
             conflicts.append('Your household size exceeds the requested seats. Will everyone travel together?')
+        if profile.household_travels_together is False:
+            trace.append({'rule_id': 'BUY_04', 'reason': 'The user explicitly stated that not all household members travel together; household size does not impose a seat minimum.', 'derived_fact': {'household_travels_together': False}})
     if facts['required_seats'] is not None:
         facts['minimum_vehicle_seats'] = facts['required_seats']
         trace.append({'rule_id': 'BUY_02', 'reason': 'Vehicle capacity must satisfy the passenger requirement.', 'derived_fact': {'minimum_vehicle_seats': facts['required_seats']}})

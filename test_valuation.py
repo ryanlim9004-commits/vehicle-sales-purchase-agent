@@ -49,6 +49,12 @@ class ValuationTests(unittest.TestCase):
             self.assertEqual(result['status'], 'inspection_required')
             self.assertIsNone(result['adjusted_scenario'])
 
+    def test_future_manufacturing_year_requests_clarification(self):
+        result = self.estimate(self.modified(year=2027))
+        self.assertEqual(result['status'], 'needs_clarification')
+        self.assertIsNone(result['reference'])
+        self.assertTrue(any('year' in q for q in result['clarification_questions']))
+
     def test_comparable_identity_and_year_transmission(self):
         for change in [{'year':2019}, {'variant':'1.5 AV'}, {'transmission':'Manual'}]:
             self.assertEqual(self.estimate(self.modified(**change))['status'], 'insufficient_evidence')

@@ -16,6 +16,8 @@ def rank_vehicles(profile: BuyerProfileFrame, filtered: dict) -> dict:
         'Fuel values are manufacturer claims, not measured used-car or city-driving consumption.',
         'Boot volume is a luggage proxy, not passenger legroom or an overall space rating.',
     ]
+    if 'long_distance' in profile.usage:
+        result['scoring_notes'].append('No independently verified long-distance comfort, reliability or safety rating is scored; only the explicitly supported criteria contribute.')
     weights = {'budget': 1.0, 'fuel': {None: 0.0, 'low': 0.5, 'medium': 2.0, 'high': 4.0}[profile.fuel_priority],
                'luggage': {None: (2.0 if 'family_travel' in profile.usage else 0.0), 'low': 0.5, 'medium': 2.0, 'high': 3.0}[profile.space_priority],
                'brand': 2.0 if profile.preferred_brands else 0.0,

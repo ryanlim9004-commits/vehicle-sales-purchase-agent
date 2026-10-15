@@ -1,0 +1,151 @@
+{
+  "status": "comparison_ready",
+  "profile": {
+    "currency": "MYR",
+    "current_vehicle": {
+      "brand": "Perodua",
+      "model": "Alza",
+      "variant": "1.5 SE",
+      "year": 2020,
+      "transmission": "Automatic"
+    },
+    "trade_in_replacement": {
+      "price_myr": 65000.0,
+      "fees_myr": 1000.0,
+      "fees_confirmed_complete": true
+    },
+    "private_sale_replacement": {
+      "price_myr": 65000.0,
+      "fees_myr": 1000.0,
+      "fees_confirmed_complete": true
+    },
+    "trade_in_quote": {
+      "price_myr": 35000.0,
+      "fees_myr": 500.0,
+      "fees_confirmed_complete": true,
+      "estimated_completion_days": 2.0,
+      "estimated_effort_hours": 2.0
+    },
+    "private_sale_quote": {
+      "price_myr": 40000.0,
+      "fees_myr": 1000.0,
+      "fees_confirmed_complete": true,
+      "estimated_completion_days": 21.0,
+      "estimated_effort_hours": 12.0
+    },
+    "loan_settlement_myr": 10000.0,
+    "available_cash_myr": 50000.0,
+    "priority": "net_cost",
+    "clarification_notes": []
+  },
+  "paths": {
+    "trade_in": {
+      "status": "calculated",
+      "missing_fields": [],
+      "replacement_price_myr": 65000.0,
+      "replacement_fees_myr": 1000.0,
+      "gross_offer_myr": 35000.0,
+      "disposal_fees_myr": 500.0,
+      "loan_settlement_myr": 10000.0,
+      "net_proceeds_myr": 24500.0,
+      "cash_difference_myr": 41500.0,
+      "cash_required_myr": 41500.0,
+      "cash_surplus_myr": 0.0,
+      "within_available_cash": true,
+      "estimated_completion_days": 2.0,
+      "estimated_effort_hours": 2.0
+    },
+    "private_sale": {
+      "status": "calculated",
+      "missing_fields": [],
+      "replacement_price_myr": 65000.0,
+      "replacement_fees_myr": 1000.0,
+      "gross_offer_myr": 40000.0,
+      "disposal_fees_myr": 1000.0,
+      "loan_settlement_myr": 10000.0,
+      "net_proceeds_myr": 29000.0,
+      "cash_difference_myr": 37000.0,
+      "cash_required_myr": 37000.0,
+      "cash_surplus_myr": 0.0,
+      "within_available_cash": true,
+      "estimated_completion_days": 21.0,
+      "estimated_effort_hours": 12.0
+    }
+  },
+  "comparison": {
+    "lower_cash_difference_path": "private_sale",
+    "private_sale_cash_advantage_myr": 4500.0,
+    "advantage_sign": "Positive favours private sale; negative favours trade-in. Path-specific replacement prices and fees are included."
+  },
+  "suggested_path": "private_sale",
+  "fired_rules": [
+    {
+      "rule_id": "TRADE_CALCULATE",
+      "path": "trade_in",
+      "reason": "All cash components and fee totals are explicit; the current loan is settled once."
+    },
+    {
+      "rule_id": "TRADE_CALCULATE",
+      "path": "private_sale",
+      "reason": "All cash components and fee totals are explicit; the current loan is settled once."
+    },
+    {
+      "rule_id": "TRADE_COMPARE",
+      "reason": "Compare full cash differences rather than gross offers alone."
+    },
+    {
+      "rule_id": "TRADE_PRIORITY",
+      "reason": "Choose the lower cash_difference_myr among paths not known to exceed the cash limit; priority is user-stated."
+    }
+  ],
+  "clarification_questions": [],
+  "policy": {
+    "version": "trade-in-v1",
+    "method": "Deterministic calculator plus hand-authored preference rules.",
+    "net_proceeds_formula": "Gross offer - disposal fees - current loan settlement",
+    "cash_difference_formula": "Replacement price + replacement fees - net proceeds",
+    "sign_convention": "Positive cash difference requires additional cash; negative means a cash surplus.",
+    "fee_scope": "Each quoted fee must include the full applicable fee total and be explicitly confirmed complete. Do not double count a fee or loan settlement."
+  },
+  "limitations": [
+    "All prices are user-provided quotes/scenarios; private-sale proceeds are not guaranteed.",
+    "Completion days and effort hours are user-provided estimates, not measured dealer service guarantees.",
+    "No time-to-money conversion, purchase-loan interest or future running costs are assumed.",
+    "A linked asking-price reference is context only, never an inferred dealer trade-in cash offer or guaranteed private-sale proceeds."
+  ],
+  "asking_price_context": {
+    "status": "asking_reference",
+    "reference": {
+      "price_basis": "asking",
+      "comparable_count": 3,
+      "median_asking_price_myr": 44800.0,
+      "observed_asking_range_myr": [
+        35888.0,
+        45000.0
+      ],
+      "personalized_for_mileage_or_condition": false
+    },
+    "as_of": "2026-10-15",
+    "sources": [
+      {
+        "vehicle_id": "CL18923892",
+        "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+      },
+      {
+        "vehicle_id": "CL19122669",
+        "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669"
+      },
+      {
+        "vehicle_id": "CL19418670",
+        "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670"
+      }
+    ],
+    "note": "Only the unadjusted asking-price reference is used. An illustrative adjustment is never treated as validated market evidence."
+  },
+  "time_comparison": {
+    "faster_path": "trade_in",
+    "lower_effort_path": "trade_in",
+    "basis": "User-provided estimates; unknown estimates remain unassessed."
+  },
+  "message": "A conditional suggestion based on the stated priority and known quotes; verify terms before deciding."
+}

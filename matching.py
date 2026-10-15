@@ -27,6 +27,8 @@ def filter_vehicles(profile: BuyerProfileFrame, vehicles: list[PassengerCarFrame
     result['constraints'] = {'maximum_price_myr': budget, 'minimum_seats': seats, 'excluded_brands': sorted(excluded)}
     for vehicle in vehicles:
         rejected = []
+        if vehicle.source_kind != 'synthetic_demo' and (vehicle.source_kind != 'listing' or vehicle.price_type != 'asking'):
+            rejected.append({'rule_id': 'FILTER_PRICE_BASIS', 'reason': 'A transaction record is historical evidence, not an asking-price listing available for purchase.'})
         if vehicle.source_kind != 'synthetic_demo' and vehicle.availability != 'listed_snapshot':
             rejected.append({'rule_id': 'FILTER_AVAILABILITY', 'reason': f'Source availability is {vehicle.availability}; this record is not an eligible listing snapshot.'})
         if vehicle.price_myr is None:
@@ -45,7 +47,7 @@ def filter_vehicles(profile: BuyerProfileFrame, vehicles: list[PassengerCarFrame
             result['matches'].append({
                 'vehicle': vehicle.model_dump(mode='json'),
                 'preferred_brand_match': normalize_brand(vehicle.brand) in preferred,
-                'passed_rules': ['FILTER_BUDGET', 'FILTER_SEATS', 'FILTER_EXCLUDED_BRAND'],
+                'passed_rules': ['FILTER_BUDGET', 'FILTER_SEATS', 'FILTER_EXCLUDED_BRAND'] + ([] if vehicle.source_kind == 'synthetic_demo' else ['FILTER_AVAILABILITY', 'FILTER_PRICE_BASIS']),
             })
     result['matches'].sort(key=lambda item: (item['vehicle']['price_myr'], item['vehicle']['vehicle_id']))
     result['checked_count'] = len(vehicles)

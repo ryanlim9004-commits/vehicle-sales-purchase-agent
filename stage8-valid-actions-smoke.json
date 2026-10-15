@@ -1,0 +1,3677 @@
+{
+  "status": "complete",
+  "goal": "buy",
+  "message": "These saved listings satisfy your hard constraints, ranked by the supported lifestyle score:\n1. 2022 Perodua Bezza 1.3 AV: MYR 40,800.00, 5 seats, score 71.970; ID PT_K4EDNMNYPG.\n2. 2023 Perodua Bezza 1.3 AV: MYR 42,800.00, 5 seats, score 71.526; ID PT_7PRLM3GLPK.\n3. 2023 Perodua Bezza 1.3 X: MYR 36,600.00, 5 seats, score 69.941; ID CS_C606800.\nScores use public heuristic weights. These are asking-price snapshots, not live inventory. See result details for sources, weights and feature coverage.",
+  "facts": {
+    "budget_myr": 50000.0,
+    "required_seats": 5,
+    "usage": [
+      "city_commute"
+    ],
+    "fuel_priority": "high",
+    "space_priority": "high"
+  },
+  "result": {
+    "status": "matches_found",
+    "buyer_reasoning": {
+      "extracted_profile": {
+        "budget_myr": 50000.0,
+        "family_size": null,
+        "required_seats": 5,
+        "usage": [
+          "city_commute"
+        ],
+        "fuel_priority": "high",
+        "space_priority": "high",
+        "preferred_brands": [],
+        "excluded_brands": [],
+        "clarification_notes": [],
+        "input_validation_notes": []
+      },
+      "derived_facts": {
+        "budget_myr": 50000.0,
+        "family_size": null,
+        "required_seats": 5,
+        "usage": [
+          "city_commute"
+        ],
+        "fuel_priority": "high",
+        "space_priority": "high",
+        "preferred_brands": [],
+        "excluded_brands": [],
+        "clarification_notes": [],
+        "input_validation_notes": [],
+        "minimum_vehicle_seats": 5,
+        "lifestyle_profile": "economical_city_commuter"
+      },
+      "fired_rules": [
+        {
+          "rule_id": "BUY_02",
+          "reason": "Vehicle capacity must satisfy the passenger requirement.",
+          "derived_fact": {
+            "minimum_vehicle_seats": 5
+          }
+        },
+        {
+          "rule_id": "BUY_03",
+          "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+          "derived_fact": {
+            "lifestyle_profile": "economical_city_commuter"
+          }
+        }
+      ],
+      "missing_slots": [],
+      "clarification_questions": [],
+      "ready_for_matching": true
+    },
+    "dataset_notice": "Observed listing snapshots, not live inventory or confirmed transaction prices. Verify availability, fees and specifications with the source.",
+    "observed_on": [
+      "2026-10-15"
+    ],
+    "matching_method": "Hard filtering followed by conservative weighted heuristic scoring v1.",
+    "constraints": {
+      "maximum_price_myr": 50000.0,
+      "minimum_seats": 5,
+      "excluded_brands": []
+    },
+    "matches": [
+      {
+        "vehicle": {
+          "vehicle_id": "PT_K4EDNMNYPG",
+          "brand": "Perodua",
+          "model": "Bezza",
+          "year": 2022,
+          "currency": "MYR",
+          "price_myr": 40800.0,
+          "seats": 5,
+          "source_kind": "listing",
+          "source_reference": "https://paultan.org/used-cars/perodua/bezza/k4ednmnypg/",
+          "observed_on": "2026-10-15",
+          "variant": "1.3 AV",
+          "transmission": "Automatic",
+          "price_type": "asking",
+          "availability": "listed_snapshot",
+          "source_updated_on": "2026-08-17",
+          "mileage_km": 59492,
+          "mileage_min_km": null,
+          "mileage_max_km": null,
+          "condition": null,
+          "fuel_km_per_l": 22.0,
+          "fuel_basis": "eco_driving_claim",
+          "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+          "boot_litres": 508.0,
+          "boot_configuration": "all_seats_up",
+          "length_mm": 4170,
+          "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+          "evidence_notes": [
+            "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+            "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+          ],
+          "vehicle_category": "passenger_car",
+          "wheels": 4
+        },
+        "preferred_brand_match": false,
+        "passed_rules": [
+          "FILTER_BUDGET",
+          "FILTER_SEATS",
+          "FILTER_EXCLUDED_BRAND",
+          "FILTER_AVAILABILITY",
+          "FILTER_PRICE_BASIS"
+        ],
+        "score_breakdown": {
+          "budget": {
+            "normalized_value": 0.18400000000000005,
+            "weight": 0.1111111111111111,
+            "weighted_points": 2.044444444444445,
+            "source_reference": "https://paultan.org/used-cars/perodua/bezza/k4ednmnypg/"
+          },
+          "fuel": {
+            "normalized_value": 0.8,
+            "weight": 0.4444444444444444,
+            "weighted_points": 35.55555555555556,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          },
+          "luggage": {
+            "normalized_value": 0.8466666666666667,
+            "weight": 0.3333333333333333,
+            "weighted_points": 28.222222222222218,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          },
+          "city_compactness": {
+            "normalized_value": 0.5533333333333333,
+            "weight": 0.1111111111111111,
+            "weighted_points": 6.148148148148148,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          }
+        },
+        "score": 71.97,
+        "score_upper_bound": 71.97,
+        "weighted_data_coverage_percent": 100.0,
+        "missing_scoring_features": [],
+        "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+        "rank": 1
+      },
+      {
+        "vehicle": {
+          "vehicle_id": "PT_7PRLM3GLPK",
+          "brand": "Perodua",
+          "model": "Bezza",
+          "year": 2023,
+          "currency": "MYR",
+          "price_myr": 42800.0,
+          "seats": 5,
+          "source_kind": "listing",
+          "source_reference": "https://paultan.org/used-cars/perodua/bezza/7prlm3glpk/",
+          "observed_on": "2026-10-15",
+          "variant": "1.3 AV",
+          "transmission": "Automatic",
+          "price_type": "asking",
+          "availability": "listed_snapshot",
+          "source_updated_on": "2026-10-07",
+          "mileage_km": 64512,
+          "mileage_min_km": null,
+          "mileage_max_km": null,
+          "condition": null,
+          "fuel_km_per_l": 22.0,
+          "fuel_basis": "eco_driving_claim",
+          "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+          "boot_litres": 508.0,
+          "boot_configuration": "all_seats_up",
+          "length_mm": 4170,
+          "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+          "evidence_notes": [
+            "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+            "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+          ],
+          "vehicle_category": "passenger_car",
+          "wheels": 4
+        },
+        "preferred_brand_match": false,
+        "passed_rules": [
+          "FILTER_BUDGET",
+          "FILTER_SEATS",
+          "FILTER_EXCLUDED_BRAND",
+          "FILTER_AVAILABILITY",
+          "FILTER_PRICE_BASIS"
+        ],
+        "score_breakdown": {
+          "budget": {
+            "normalized_value": 0.14400000000000002,
+            "weight": 0.1111111111111111,
+            "weighted_points": 1.6,
+            "source_reference": "https://paultan.org/used-cars/perodua/bezza/7prlm3glpk/"
+          },
+          "fuel": {
+            "normalized_value": 0.8,
+            "weight": 0.4444444444444444,
+            "weighted_points": 35.55555555555556,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          },
+          "luggage": {
+            "normalized_value": 0.8466666666666667,
+            "weight": 0.3333333333333333,
+            "weighted_points": 28.222222222222218,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          },
+          "city_compactness": {
+            "normalized_value": 0.5533333333333333,
+            "weight": 0.1111111111111111,
+            "weighted_points": 6.148148148148148,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          }
+        },
+        "score": 71.526,
+        "score_upper_bound": 71.526,
+        "weighted_data_coverage_percent": 100.0,
+        "missing_scoring_features": [],
+        "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+        "rank": 2
+      },
+      {
+        "vehicle": {
+          "vehicle_id": "CS_C606800",
+          "brand": "Perodua",
+          "model": "Bezza",
+          "year": 2023,
+          "currency": "MYR",
+          "price_myr": 36600.0,
+          "seats": 5,
+          "source_kind": "listing",
+          "source_reference": "https://www.carsome.my/buy-car/perodua/bezza/2023-perodua-bezza-x-1.3/c606800",
+          "observed_on": "2026-10-15",
+          "variant": "1.3 X",
+          "transmission": "Automatic",
+          "price_type": "asking",
+          "availability": "listed_snapshot",
+          "source_updated_on": null,
+          "mileage_km": 50172,
+          "mileage_min_km": null,
+          "mileage_max_km": null,
+          "condition": null,
+          "fuel_km_per_l": 21.0,
+          "fuel_basis": "eco_driving_claim",
+          "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+          "boot_litres": 508.0,
+          "boot_configuration": "all_seats_up",
+          "length_mm": 4170,
+          "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+          "evidence_notes": [
+            "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+            "Page says Car in Transit and offers Order Now; treated as a listing snapshot, not confirmed delivery availability. Year from listing title; registration month Sep 2023.",
+            "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+          ],
+          "vehicle_category": "passenger_car",
+          "wheels": 4
+        },
+        "preferred_brand_match": false,
+        "passed_rules": [
+          "FILTER_BUDGET",
+          "FILTER_SEATS",
+          "FILTER_EXCLUDED_BRAND",
+          "FILTER_AVAILABILITY",
+          "FILTER_PRICE_BASIS"
+        ],
+        "score_breakdown": {
+          "budget": {
+            "normalized_value": 0.268,
+            "weight": 0.1111111111111111,
+            "weighted_points": 2.977777777777778,
+            "source_reference": "https://www.carsome.my/buy-car/perodua/bezza/2023-perodua-bezza-x-1.3/c606800"
+          },
+          "fuel": {
+            "normalized_value": 0.7333333333333333,
+            "weight": 0.4444444444444444,
+            "weighted_points": 32.59259259259259,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          },
+          "luggage": {
+            "normalized_value": 0.8466666666666667,
+            "weight": 0.3333333333333333,
+            "weighted_points": 28.222222222222218,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          },
+          "city_compactness": {
+            "normalized_value": 0.5533333333333333,
+            "weight": 0.1111111111111111,
+            "weighted_points": 6.148148148148148,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          }
+        },
+        "score": 69.941,
+        "score_upper_bound": 69.941,
+        "weighted_data_coverage_percent": 100.0,
+        "missing_scoring_features": [],
+        "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+        "rank": 3
+      },
+      {
+        "vehicle": {
+          "vehicle_id": "PT_LP63L6X1P7",
+          "brand": "Perodua",
+          "model": "Bezza",
+          "year": 2023,
+          "currency": "MYR",
+          "price_myr": 40800.0,
+          "seats": 5,
+          "source_kind": "listing",
+          "source_reference": "https://paultan.org/used-cars/perodua/bezza/lp63l6x1p7/",
+          "observed_on": "2026-10-15",
+          "variant": "1.3 X",
+          "transmission": "Automatic",
+          "price_type": "asking",
+          "availability": "listed_snapshot",
+          "source_updated_on": "2026-08-21",
+          "mileage_km": 65709,
+          "mileage_min_km": null,
+          "mileage_max_km": null,
+          "condition": null,
+          "fuel_km_per_l": 21.0,
+          "fuel_basis": "eco_driving_claim",
+          "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+          "boot_litres": 508.0,
+          "boot_configuration": "all_seats_up",
+          "length_mm": 4170,
+          "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+          "evidence_notes": [
+            "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+            "Publisher-hosted classifieds identify Carro inventory; listing evidence, not independent inspection.",
+            "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+          ],
+          "vehicle_category": "passenger_car",
+          "wheels": 4
+        },
+        "preferred_brand_match": false,
+        "passed_rules": [
+          "FILTER_BUDGET",
+          "FILTER_SEATS",
+          "FILTER_EXCLUDED_BRAND",
+          "FILTER_AVAILABILITY",
+          "FILTER_PRICE_BASIS"
+        ],
+        "score_breakdown": {
+          "budget": {
+            "normalized_value": 0.18400000000000005,
+            "weight": 0.1111111111111111,
+            "weighted_points": 2.044444444444445,
+            "source_reference": "https://paultan.org/used-cars/perodua/bezza/lp63l6x1p7/"
+          },
+          "fuel": {
+            "normalized_value": 0.7333333333333333,
+            "weight": 0.4444444444444444,
+            "weighted_points": 32.59259259259259,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          },
+          "luggage": {
+            "normalized_value": 0.8466666666666667,
+            "weight": 0.3333333333333333,
+            "weighted_points": 28.222222222222218,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          },
+          "city_compactness": {
+            "normalized_value": 0.5533333333333333,
+            "weight": 0.1111111111111111,
+            "weighted_points": 6.148148148148148,
+            "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+          }
+        },
+        "score": 69.007,
+        "score_upper_bound": 69.007,
+        "weighted_data_coverage_percent": 100.0,
+        "missing_scoring_features": [],
+        "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+        "rank": 4
+      },
+      {
+        "vehicle": {
+          "vehicle_id": "CL18939959",
+          "brand": "Perodua",
+          "model": "Myvi",
+          "year": 2022,
+          "currency": "MYR",
+          "price_myr": 40500.0,
+          "seats": 5,
+          "source_kind": "listing",
+          "source_reference": "https://www.carlist.my/used-cars/2022-perodua-myvi-1-5-h-a/18939959",
+          "observed_on": "2026-10-15",
+          "variant": "1.5 H",
+          "transmission": "D-CVT",
+          "price_type": "asking",
+          "availability": "listed_snapshot",
+          "source_updated_on": "2026-08-11",
+          "mileage_km": null,
+          "mileage_min_km": 40000,
+          "mileage_max_km": 45000,
+          "condition": null,
+          "fuel_km_per_l": 21.1,
+          "fuel_basis": "eco_driving_claim",
+          "fuel_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+          "boot_litres": 277.0,
+          "boot_configuration": "all_seats_up",
+          "length_mm": 3895,
+          "specs_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+          "evidence_notes": [
+            "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+            "Reference specs for the matched 1.5 D-CVT generation; listing D-CVT checked. Eco-driving claim is not guaranteed real city consumption."
+          ],
+          "vehicle_category": "passenger_car",
+          "wheels": 4
+        },
+        "preferred_brand_match": false,
+        "passed_rules": [
+          "FILTER_BUDGET",
+          "FILTER_SEATS",
+          "FILTER_EXCLUDED_BRAND",
+          "FILTER_AVAILABILITY",
+          "FILTER_PRICE_BASIS"
+        ],
+        "score_breakdown": {
+          "budget": {
+            "normalized_value": 0.18999999999999995,
+            "weight": 0.1111111111111111,
+            "weighted_points": 2.1111111111111103,
+            "source_reference": "https://www.carlist.my/used-cars/2022-perodua-myvi-1-5-h-a/18939959"
+          },
+          "fuel": {
+            "normalized_value": 0.7400000000000001,
+            "weight": 0.4444444444444444,
+            "weighted_points": 32.88888888888889,
+            "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+          },
+          "luggage": {
+            "normalized_value": 0.46166666666666667,
+            "weight": 0.3333333333333333,
+            "weighted_points": 15.388888888888888,
+            "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+          },
+          "city_compactness": {
+            "normalized_value": 0.7366666666666667,
+            "weight": 0.1111111111111111,
+            "weighted_points": 8.185185185185185,
+            "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+          }
+        },
+        "score": 58.574,
+        "score_upper_bound": 58.574,
+        "weighted_data_coverage_percent": 100.0,
+        "missing_scoring_features": [],
+        "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+        "rank": 5
+      },
+      {
+        "vehicle": {
+          "vehicle_id": "CL18625566",
+          "brand": "Perodua",
+          "model": "Myvi",
+          "year": 2022,
+          "currency": "MYR",
+          "price_myr": 42800.0,
+          "seats": 5,
+          "source_kind": "listing",
+          "source_reference": "https://www.carlist.my/used-cars/perodua-myvi-1-5-advance-38501km-mileage-tahun-dibuat-2022-see-to-believe-1-year-warranty/18625566",
+          "observed_on": "2026-10-15",
+          "variant": "1.5 AV",
+          "transmission": "D-CVT",
+          "price_type": "asking",
+          "availability": "listed_snapshot",
+          "source_updated_on": "2026-08-07",
+          "mileage_km": null,
+          "mileage_min_km": 35000,
+          "mileage_max_km": 40000,
+          "condition": null,
+          "fuel_km_per_l": 21.1,
+          "fuel_basis": "eco_driving_claim",
+          "fuel_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+          "boot_litres": 277.0,
+          "boot_configuration": "all_seats_up",
+          "length_mm": 3895,
+          "specs_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+          "evidence_notes": [
+            "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+            "Range from structured listing retained; no midpoint is invented.",
+            "Reference specs for the matched 1.5 D-CVT generation; listing D-CVT checked. Eco-driving claim is not guaranteed real city consumption."
+          ],
+          "vehicle_category": "passenger_car",
+          "wheels": 4
+        },
+        "preferred_brand_match": false,
+        "passed_rules": [
+          "FILTER_BUDGET",
+          "FILTER_SEATS",
+          "FILTER_EXCLUDED_BRAND",
+          "FILTER_AVAILABILITY",
+          "FILTER_PRICE_BASIS"
+        ],
+        "score_breakdown": {
+          "budget": {
+            "normalized_value": 0.14400000000000002,
+            "weight": 0.1111111111111111,
+            "weighted_points": 1.6,
+            "source_reference": "https://www.carlist.my/used-cars/perodua-myvi-1-5-advance-38501km-mileage-tahun-dibuat-2022-see-to-believe-1-year-warranty/18625566"
+          },
+          "fuel": {
+            "normalized_value": 0.7400000000000001,
+            "weight": 0.4444444444444444,
+            "weighted_points": 32.88888888888889,
+            "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+          },
+          "luggage": {
+            "normalized_value": 0.46166666666666667,
+            "weight": 0.3333333333333333,
+            "weighted_points": 15.388888888888888,
+            "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+          },
+          "city_compactness": {
+            "normalized_value": 0.7366666666666667,
+            "weight": 0.1111111111111111,
+            "weighted_points": 8.185185185185185,
+            "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+          }
+        },
+        "score": 58.063,
+        "score_upper_bound": 58.063,
+        "weighted_data_coverage_percent": 100.0,
+        "missing_scoring_features": [],
+        "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+        "rank": 6
+      },
+      {
+        "vehicle": {
+          "vehicle_id": "CL18923892",
+          "brand": "Perodua",
+          "model": "Alza",
+          "year": 2020,
+          "currency": "MYR",
+          "price_myr": 35888.0,
+          "seats": 7,
+          "source_kind": "listing",
+          "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+          "observed_on": "2026-10-15",
+          "variant": "1.5 SE",
+          "transmission": "Automatic",
+          "price_type": "asking",
+          "availability": "listed_snapshot",
+          "source_updated_on": "2026-09-21",
+          "mileage_km": null,
+          "mileage_min_km": 65000,
+          "mileage_max_km": 70000,
+          "condition": null,
+          "fuel_km_per_l": null,
+          "fuel_basis": null,
+          "fuel_source_reference": null,
+          "boot_litres": null,
+          "boot_configuration": null,
+          "length_mm": 4220,
+          "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+          "evidence_notes": [
+            "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+            "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+          ],
+          "vehicle_category": "passenger_car",
+          "wheels": 4
+        },
+        "preferred_brand_match": false,
+        "passed_rules": [
+          "FILTER_BUDGET",
+          "FILTER_SEATS",
+          "FILTER_EXCLUDED_BRAND",
+          "FILTER_AVAILABILITY",
+          "FILTER_PRICE_BASIS"
+        ],
+        "score_breakdown": {
+          "budget": {
+            "normalized_value": 0.28224000000000005,
+            "weight": 0.1111111111111111,
+            "weighted_points": 3.1360000000000006,
+            "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+          },
+          "fuel": {
+            "normalized_value": null,
+            "weight": 0.4444444444444444,
+            "weighted_points": 0.0,
+            "source_reference": null
+          },
+          "luggage": {
+            "normalized_value": null,
+            "weight": 0.3333333333333333,
+            "weighted_points": 0.0,
+            "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+          },
+          "city_compactness": {
+            "normalized_value": 0.52,
+            "weight": 0.1111111111111111,
+            "weighted_points": 5.777777777777778,
+            "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+          }
+        },
+        "score": 8.914,
+        "score_upper_bound": 86.692,
+        "weighted_data_coverage_percent": 22.222,
+        "missing_scoring_features": [
+          "fuel",
+          "luggage"
+        ],
+        "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+        "rank": 7
+      },
+      {
+        "vehicle": {
+          "vehicle_id": "CL19418670",
+          "brand": "Perodua",
+          "model": "Alza",
+          "year": 2020,
+          "currency": "MYR",
+          "price_myr": 44800.0,
+          "seats": 7,
+          "source_kind": "listing",
+          "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670",
+          "observed_on": "2026-10-15",
+          "variant": "1.5 SE",
+          "transmission": "Automatic",
+          "price_type": "asking",
+          "availability": "listed_snapshot",
+          "source_updated_on": "2026-09-20",
+          "mileage_km": null,
+          "mileage_min_km": 120000,
+          "mileage_max_km": 125000,
+          "condition": null,
+          "fuel_km_per_l": null,
+          "fuel_basis": null,
+          "fuel_source_reference": null,
+          "boot_litres": null,
+          "boot_configuration": null,
+          "length_mm": 4220,
+          "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+          "evidence_notes": [
+            "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+            "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+          ],
+          "vehicle_category": "passenger_car",
+          "wheels": 4
+        },
+        "preferred_brand_match": false,
+        "passed_rules": [
+          "FILTER_BUDGET",
+          "FILTER_SEATS",
+          "FILTER_EXCLUDED_BRAND",
+          "FILTER_AVAILABILITY",
+          "FILTER_PRICE_BASIS"
+        ],
+        "score_breakdown": {
+          "budget": {
+            "normalized_value": 0.10399999999999998,
+            "weight": 0.1111111111111111,
+            "weighted_points": 1.1555555555555552,
+            "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670"
+          },
+          "fuel": {
+            "normalized_value": null,
+            "weight": 0.4444444444444444,
+            "weighted_points": 0.0,
+            "source_reference": null
+          },
+          "luggage": {
+            "normalized_value": null,
+            "weight": 0.3333333333333333,
+            "weighted_points": 0.0,
+            "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+          },
+          "city_compactness": {
+            "normalized_value": 0.52,
+            "weight": 0.1111111111111111,
+            "weighted_points": 5.777777777777778,
+            "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+          }
+        },
+        "score": 6.933,
+        "score_upper_bound": 84.711,
+        "weighted_data_coverage_percent": 22.222,
+        "missing_scoring_features": [
+          "fuel",
+          "luggage"
+        ],
+        "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+        "rank": 8
+      },
+      {
+        "vehicle": {
+          "vehicle_id": "CL19122669",
+          "brand": "Perodua",
+          "model": "Alza",
+          "year": 2020,
+          "currency": "MYR",
+          "price_myr": 45000.0,
+          "seats": 7,
+          "source_kind": "listing",
+          "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669",
+          "observed_on": "2026-10-15",
+          "variant": "1.5 SE",
+          "transmission": "Automatic",
+          "price_type": "asking",
+          "availability": "listed_snapshot",
+          "source_updated_on": "2026-09-21",
+          "mileage_km": null,
+          "mileage_min_km": 100000,
+          "mileage_max_km": 105000,
+          "condition": null,
+          "fuel_km_per_l": null,
+          "fuel_basis": null,
+          "fuel_source_reference": null,
+          "boot_litres": null,
+          "boot_configuration": null,
+          "length_mm": 4220,
+          "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+          "evidence_notes": [
+            "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+            "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+          ],
+          "vehicle_category": "passenger_car",
+          "wheels": 4
+        },
+        "preferred_brand_match": false,
+        "passed_rules": [
+          "FILTER_BUDGET",
+          "FILTER_SEATS",
+          "FILTER_EXCLUDED_BRAND",
+          "FILTER_AVAILABILITY",
+          "FILTER_PRICE_BASIS"
+        ],
+        "score_breakdown": {
+          "budget": {
+            "normalized_value": 0.09999999999999998,
+            "weight": 0.1111111111111111,
+            "weighted_points": 1.1111111111111107,
+            "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669"
+          },
+          "fuel": {
+            "normalized_value": null,
+            "weight": 0.4444444444444444,
+            "weighted_points": 0.0,
+            "source_reference": null
+          },
+          "luggage": {
+            "normalized_value": null,
+            "weight": 0.3333333333333333,
+            "weighted_points": 0.0,
+            "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+          },
+          "city_compactness": {
+            "normalized_value": 0.52,
+            "weight": 0.1111111111111111,
+            "weighted_points": 5.777777777777778,
+            "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+          }
+        },
+        "score": 6.889,
+        "score_upper_bound": 84.667,
+        "weighted_data_coverage_percent": 22.222,
+        "missing_scoring_features": [
+          "fuel",
+          "luggage"
+        ],
+        "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+        "rank": 9
+      }
+    ],
+    "rejected": [
+      {
+        "vehicle_id": "CL18751444",
+        "brand": "Perodua",
+        "model": "Alza",
+        "reasons": [
+          {
+            "rule_id": "FILTER_BUDGET",
+            "reason": "Price MYR 64800 exceeds budget MYR 50000."
+          }
+        ]
+      },
+      {
+        "vehicle_id": "CL18249652",
+        "brand": "Perodua",
+        "model": "Alza",
+        "reasons": [
+          {
+            "rule_id": "FILTER_BUDGET",
+            "reason": "Price MYR 65800 exceeds budget MYR 50000."
+          }
+        ]
+      },
+      {
+        "vehicle_id": "CL18624149",
+        "brand": "Perodua",
+        "model": "Alza",
+        "reasons": [
+          {
+            "rule_id": "FILTER_AVAILABILITY",
+            "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+          },
+          {
+            "rule_id": "FILTER_BUDGET",
+            "reason": "Price MYR 58888 exceeds budget MYR 50000."
+          }
+        ]
+      },
+      {
+        "vehicle_id": "CL18807978",
+        "brand": "Perodua",
+        "model": "Alza",
+        "reasons": [
+          {
+            "rule_id": "FILTER_AVAILABILITY",
+            "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+          },
+          {
+            "rule_id": "FILTER_BUDGET",
+            "reason": "Price MYR 57800 exceeds budget MYR 50000."
+          }
+        ]
+      },
+      {
+        "vehicle_id": "CL18603852",
+        "brand": "Perodua",
+        "model": "Alza",
+        "reasons": [
+          {
+            "rule_id": "FILTER_AVAILABILITY",
+            "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+          },
+          {
+            "rule_id": "FILTER_BUDGET",
+            "reason": "Price MYR 61800 exceeds budget MYR 50000."
+          },
+          {
+            "rule_id": "FILTER_SEATS_UNKNOWN",
+            "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+          }
+        ]
+      },
+      {
+        "vehicle_id": "CL18902191",
+        "brand": "Perodua",
+        "model": "Myvi",
+        "reasons": [
+          {
+            "rule_id": "FILTER_AVAILABILITY",
+            "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+          }
+        ]
+      },
+      {
+        "vehicle_id": "CS_C6RA000",
+        "brand": "Toyota",
+        "model": "Avanza",
+        "reasons": [
+          {
+            "rule_id": "FILTER_AVAILABILITY",
+            "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+          },
+          {
+            "rule_id": "FILTER_BUDGET",
+            "reason": "Price MYR 73900 exceeds budget MYR 50000."
+          },
+          {
+            "rule_id": "FILTER_SEATS_UNKNOWN",
+            "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+          }
+        ]
+      },
+      {
+        "vehicle_id": "CS_CBFS600",
+        "brand": "Toyota",
+        "model": "Avanza",
+        "reasons": [
+          {
+            "rule_id": "FILTER_AVAILABILITY",
+            "reason": "Source availability is reserved; this record is not an eligible listing snapshot."
+          },
+          {
+            "rule_id": "FILTER_BUDGET",
+            "reason": "Price MYR 58000 exceeds budget MYR 50000."
+          },
+          {
+            "rule_id": "FILTER_SEATS_UNKNOWN",
+            "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+          }
+        ]
+      }
+    ],
+    "checked_count": 17,
+    "matched_count": 9,
+    "scoring_notes": [
+      "Weights and anchors are design assumptions, not learned coefficients or market facts.",
+      "Unknown components contribute zero to the lower bound, not a claim of poor vehicle quality.",
+      "Fuel values are manufacturer claims, not measured used-car or city-driving consumption.",
+      "Boot volume is a luggage proxy, not passenger legroom or an overall space rating."
+    ],
+    "scoring_weights": {
+      "budget": 0.1111111111111111,
+      "fuel": 0.4444444444444444,
+      "luggage": 0.3333333333333333,
+      "city_compactness": 0.1111111111111111
+    },
+    "scoring_anchors": {
+      "budget": "1 - asking_price / buyer_budget",
+      "fuel": "clip((km_per_l - 10) / 15, 0, 1); same claim basis only",
+      "luggage": "clip(boot_litres / 600, 0, 1); all seats up only",
+      "brand": "1 for a preferred brand, otherwise 0",
+      "city_compactness": "clip((5000 - length_mm) / 1500, 0, 1)"
+    },
+    "top_vehicle_ids": [
+      "PT_K4EDNMNYPG",
+      "PT_7PRLM3GLPK",
+      "CS_C606800"
+    ]
+  },
+  "rules": [
+    {
+      "turn": 1,
+      "category": "rules",
+      "tool": "rank_vehicles",
+      "rule_id": "BUY_02",
+      "reason": "Vehicle capacity must satisfy the passenger requirement.",
+      "derived_fact": {
+        "minimum_vehicle_seats": 5
+      }
+    },
+    {
+      "turn": 1,
+      "category": "rules",
+      "tool": "rank_vehicles",
+      "rule_id": "BUY_03",
+      "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+      "derived_fact": {
+        "lifestyle_profile": "economical_city_commuter"
+      }
+    }
+  ],
+  "tools": [
+    {
+      "turn": 1,
+      "category": "tools",
+      "name": "inspect_requirements",
+      "arguments": {},
+      "executed": true,
+      "observation": {
+        "status": "ready",
+        "missing_slots": [],
+        "questions": []
+      }
+    },
+    {
+      "turn": 1,
+      "category": "tools",
+      "name": "rank_vehicles",
+      "arguments": {},
+      "executed": true,
+      "observation": {
+        "status": "matches_found",
+        "buyer_reasoning": {
+          "extracted_profile": {
+            "budget_myr": 50000.0,
+            "family_size": null,
+            "required_seats": 5,
+            "usage": [
+              "city_commute"
+            ],
+            "fuel_priority": "high",
+            "space_priority": "high",
+            "preferred_brands": [],
+            "excluded_brands": [],
+            "clarification_notes": [],
+            "input_validation_notes": []
+          },
+          "derived_facts": {
+            "budget_myr": 50000.0,
+            "family_size": null,
+            "required_seats": 5,
+            "usage": [
+              "city_commute"
+            ],
+            "fuel_priority": "high",
+            "space_priority": "high",
+            "preferred_brands": [],
+            "excluded_brands": [],
+            "clarification_notes": [],
+            "input_validation_notes": [],
+            "minimum_vehicle_seats": 5,
+            "lifestyle_profile": "economical_city_commuter"
+          },
+          "fired_rules": [
+            {
+              "rule_id": "BUY_02",
+              "reason": "Vehicle capacity must satisfy the passenger requirement.",
+              "derived_fact": {
+                "minimum_vehicle_seats": 5
+              }
+            },
+            {
+              "rule_id": "BUY_03",
+              "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+              "derived_fact": {
+                "lifestyle_profile": "economical_city_commuter"
+              }
+            }
+          ],
+          "missing_slots": [],
+          "clarification_questions": [],
+          "ready_for_matching": true
+        },
+        "dataset_notice": "Observed listing snapshots, not live inventory or confirmed transaction prices. Verify availability, fees and specifications with the source.",
+        "observed_on": [
+          "2026-10-15"
+        ],
+        "matching_method": "Hard filtering followed by conservative weighted heuristic scoring v1.",
+        "constraints": {
+          "maximum_price_myr": 50000.0,
+          "minimum_seats": 5,
+          "excluded_brands": []
+        },
+        "matches": [
+          {
+            "vehicle": {
+              "vehicle_id": "PT_K4EDNMNYPG",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "year": 2022,
+              "currency": "MYR",
+              "price_myr": 40800.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://paultan.org/used-cars/perodua/bezza/k4ednmnypg/",
+              "observed_on": "2026-10-15",
+              "variant": "1.3 AV",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-08-17",
+              "mileage_km": 59492,
+              "mileage_min_km": null,
+              "mileage_max_km": null,
+              "condition": null,
+              "fuel_km_per_l": 22.0,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "boot_litres": 508.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 4170,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.18400000000000005,
+                "weight": 0.1111111111111111,
+                "weighted_points": 2.044444444444445,
+                "source_reference": "https://paultan.org/used-cars/perodua/bezza/k4ednmnypg/"
+              },
+              "fuel": {
+                "normalized_value": 0.8,
+                "weight": 0.4444444444444444,
+                "weighted_points": 35.55555555555556,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "luggage": {
+                "normalized_value": 0.8466666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 28.222222222222218,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "city_compactness": {
+                "normalized_value": 0.5533333333333333,
+                "weight": 0.1111111111111111,
+                "weighted_points": 6.148148148148148,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              }
+            },
+            "score": 71.97,
+            "score_upper_bound": 71.97,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 1
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "PT_7PRLM3GLPK",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "year": 2023,
+              "currency": "MYR",
+              "price_myr": 42800.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://paultan.org/used-cars/perodua/bezza/7prlm3glpk/",
+              "observed_on": "2026-10-15",
+              "variant": "1.3 AV",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-10-07",
+              "mileage_km": 64512,
+              "mileage_min_km": null,
+              "mileage_max_km": null,
+              "condition": null,
+              "fuel_km_per_l": 22.0,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "boot_litres": 508.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 4170,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.14400000000000002,
+                "weight": 0.1111111111111111,
+                "weighted_points": 1.6,
+                "source_reference": "https://paultan.org/used-cars/perodua/bezza/7prlm3glpk/"
+              },
+              "fuel": {
+                "normalized_value": 0.8,
+                "weight": 0.4444444444444444,
+                "weighted_points": 35.55555555555556,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "luggage": {
+                "normalized_value": 0.8466666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 28.222222222222218,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "city_compactness": {
+                "normalized_value": 0.5533333333333333,
+                "weight": 0.1111111111111111,
+                "weighted_points": 6.148148148148148,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              }
+            },
+            "score": 71.526,
+            "score_upper_bound": 71.526,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 2
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CS_C606800",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "year": 2023,
+              "currency": "MYR",
+              "price_myr": 36600.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://www.carsome.my/buy-car/perodua/bezza/2023-perodua-bezza-x-1.3/c606800",
+              "observed_on": "2026-10-15",
+              "variant": "1.3 X",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": null,
+              "mileage_km": 50172,
+              "mileage_min_km": null,
+              "mileage_max_km": null,
+              "condition": null,
+              "fuel_km_per_l": 21.0,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "boot_litres": 508.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 4170,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Page says Car in Transit and offers Order Now; treated as a listing snapshot, not confirmed delivery availability. Year from listing title; registration month Sep 2023.",
+                "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.268,
+                "weight": 0.1111111111111111,
+                "weighted_points": 2.977777777777778,
+                "source_reference": "https://www.carsome.my/buy-car/perodua/bezza/2023-perodua-bezza-x-1.3/c606800"
+              },
+              "fuel": {
+                "normalized_value": 0.7333333333333333,
+                "weight": 0.4444444444444444,
+                "weighted_points": 32.59259259259259,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "luggage": {
+                "normalized_value": 0.8466666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 28.222222222222218,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "city_compactness": {
+                "normalized_value": 0.5533333333333333,
+                "weight": 0.1111111111111111,
+                "weighted_points": 6.148148148148148,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              }
+            },
+            "score": 69.941,
+            "score_upper_bound": 69.941,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 3
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "PT_LP63L6X1P7",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "year": 2023,
+              "currency": "MYR",
+              "price_myr": 40800.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://paultan.org/used-cars/perodua/bezza/lp63l6x1p7/",
+              "observed_on": "2026-10-15",
+              "variant": "1.3 X",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-08-21",
+              "mileage_km": 65709,
+              "mileage_min_km": null,
+              "mileage_max_km": null,
+              "condition": null,
+              "fuel_km_per_l": 21.0,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "boot_litres": 508.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 4170,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Publisher-hosted classifieds identify Carro inventory; listing evidence, not independent inspection.",
+                "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.18400000000000005,
+                "weight": 0.1111111111111111,
+                "weighted_points": 2.044444444444445,
+                "source_reference": "https://paultan.org/used-cars/perodua/bezza/lp63l6x1p7/"
+              },
+              "fuel": {
+                "normalized_value": 0.7333333333333333,
+                "weight": 0.4444444444444444,
+                "weighted_points": 32.59259259259259,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "luggage": {
+                "normalized_value": 0.8466666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 28.222222222222218,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "city_compactness": {
+                "normalized_value": 0.5533333333333333,
+                "weight": 0.1111111111111111,
+                "weighted_points": 6.148148148148148,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              }
+            },
+            "score": 69.007,
+            "score_upper_bound": 69.007,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 4
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CL18939959",
+              "brand": "Perodua",
+              "model": "Myvi",
+              "year": 2022,
+              "currency": "MYR",
+              "price_myr": 40500.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://www.carlist.my/used-cars/2022-perodua-myvi-1-5-h-a/18939959",
+              "observed_on": "2026-10-15",
+              "variant": "1.5 H",
+              "transmission": "D-CVT",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-08-11",
+              "mileage_km": null,
+              "mileage_min_km": 40000,
+              "mileage_max_km": 45000,
+              "condition": null,
+              "fuel_km_per_l": 21.1,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+              "boot_litres": 277.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 3895,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Reference specs for the matched 1.5 D-CVT generation; listing D-CVT checked. Eco-driving claim is not guaranteed real city consumption."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.18999999999999995,
+                "weight": 0.1111111111111111,
+                "weighted_points": 2.1111111111111103,
+                "source_reference": "https://www.carlist.my/used-cars/2022-perodua-myvi-1-5-h-a/18939959"
+              },
+              "fuel": {
+                "normalized_value": 0.7400000000000001,
+                "weight": 0.4444444444444444,
+                "weighted_points": 32.88888888888889,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              },
+              "luggage": {
+                "normalized_value": 0.46166666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 15.388888888888888,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              },
+              "city_compactness": {
+                "normalized_value": 0.7366666666666667,
+                "weight": 0.1111111111111111,
+                "weighted_points": 8.185185185185185,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              }
+            },
+            "score": 58.574,
+            "score_upper_bound": 58.574,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 5
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CL18625566",
+              "brand": "Perodua",
+              "model": "Myvi",
+              "year": 2022,
+              "currency": "MYR",
+              "price_myr": 42800.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://www.carlist.my/used-cars/perodua-myvi-1-5-advance-38501km-mileage-tahun-dibuat-2022-see-to-believe-1-year-warranty/18625566",
+              "observed_on": "2026-10-15",
+              "variant": "1.5 AV",
+              "transmission": "D-CVT",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-08-07",
+              "mileage_km": null,
+              "mileage_min_km": 35000,
+              "mileage_max_km": 40000,
+              "condition": null,
+              "fuel_km_per_l": 21.1,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+              "boot_litres": 277.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 3895,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Range from structured listing retained; no midpoint is invented.",
+                "Reference specs for the matched 1.5 D-CVT generation; listing D-CVT checked. Eco-driving claim is not guaranteed real city consumption."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.14400000000000002,
+                "weight": 0.1111111111111111,
+                "weighted_points": 1.6,
+                "source_reference": "https://www.carlist.my/used-cars/perodua-myvi-1-5-advance-38501km-mileage-tahun-dibuat-2022-see-to-believe-1-year-warranty/18625566"
+              },
+              "fuel": {
+                "normalized_value": 0.7400000000000001,
+                "weight": 0.4444444444444444,
+                "weighted_points": 32.88888888888889,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              },
+              "luggage": {
+                "normalized_value": 0.46166666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 15.388888888888888,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              },
+              "city_compactness": {
+                "normalized_value": 0.7366666666666667,
+                "weight": 0.1111111111111111,
+                "weighted_points": 8.185185185185185,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              }
+            },
+            "score": 58.063,
+            "score_upper_bound": 58.063,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 6
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CL18923892",
+              "brand": "Perodua",
+              "model": "Alza",
+              "year": 2020,
+              "currency": "MYR",
+              "price_myr": 35888.0,
+              "seats": 7,
+              "source_kind": "listing",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+              "observed_on": "2026-10-15",
+              "variant": "1.5 SE",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-09-21",
+              "mileage_km": null,
+              "mileage_min_km": 65000,
+              "mileage_max_km": 70000,
+              "condition": null,
+              "fuel_km_per_l": null,
+              "fuel_basis": null,
+              "fuel_source_reference": null,
+              "boot_litres": null,
+              "boot_configuration": null,
+              "length_mm": 4220,
+              "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.28224000000000005,
+                "weight": 0.1111111111111111,
+                "weighted_points": 3.1360000000000006,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              },
+              "fuel": {
+                "normalized_value": null,
+                "weight": 0.4444444444444444,
+                "weighted_points": 0.0,
+                "source_reference": null
+              },
+              "luggage": {
+                "normalized_value": null,
+                "weight": 0.3333333333333333,
+                "weighted_points": 0.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              },
+              "city_compactness": {
+                "normalized_value": 0.52,
+                "weight": 0.1111111111111111,
+                "weighted_points": 5.777777777777778,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              }
+            },
+            "score": 8.914,
+            "score_upper_bound": 86.692,
+            "weighted_data_coverage_percent": 22.222,
+            "missing_scoring_features": [
+              "fuel",
+              "luggage"
+            ],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 7
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CL19418670",
+              "brand": "Perodua",
+              "model": "Alza",
+              "year": 2020,
+              "currency": "MYR",
+              "price_myr": 44800.0,
+              "seats": 7,
+              "source_kind": "listing",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670",
+              "observed_on": "2026-10-15",
+              "variant": "1.5 SE",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-09-20",
+              "mileage_km": null,
+              "mileage_min_km": 120000,
+              "mileage_max_km": 125000,
+              "condition": null,
+              "fuel_km_per_l": null,
+              "fuel_basis": null,
+              "fuel_source_reference": null,
+              "boot_litres": null,
+              "boot_configuration": null,
+              "length_mm": 4220,
+              "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.10399999999999998,
+                "weight": 0.1111111111111111,
+                "weighted_points": 1.1555555555555552,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670"
+              },
+              "fuel": {
+                "normalized_value": null,
+                "weight": 0.4444444444444444,
+                "weighted_points": 0.0,
+                "source_reference": null
+              },
+              "luggage": {
+                "normalized_value": null,
+                "weight": 0.3333333333333333,
+                "weighted_points": 0.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              },
+              "city_compactness": {
+                "normalized_value": 0.52,
+                "weight": 0.1111111111111111,
+                "weighted_points": 5.777777777777778,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              }
+            },
+            "score": 6.933,
+            "score_upper_bound": 84.711,
+            "weighted_data_coverage_percent": 22.222,
+            "missing_scoring_features": [
+              "fuel",
+              "luggage"
+            ],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 8
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CL19122669",
+              "brand": "Perodua",
+              "model": "Alza",
+              "year": 2020,
+              "currency": "MYR",
+              "price_myr": 45000.0,
+              "seats": 7,
+              "source_kind": "listing",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669",
+              "observed_on": "2026-10-15",
+              "variant": "1.5 SE",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-09-21",
+              "mileage_km": null,
+              "mileage_min_km": 100000,
+              "mileage_max_km": 105000,
+              "condition": null,
+              "fuel_km_per_l": null,
+              "fuel_basis": null,
+              "fuel_source_reference": null,
+              "boot_litres": null,
+              "boot_configuration": null,
+              "length_mm": 4220,
+              "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.09999999999999998,
+                "weight": 0.1111111111111111,
+                "weighted_points": 1.1111111111111107,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669"
+              },
+              "fuel": {
+                "normalized_value": null,
+                "weight": 0.4444444444444444,
+                "weighted_points": 0.0,
+                "source_reference": null
+              },
+              "luggage": {
+                "normalized_value": null,
+                "weight": 0.3333333333333333,
+                "weighted_points": 0.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              },
+              "city_compactness": {
+                "normalized_value": 0.52,
+                "weight": 0.1111111111111111,
+                "weighted_points": 5.777777777777778,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              }
+            },
+            "score": 6.889,
+            "score_upper_bound": 84.667,
+            "weighted_data_coverage_percent": 22.222,
+            "missing_scoring_features": [
+              "fuel",
+              "luggage"
+            ],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 9
+          }
+        ],
+        "rejected": [
+          {
+            "vehicle_id": "CL18751444",
+            "brand": "Perodua",
+            "model": "Alza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 64800 exceeds budget MYR 50000."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CL18249652",
+            "brand": "Perodua",
+            "model": "Alza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 65800 exceeds budget MYR 50000."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CL18624149",
+            "brand": "Perodua",
+            "model": "Alza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+              },
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 58888 exceeds budget MYR 50000."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CL18807978",
+            "brand": "Perodua",
+            "model": "Alza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+              },
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 57800 exceeds budget MYR 50000."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CL18603852",
+            "brand": "Perodua",
+            "model": "Alza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+              },
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 61800 exceeds budget MYR 50000."
+              },
+              {
+                "rule_id": "FILTER_SEATS_UNKNOWN",
+                "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CL18902191",
+            "brand": "Perodua",
+            "model": "Myvi",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CS_C6RA000",
+            "brand": "Toyota",
+            "model": "Avanza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+              },
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 73900 exceeds budget MYR 50000."
+              },
+              {
+                "rule_id": "FILTER_SEATS_UNKNOWN",
+                "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CS_CBFS600",
+            "brand": "Toyota",
+            "model": "Avanza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is reserved; this record is not an eligible listing snapshot."
+              },
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 58000 exceeds budget MYR 50000."
+              },
+              {
+                "rule_id": "FILTER_SEATS_UNKNOWN",
+                "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+              }
+            ]
+          }
+        ],
+        "checked_count": 17,
+        "matched_count": 9,
+        "scoring_notes": [
+          "Weights and anchors are design assumptions, not learned coefficients or market facts.",
+          "Unknown components contribute zero to the lower bound, not a claim of poor vehicle quality.",
+          "Fuel values are manufacturer claims, not measured used-car or city-driving consumption.",
+          "Boot volume is a luggage proxy, not passenger legroom or an overall space rating."
+        ],
+        "scoring_weights": {
+          "budget": 0.1111111111111111,
+          "fuel": 0.4444444444444444,
+          "luggage": 0.3333333333333333,
+          "city_compactness": 0.1111111111111111
+        },
+        "scoring_anchors": {
+          "budget": "1 - asking_price / buyer_budget",
+          "fuel": "clip((km_per_l - 10) / 15, 0, 1); same claim basis only",
+          "luggage": "clip(boot_litres / 600, 0, 1); all seats up only",
+          "brand": "1 for a preferred brand, otherwise 0",
+          "city_compactness": "clip((5000 - length_mm) / 1500, 0, 1)"
+        },
+        "top_vehicle_ids": [
+          "PT_K4EDNMNYPG",
+          "PT_7PRLM3GLPK",
+          "CS_C606800"
+        ]
+      }
+    },
+    {
+      "turn": 1,
+      "category": "tools",
+      "name": "check_result",
+      "arguments": {},
+      "executed": true,
+      "observation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "finite_json_result",
+            "passed": true
+          },
+          {
+            "name": "all_eligible_ids_once",
+            "passed": true
+          },
+          {
+            "name": "status_agrees_with_matches",
+            "passed": true
+          },
+          {
+            "name": "weights_sum_to_one",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_PT_K4EDNMNYPG",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_PT_K4EDNMNYPG",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_PT_K4EDNMNYPG",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_PT_7PRLM3GLPK",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_PT_7PRLM3GLPK",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_PT_7PRLM3GLPK",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CS_C606800",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CS_C606800",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CS_C606800",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_PT_LP63L6X1P7",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_PT_LP63L6X1P7",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_PT_LP63L6X1P7",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CL18939959",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CL18939959",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CL18939959",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CL18625566",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CL18625566",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CL18625566",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CL18923892",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CL18923892",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CL18923892",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CL19418670",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CL19418670",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CL19418670",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CL19122669",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CL19122669",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CL19122669",
+            "passed": true
+          },
+          {
+            "name": "score_order",
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "turn": 1,
+      "category": "tools",
+      "name": "finish",
+      "arguments": {},
+      "executed": true,
+      "observation": {
+        "status": "complete",
+        "outcome": "matches_found"
+      }
+    }
+  ],
+  "checks": [
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "finite_json_result",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "all_eligible_ids_once",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "status_agrees_with_matches",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "weights_sum_to_one",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_PT_K4EDNMNYPG",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_PT_K4EDNMNYPG",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_PT_K4EDNMNYPG",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_PT_7PRLM3GLPK",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_PT_7PRLM3GLPK",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_PT_7PRLM3GLPK",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CS_C606800",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CS_C606800",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CS_C606800",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_PT_LP63L6X1P7",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_PT_LP63L6X1P7",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_PT_LP63L6X1P7",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CL18939959",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CL18939959",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CL18939959",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CL18625566",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CL18625566",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CL18625566",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CL18923892",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CL18923892",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CL18923892",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CL19418670",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CL19418670",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CL19418670",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CL19122669",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CL19122669",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CL19122669",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_order",
+      "passed": true
+    }
+  ],
+  "trace": [
+    {
+      "turn": 1,
+      "category": "model",
+      "phase": "sense",
+      "attempt": 1,
+      "success": true
+    },
+    {
+      "turn": 1,
+      "category": "facts",
+      "action": "switch_goal",
+      "previous": null,
+      "goal": "buy"
+    },
+    {
+      "turn": 1,
+      "category": "facts",
+      "action": "update",
+      "slot": "buyer.budget_myr",
+      "value": 50000.0,
+      "operation": "set",
+      "evidence": "Budget RM50000"
+    },
+    {
+      "turn": 1,
+      "category": "facts",
+      "action": "update",
+      "slot": "buyer.required_seats",
+      "value": 5,
+      "operation": "set",
+      "evidence": "at least five seats"
+    },
+    {
+      "turn": 1,
+      "category": "facts",
+      "action": "update",
+      "slot": "buyer.usage",
+      "value": [
+        "city_commute"
+      ],
+      "operation": "add",
+      "evidence": "mainly city commuting"
+    },
+    {
+      "turn": 1,
+      "category": "facts",
+      "action": "update",
+      "slot": "buyer.fuel_priority",
+      "value": "high",
+      "operation": "set",
+      "evidence": "Save fuel"
+    },
+    {
+      "turn": 1,
+      "category": "facts",
+      "action": "update",
+      "slot": "buyer.space_priority",
+      "value": "high",
+      "operation": "set",
+      "evidence": "a spacious boot"
+    },
+    {
+      "turn": 1,
+      "category": "model",
+      "phase": "plan",
+      "attempt": 1,
+      "success": true
+    },
+    {
+      "turn": 1,
+      "category": "tools",
+      "name": "inspect_requirements",
+      "arguments": {},
+      "executed": true,
+      "observation": {
+        "status": "ready",
+        "missing_slots": [],
+        "questions": []
+      }
+    },
+    {
+      "turn": 1,
+      "category": "model",
+      "phase": "plan",
+      "attempt": 1,
+      "success": true
+    },
+    {
+      "turn": 1,
+      "category": "tools",
+      "name": "rank_vehicles",
+      "arguments": {},
+      "executed": true,
+      "observation": {
+        "status": "matches_found",
+        "buyer_reasoning": {
+          "extracted_profile": {
+            "budget_myr": 50000.0,
+            "family_size": null,
+            "required_seats": 5,
+            "usage": [
+              "city_commute"
+            ],
+            "fuel_priority": "high",
+            "space_priority": "high",
+            "preferred_brands": [],
+            "excluded_brands": [],
+            "clarification_notes": [],
+            "input_validation_notes": []
+          },
+          "derived_facts": {
+            "budget_myr": 50000.0,
+            "family_size": null,
+            "required_seats": 5,
+            "usage": [
+              "city_commute"
+            ],
+            "fuel_priority": "high",
+            "space_priority": "high",
+            "preferred_brands": [],
+            "excluded_brands": [],
+            "clarification_notes": [],
+            "input_validation_notes": [],
+            "minimum_vehicle_seats": 5,
+            "lifestyle_profile": "economical_city_commuter"
+          },
+          "fired_rules": [
+            {
+              "rule_id": "BUY_02",
+              "reason": "Vehicle capacity must satisfy the passenger requirement.",
+              "derived_fact": {
+                "minimum_vehicle_seats": 5
+              }
+            },
+            {
+              "rule_id": "BUY_03",
+              "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+              "derived_fact": {
+                "lifestyle_profile": "economical_city_commuter"
+              }
+            }
+          ],
+          "missing_slots": [],
+          "clarification_questions": [],
+          "ready_for_matching": true
+        },
+        "dataset_notice": "Observed listing snapshots, not live inventory or confirmed transaction prices. Verify availability, fees and specifications with the source.",
+        "observed_on": [
+          "2026-10-15"
+        ],
+        "matching_method": "Hard filtering followed by conservative weighted heuristic scoring v1.",
+        "constraints": {
+          "maximum_price_myr": 50000.0,
+          "minimum_seats": 5,
+          "excluded_brands": []
+        },
+        "matches": [
+          {
+            "vehicle": {
+              "vehicle_id": "PT_K4EDNMNYPG",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "year": 2022,
+              "currency": "MYR",
+              "price_myr": 40800.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://paultan.org/used-cars/perodua/bezza/k4ednmnypg/",
+              "observed_on": "2026-10-15",
+              "variant": "1.3 AV",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-08-17",
+              "mileage_km": 59492,
+              "mileage_min_km": null,
+              "mileage_max_km": null,
+              "condition": null,
+              "fuel_km_per_l": 22.0,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "boot_litres": 508.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 4170,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.18400000000000005,
+                "weight": 0.1111111111111111,
+                "weighted_points": 2.044444444444445,
+                "source_reference": "https://paultan.org/used-cars/perodua/bezza/k4ednmnypg/"
+              },
+              "fuel": {
+                "normalized_value": 0.8,
+                "weight": 0.4444444444444444,
+                "weighted_points": 35.55555555555556,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "luggage": {
+                "normalized_value": 0.8466666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 28.222222222222218,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "city_compactness": {
+                "normalized_value": 0.5533333333333333,
+                "weight": 0.1111111111111111,
+                "weighted_points": 6.148148148148148,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              }
+            },
+            "score": 71.97,
+            "score_upper_bound": 71.97,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 1
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "PT_7PRLM3GLPK",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "year": 2023,
+              "currency": "MYR",
+              "price_myr": 42800.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://paultan.org/used-cars/perodua/bezza/7prlm3glpk/",
+              "observed_on": "2026-10-15",
+              "variant": "1.3 AV",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-10-07",
+              "mileage_km": 64512,
+              "mileage_min_km": null,
+              "mileage_max_km": null,
+              "condition": null,
+              "fuel_km_per_l": 22.0,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "boot_litres": 508.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 4170,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.14400000000000002,
+                "weight": 0.1111111111111111,
+                "weighted_points": 1.6,
+                "source_reference": "https://paultan.org/used-cars/perodua/bezza/7prlm3glpk/"
+              },
+              "fuel": {
+                "normalized_value": 0.8,
+                "weight": 0.4444444444444444,
+                "weighted_points": 35.55555555555556,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "luggage": {
+                "normalized_value": 0.8466666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 28.222222222222218,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "city_compactness": {
+                "normalized_value": 0.5533333333333333,
+                "weight": 0.1111111111111111,
+                "weighted_points": 6.148148148148148,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              }
+            },
+            "score": 71.526,
+            "score_upper_bound": 71.526,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 2
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CS_C606800",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "year": 2023,
+              "currency": "MYR",
+              "price_myr": 36600.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://www.carsome.my/buy-car/perodua/bezza/2023-perodua-bezza-x-1.3/c606800",
+              "observed_on": "2026-10-15",
+              "variant": "1.3 X",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": null,
+              "mileage_km": 50172,
+              "mileage_min_km": null,
+              "mileage_max_km": null,
+              "condition": null,
+              "fuel_km_per_l": 21.0,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "boot_litres": 508.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 4170,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Page says Car in Transit and offers Order Now; treated as a listing snapshot, not confirmed delivery availability. Year from listing title; registration month Sep 2023.",
+                "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.268,
+                "weight": 0.1111111111111111,
+                "weighted_points": 2.977777777777778,
+                "source_reference": "https://www.carsome.my/buy-car/perodua/bezza/2023-perodua-bezza-x-1.3/c606800"
+              },
+              "fuel": {
+                "normalized_value": 0.7333333333333333,
+                "weight": 0.4444444444444444,
+                "weighted_points": 32.59259259259259,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "luggage": {
+                "normalized_value": 0.8466666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 28.222222222222218,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "city_compactness": {
+                "normalized_value": 0.5533333333333333,
+                "weight": 0.1111111111111111,
+                "weighted_points": 6.148148148148148,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              }
+            },
+            "score": 69.941,
+            "score_upper_bound": 69.941,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 3
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "PT_LP63L6X1P7",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "year": 2023,
+              "currency": "MYR",
+              "price_myr": 40800.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://paultan.org/used-cars/perodua/bezza/lp63l6x1p7/",
+              "observed_on": "2026-10-15",
+              "variant": "1.3 X",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-08-21",
+              "mileage_km": 65709,
+              "mileage_min_km": null,
+              "mileage_max_km": null,
+              "condition": null,
+              "fuel_km_per_l": 21.0,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "boot_litres": 508.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 4170,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/sedan/bezza",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Publisher-hosted classifieds identify Carro inventory; listing evidence, not independent inspection.",
+                "Facelift-generation reference specs: X and AV fuel values kept distinct. Eco-driving claims are not harmonized real-world tests."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.18400000000000005,
+                "weight": 0.1111111111111111,
+                "weighted_points": 2.044444444444445,
+                "source_reference": "https://paultan.org/used-cars/perodua/bezza/lp63l6x1p7/"
+              },
+              "fuel": {
+                "normalized_value": 0.7333333333333333,
+                "weight": 0.4444444444444444,
+                "weighted_points": 32.59259259259259,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "luggage": {
+                "normalized_value": 0.8466666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 28.222222222222218,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              },
+              "city_compactness": {
+                "normalized_value": 0.5533333333333333,
+                "weight": 0.1111111111111111,
+                "weighted_points": 6.148148148148148,
+                "source_reference": "https://www.perodua.com.my/our-models/sedan/bezza"
+              }
+            },
+            "score": 69.007,
+            "score_upper_bound": 69.007,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 4
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CL18939959",
+              "brand": "Perodua",
+              "model": "Myvi",
+              "year": 2022,
+              "currency": "MYR",
+              "price_myr": 40500.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://www.carlist.my/used-cars/2022-perodua-myvi-1-5-h-a/18939959",
+              "observed_on": "2026-10-15",
+              "variant": "1.5 H",
+              "transmission": "D-CVT",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-08-11",
+              "mileage_km": null,
+              "mileage_min_km": 40000,
+              "mileage_max_km": 45000,
+              "condition": null,
+              "fuel_km_per_l": 21.1,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+              "boot_litres": 277.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 3895,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Reference specs for the matched 1.5 D-CVT generation; listing D-CVT checked. Eco-driving claim is not guaranteed real city consumption."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.18999999999999995,
+                "weight": 0.1111111111111111,
+                "weighted_points": 2.1111111111111103,
+                "source_reference": "https://www.carlist.my/used-cars/2022-perodua-myvi-1-5-h-a/18939959"
+              },
+              "fuel": {
+                "normalized_value": 0.7400000000000001,
+                "weight": 0.4444444444444444,
+                "weighted_points": 32.88888888888889,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              },
+              "luggage": {
+                "normalized_value": 0.46166666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 15.388888888888888,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              },
+              "city_compactness": {
+                "normalized_value": 0.7366666666666667,
+                "weight": 0.1111111111111111,
+                "weighted_points": 8.185185185185185,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              }
+            },
+            "score": 58.574,
+            "score_upper_bound": 58.574,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 5
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CL18625566",
+              "brand": "Perodua",
+              "model": "Myvi",
+              "year": 2022,
+              "currency": "MYR",
+              "price_myr": 42800.0,
+              "seats": 5,
+              "source_kind": "listing",
+              "source_reference": "https://www.carlist.my/used-cars/perodua-myvi-1-5-advance-38501km-mileage-tahun-dibuat-2022-see-to-believe-1-year-warranty/18625566",
+              "observed_on": "2026-10-15",
+              "variant": "1.5 AV",
+              "transmission": "D-CVT",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-08-07",
+              "mileage_km": null,
+              "mileage_min_km": 35000,
+              "mileage_max_km": 40000,
+              "condition": null,
+              "fuel_km_per_l": 21.1,
+              "fuel_basis": "eco_driving_claim",
+              "fuel_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+              "boot_litres": 277.0,
+              "boot_configuration": "all_seats_up",
+              "length_mm": 3895,
+              "specs_source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Range from structured listing retained; no midpoint is invented.",
+                "Reference specs for the matched 1.5 D-CVT generation; listing D-CVT checked. Eco-driving claim is not guaranteed real city consumption."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.14400000000000002,
+                "weight": 0.1111111111111111,
+                "weighted_points": 1.6,
+                "source_reference": "https://www.carlist.my/used-cars/perodua-myvi-1-5-advance-38501km-mileage-tahun-dibuat-2022-see-to-believe-1-year-warranty/18625566"
+              },
+              "fuel": {
+                "normalized_value": 0.7400000000000001,
+                "weight": 0.4444444444444444,
+                "weighted_points": 32.88888888888889,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              },
+              "luggage": {
+                "normalized_value": 0.46166666666666667,
+                "weight": 0.3333333333333333,
+                "weighted_points": 15.388888888888888,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              },
+              "city_compactness": {
+                "normalized_value": 0.7366666666666667,
+                "weight": 0.1111111111111111,
+                "weighted_points": 8.185185185185185,
+                "source_reference": "https://www.perodua.com.my/our-models/hatchback/myvi"
+              }
+            },
+            "score": 58.063,
+            "score_upper_bound": 58.063,
+            "weighted_data_coverage_percent": 100.0,
+            "missing_scoring_features": [],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 6
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CL18923892",
+              "brand": "Perodua",
+              "model": "Alza",
+              "year": 2020,
+              "currency": "MYR",
+              "price_myr": 35888.0,
+              "seats": 7,
+              "source_kind": "listing",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+              "observed_on": "2026-10-15",
+              "variant": "1.5 SE",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-09-21",
+              "mileage_km": null,
+              "mileage_min_km": 65000,
+              "mileage_max_km": 70000,
+              "condition": null,
+              "fuel_km_per_l": null,
+              "fuel_basis": null,
+              "fuel_source_reference": null,
+              "boot_litres": null,
+              "boot_configuration": null,
+              "length_mm": 4220,
+              "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.28224000000000005,
+                "weight": 0.1111111111111111,
+                "weighted_points": 3.1360000000000006,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              },
+              "fuel": {
+                "normalized_value": null,
+                "weight": 0.4444444444444444,
+                "weighted_points": 0.0,
+                "source_reference": null
+              },
+              "luggage": {
+                "normalized_value": null,
+                "weight": 0.3333333333333333,
+                "weighted_points": 0.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              },
+              "city_compactness": {
+                "normalized_value": 0.52,
+                "weight": 0.1111111111111111,
+                "weighted_points": 5.777777777777778,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              }
+            },
+            "score": 8.914,
+            "score_upper_bound": 86.692,
+            "weighted_data_coverage_percent": 22.222,
+            "missing_scoring_features": [
+              "fuel",
+              "luggage"
+            ],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 7
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CL19418670",
+              "brand": "Perodua",
+              "model": "Alza",
+              "year": 2020,
+              "currency": "MYR",
+              "price_myr": 44800.0,
+              "seats": 7,
+              "source_kind": "listing",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670",
+              "observed_on": "2026-10-15",
+              "variant": "1.5 SE",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-09-20",
+              "mileage_km": null,
+              "mileage_min_km": 120000,
+              "mileage_max_km": 125000,
+              "condition": null,
+              "fuel_km_per_l": null,
+              "fuel_basis": null,
+              "fuel_source_reference": null,
+              "boot_litres": null,
+              "boot_configuration": null,
+              "length_mm": 4220,
+              "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.10399999999999998,
+                "weight": 0.1111111111111111,
+                "weighted_points": 1.1555555555555552,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670"
+              },
+              "fuel": {
+                "normalized_value": null,
+                "weight": 0.4444444444444444,
+                "weighted_points": 0.0,
+                "source_reference": null
+              },
+              "luggage": {
+                "normalized_value": null,
+                "weight": 0.3333333333333333,
+                "weighted_points": 0.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              },
+              "city_compactness": {
+                "normalized_value": 0.52,
+                "weight": 0.1111111111111111,
+                "weighted_points": 5.777777777777778,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              }
+            },
+            "score": 6.933,
+            "score_upper_bound": 84.711,
+            "weighted_data_coverage_percent": 22.222,
+            "missing_scoring_features": [
+              "fuel",
+              "luggage"
+            ],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 8
+          },
+          {
+            "vehicle": {
+              "vehicle_id": "CL19122669",
+              "brand": "Perodua",
+              "model": "Alza",
+              "year": 2020,
+              "currency": "MYR",
+              "price_myr": 45000.0,
+              "seats": 7,
+              "source_kind": "listing",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669",
+              "observed_on": "2026-10-15",
+              "variant": "1.5 SE",
+              "transmission": "Automatic",
+              "price_type": "asking",
+              "availability": "listed_snapshot",
+              "source_updated_on": "2026-09-21",
+              "mileage_km": null,
+              "mileage_min_km": 100000,
+              "mileage_max_km": 105000,
+              "condition": null,
+              "fuel_km_per_l": null,
+              "fuel_basis": null,
+              "fuel_source_reference": null,
+              "boot_litres": null,
+              "boot_configuration": null,
+              "length_mm": 4220,
+              "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+              "evidence_notes": [
+                "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+              ],
+              "vehicle_category": "passenger_car",
+              "wheels": 4
+            },
+            "preferred_brand_match": false,
+            "passed_rules": [
+              "FILTER_BUDGET",
+              "FILTER_SEATS",
+              "FILTER_EXCLUDED_BRAND",
+              "FILTER_AVAILABILITY",
+              "FILTER_PRICE_BASIS"
+            ],
+            "score_breakdown": {
+              "budget": {
+                "normalized_value": 0.09999999999999998,
+                "weight": 0.1111111111111111,
+                "weighted_points": 1.1111111111111107,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669"
+              },
+              "fuel": {
+                "normalized_value": null,
+                "weight": 0.4444444444444444,
+                "weighted_points": 0.0,
+                "source_reference": null
+              },
+              "luggage": {
+                "normalized_value": null,
+                "weight": 0.3333333333333333,
+                "weighted_points": 0.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              },
+              "city_compactness": {
+                "normalized_value": 0.52,
+                "weight": 0.1111111111111111,
+                "weighted_points": 5.777777777777778,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+              }
+            },
+            "score": 6.889,
+            "score_upper_bound": 84.667,
+            "weighted_data_coverage_percent": 22.222,
+            "missing_scoring_features": [
+              "fuel",
+              "luggage"
+            ],
+            "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+            "rank": 9
+          }
+        ],
+        "rejected": [
+          {
+            "vehicle_id": "CL18751444",
+            "brand": "Perodua",
+            "model": "Alza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 64800 exceeds budget MYR 50000."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CL18249652",
+            "brand": "Perodua",
+            "model": "Alza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 65800 exceeds budget MYR 50000."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CL18624149",
+            "brand": "Perodua",
+            "model": "Alza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+              },
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 58888 exceeds budget MYR 50000."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CL18807978",
+            "brand": "Perodua",
+            "model": "Alza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+              },
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 57800 exceeds budget MYR 50000."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CL18603852",
+            "brand": "Perodua",
+            "model": "Alza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+              },
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 61800 exceeds budget MYR 50000."
+              },
+              {
+                "rule_id": "FILTER_SEATS_UNKNOWN",
+                "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CL18902191",
+            "brand": "Perodua",
+            "model": "Myvi",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CS_C6RA000",
+            "brand": "Toyota",
+            "model": "Avanza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+              },
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 73900 exceeds budget MYR 50000."
+              },
+              {
+                "rule_id": "FILTER_SEATS_UNKNOWN",
+                "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+              }
+            ]
+          },
+          {
+            "vehicle_id": "CS_CBFS600",
+            "brand": "Toyota",
+            "model": "Avanza",
+            "reasons": [
+              {
+                "rule_id": "FILTER_AVAILABILITY",
+                "reason": "Source availability is reserved; this record is not an eligible listing snapshot."
+              },
+              {
+                "rule_id": "FILTER_BUDGET",
+                "reason": "Price MYR 58000 exceeds budget MYR 50000."
+              },
+              {
+                "rule_id": "FILTER_SEATS_UNKNOWN",
+                "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+              }
+            ]
+          }
+        ],
+        "checked_count": 17,
+        "matched_count": 9,
+        "scoring_notes": [
+          "Weights and anchors are design assumptions, not learned coefficients or market facts.",
+          "Unknown components contribute zero to the lower bound, not a claim of poor vehicle quality.",
+          "Fuel values are manufacturer claims, not measured used-car or city-driving consumption.",
+          "Boot volume is a luggage proxy, not passenger legroom or an overall space rating."
+        ],
+        "scoring_weights": {
+          "budget": 0.1111111111111111,
+          "fuel": 0.4444444444444444,
+          "luggage": 0.3333333333333333,
+          "city_compactness": 0.1111111111111111
+        },
+        "scoring_anchors": {
+          "budget": "1 - asking_price / buyer_budget",
+          "fuel": "clip((km_per_l - 10) / 15, 0, 1); same claim basis only",
+          "luggage": "clip(boot_litres / 600, 0, 1); all seats up only",
+          "brand": "1 for a preferred brand, otherwise 0",
+          "city_compactness": "clip((5000 - length_mm) / 1500, 0, 1)"
+        },
+        "top_vehicle_ids": [
+          "PT_K4EDNMNYPG",
+          "PT_7PRLM3GLPK",
+          "CS_C606800"
+        ]
+      }
+    },
+    {
+      "turn": 1,
+      "category": "rules",
+      "tool": "rank_vehicles",
+      "rule_id": "BUY_02",
+      "reason": "Vehicle capacity must satisfy the passenger requirement.",
+      "derived_fact": {
+        "minimum_vehicle_seats": 5
+      }
+    },
+    {
+      "turn": 1,
+      "category": "rules",
+      "tool": "rank_vehicles",
+      "rule_id": "BUY_03",
+      "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+      "derived_fact": {
+        "lifestyle_profile": "economical_city_commuter"
+      }
+    },
+    {
+      "turn": 1,
+      "category": "model",
+      "phase": "plan",
+      "attempt": 1,
+      "success": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "finite_json_result",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "all_eligible_ids_once",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "status_agrees_with_matches",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "weights_sum_to_one",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_PT_K4EDNMNYPG",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_PT_K4EDNMNYPG",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_PT_K4EDNMNYPG",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_PT_7PRLM3GLPK",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_PT_7PRLM3GLPK",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_PT_7PRLM3GLPK",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CS_C606800",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CS_C606800",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CS_C606800",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_PT_LP63L6X1P7",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_PT_LP63L6X1P7",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_PT_LP63L6X1P7",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CL18939959",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CL18939959",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CL18939959",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CL18625566",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CL18625566",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CL18625566",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CL18923892",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CL18923892",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CL18923892",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CL19418670",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CL19418670",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CL19418670",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "dataset_identity_CL19122669",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "hard_constraints_CL19122669",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_reconciles_CL19122669",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "checks",
+      "tool": "rank_vehicles",
+      "name": "score_order",
+      "passed": true
+    },
+    {
+      "turn": 1,
+      "category": "tools",
+      "name": "check_result",
+      "arguments": {},
+      "executed": true,
+      "observation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "finite_json_result",
+            "passed": true
+          },
+          {
+            "name": "all_eligible_ids_once",
+            "passed": true
+          },
+          {
+            "name": "status_agrees_with_matches",
+            "passed": true
+          },
+          {
+            "name": "weights_sum_to_one",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_PT_K4EDNMNYPG",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_PT_K4EDNMNYPG",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_PT_K4EDNMNYPG",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_PT_7PRLM3GLPK",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_PT_7PRLM3GLPK",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_PT_7PRLM3GLPK",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CS_C606800",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CS_C606800",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CS_C606800",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_PT_LP63L6X1P7",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_PT_LP63L6X1P7",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_PT_LP63L6X1P7",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CL18939959",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CL18939959",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CL18939959",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CL18625566",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CL18625566",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CL18625566",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CL18923892",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CL18923892",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CL18923892",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CL19418670",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CL19418670",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CL19418670",
+            "passed": true
+          },
+          {
+            "name": "dataset_identity_CL19122669",
+            "passed": true
+          },
+          {
+            "name": "hard_constraints_CL19122669",
+            "passed": true
+          },
+          {
+            "name": "score_reconciles_CL19122669",
+            "passed": true
+          },
+          {
+            "name": "score_order",
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "turn": 1,
+      "category": "model",
+      "phase": "plan",
+      "attempt": 1,
+      "success": true
+    },
+    {
+      "turn": 1,
+      "category": "tools",
+      "name": "finish",
+      "arguments": {},
+      "executed": true,
+      "observation": {
+        "status": "complete",
+        "outcome": "matches_found"
+      }
+    }
+  ],
+  "limits": {
+    "request_timeout_seconds": 45.0,
+    "turn_timeout_seconds": 180.0,
+    "model_retries": 1,
+    "maximum_tool_calls": 10,
+    "maximum_tool_errors": 2,
+    "maximum_input_characters": 6000
+  }
+}

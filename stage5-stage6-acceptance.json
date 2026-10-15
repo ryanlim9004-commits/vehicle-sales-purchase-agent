@@ -1,0 +1,126 @@
+{
+  "reviewed_on": "2026-10-15",
+  "scope": "Bounded development acceptance scenarios, not market or general language accuracy.",
+  "live_model": "qwen3:4b",
+  "checks": [
+    {
+      "case": "source_receipt_and_quality",
+      "expected": {
+        "critical_issues": [],
+        "receipts": "passed"
+      },
+      "actual": {
+        "critical_issues": [],
+        "receipts": "passed"
+      },
+      "passed": true
+    },
+    {
+      "case": "city_lifestyle_ranking",
+      "expected": [
+        "PT_K4EDNMNYPG",
+        "PT_7PRLM3GLPK",
+        "CS_C606800"
+      ],
+      "actual": [
+        "PT_K4EDNMNYPG",
+        "PT_7PRLM3GLPK",
+        "CS_C606800"
+      ],
+      "passed": true
+    },
+    {
+      "case": "family_unknown_fuel_is_disclosed",
+      "expected": {
+        "matches": 3,
+        "fuel_scored": false,
+        "explained": true
+      },
+      "actual": {
+        "matches": 3,
+        "fuel_scored": false,
+        "explained": true
+      },
+      "passed": true
+    },
+    {
+      "case": "seller_reference",
+      "expected": {
+        "status": "reference_only",
+        "median": 44800,
+        "count": 3
+      },
+      "actual": {
+        "status": "reference_only",
+        "median": 44800.0,
+        "count": 3
+      },
+      "passed": true
+    },
+    {
+      "case": "insufficient_comparables",
+      "expected": "insufficient_evidence",
+      "actual": "insufficient_evidence",
+      "passed": true
+    },
+    {
+      "case": "future_manufacturing_year",
+      "expected": "needs_clarification",
+      "actual": "needs_clarification",
+      "passed": true
+    },
+    {
+      "case": "major_damage",
+      "expected": "inspection_required",
+      "actual": "inspection_required",
+      "passed": true
+    },
+    {
+      "case": "explicit_educational_scenario",
+      "expected": {
+        "value": 43092,
+        "market_validated": false
+      },
+      "actual": {
+        "value": 43092.0,
+        "market_validated": false
+      },
+      "passed": true
+    },
+    {
+      "case": "live_buyer_text_to_rank",
+      "expected": {
+        "status": "matches_found",
+        "top": [
+          "PT_K4EDNMNYPG",
+          "PT_7PRLM3GLPK",
+          "CS_C606800"
+        ]
+      },
+      "actual": {
+        "status": "matches_found",
+        "top": [
+          "PT_K4EDNMNYPG",
+          "PT_7PRLM3GLPK",
+          "CS_C606800"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "case": "live_seller_metres_to_reference",
+      "expected": {
+        "mileage_km": 50.0,
+        "status": "reference_only",
+        "median": 44800
+      },
+      "actual": {
+        "mileage_km": 50.0,
+        "status": "reference_only",
+        "median": 44800.0
+      },
+      "passed": true
+    }
+  ],
+  "passed": true
+}

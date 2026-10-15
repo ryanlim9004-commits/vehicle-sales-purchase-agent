@@ -1,0 +1,4024 @@
+{
+  "reviewed_on": "2026-10-15",
+  "model": "qwen3:4b",
+  "planning_protocol": "Schema-constrained JSON tool requests; Python validates, executes and checks actual observations. Not Ollama native tool_calls.",
+  "scope": "Development acceptance, synthetic user quotes and frozen real-source snapshots; not holdout language accuracy or market/transaction accuracy.",
+  "turns": [
+    {
+      "case": "buy",
+      "turn": 1,
+      "input": "I want to buy a car. Save fuel.",
+      "expected": {
+        "status": "needs_clarification"
+      },
+      "actual": {
+        "status": "needs_clarification"
+      },
+      "passed": true,
+      "elapsed_seconds": 38.46,
+      "response": {
+        "status": "needs_clarification",
+        "goal": "buy",
+        "message": "What is your maximum total purchase budget in MYR?\nHow many seats do you need at minimum?\nWill you mainly use the car for city commuting, family travel, or long-distance driving?",
+        "facts": {
+          "fuel_priority": "high"
+        },
+        "result": null,
+        "rules": [],
+        "tools": [
+          {
+            "turn": 1,
+            "category": "tools",
+            "name": "inspect_requirements",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "needs_clarification",
+              "missing_slots": [
+                "buyer.budget_myr",
+                "buyer.required_seats",
+                "buyer.usage"
+              ],
+              "questions": [
+                "What is your maximum total purchase budget in MYR?",
+                "How many seats do you need at minimum?",
+                "Will you mainly use the car for city commuting, family travel, or long-distance driving?"
+              ]
+            }
+          },
+          {
+            "turn": 1,
+            "category": "tools",
+            "name": "ask_user",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "questions": [
+                "What is your maximum total purchase budget in MYR?",
+                "How many seats do you need at minimum?",
+                "Will you mainly use the car for city commuting, family travel, or long-distance driving?"
+              ]
+            }
+          }
+        ],
+        "checks": [],
+        "trace": [
+          {
+            "turn": 1,
+            "category": "model",
+            "phase": "sense",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 1,
+            "category": "facts",
+            "action": "switch_goal",
+            "previous": null,
+            "goal": "buy"
+          },
+          {
+            "turn": 1,
+            "category": "facts",
+            "action": "update",
+            "slot": "buyer.fuel_priority",
+            "value": "high",
+            "operation": "set",
+            "evidence": "Save fuel"
+          },
+          {
+            "turn": 1,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 1,
+            "category": "tools",
+            "name": "inspect_requirements",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "needs_clarification",
+              "missing_slots": [
+                "buyer.budget_myr",
+                "buyer.required_seats",
+                "buyer.usage"
+              ],
+              "questions": [
+                "What is your maximum total purchase budget in MYR?",
+                "How many seats do you need at minimum?",
+                "Will you mainly use the car for city commuting, family travel, or long-distance driving?"
+              ]
+            }
+          },
+          {
+            "turn": 1,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 1,
+            "category": "tools",
+            "name": "ask_user",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "questions": [
+                "What is your maximum total purchase budget in MYR?",
+                "How many seats do you need at minimum?",
+                "Will you mainly use the car for city commuting, family travel, or long-distance driving?"
+              ]
+            }
+          }
+        ],
+        "limits": {
+          "request_timeout_seconds": 45.0,
+          "turn_timeout_seconds": 180.0,
+          "model_retries": 1,
+          "maximum_tool_calls": 10,
+          "maximum_tool_errors": 2,
+          "maximum_input_characters": 6000
+        }
+      }
+    },
+    {
+      "case": "buy",
+      "turn": 2,
+      "input": "My vehicle budget is RM60000, a six-person family, mainly city commuting. Exclude Toyota.",
+      "expected": {
+        "status": "complete",
+        "result.matched_count": 3
+      },
+      "actual": {
+        "status": "complete",
+        "result.matched_count": 3
+      },
+      "passed": true,
+      "elapsed_seconds": 57.15,
+      "response": {
+        "status": "complete",
+        "goal": "buy",
+        "message": "These saved listings satisfy your hard constraints, ranked by the supported lifestyle score:\n1. 2020 Perodua Alza 1.5 SE: MYR 35,888.00, 7 seats, score 46.093; ID CL18923892.\n2. 2020 Perodua Alza 1.5 SE: MYR 44,800.00, 7 seats, score 38.667; ID CL19418670.\n3. 2020 Perodua Alza 1.5 SE: MYR 45,000.00, 7 seats, score 38.500; ID CL19122669.\nScores use public heuristic weights. These are asking-price snapshots, not live inventory. See result details for sources, weights and feature coverage.\nFuel comparison is unavailable or incompatible for this candidate set; no fuel-economy claim is made.",
+        "facts": {
+          "budget_myr": 60000.0,
+          "family_size": 6,
+          "usage": [
+            "city_commute"
+          ],
+          "fuel_priority": "high",
+          "excluded_brands": [
+            "Toyota"
+          ]
+        },
+        "result": {
+          "status": "matches_found",
+          "buyer_reasoning": {
+            "extracted_profile": {
+              "budget_myr": 60000.0,
+              "family_size": 6,
+              "required_seats": null,
+              "usage": [
+                "city_commute"
+              ],
+              "fuel_priority": "high",
+              "space_priority": null,
+              "preferred_brands": [],
+              "excluded_brands": [
+                "Toyota"
+              ],
+              "clarification_notes": [],
+              "input_validation_notes": []
+            },
+            "derived_facts": {
+              "budget_myr": 60000.0,
+              "family_size": 6,
+              "required_seats": 6,
+              "usage": [
+                "city_commute"
+              ],
+              "fuel_priority": "high",
+              "space_priority": null,
+              "preferred_brands": [],
+              "excluded_brands": [
+                "Toyota"
+              ],
+              "clarification_notes": [],
+              "input_validation_notes": [],
+              "minimum_vehicle_seats": 6,
+              "lifestyle_profile": "economical_city_commuter"
+            },
+            "fired_rules": [
+              {
+                "rule_id": "BUY_01",
+                "reason": "All stated household members are assumed to travel together; confirm if different.",
+                "derived_fact": {
+                  "required_seats": 6
+                }
+              },
+              {
+                "rule_id": "BUY_02",
+                "reason": "Vehicle capacity must satisfy the passenger requirement.",
+                "derived_fact": {
+                  "minimum_vehicle_seats": 6
+                }
+              },
+              {
+                "rule_id": "BUY_03",
+                "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+                "derived_fact": {
+                  "lifestyle_profile": "economical_city_commuter"
+                }
+              }
+            ],
+            "missing_slots": [],
+            "clarification_questions": [],
+            "ready_for_matching": true
+          },
+          "dataset_notice": "Observed listing snapshots, not live inventory or confirmed transaction prices. Verify availability, fees and specifications with the source.",
+          "observed_on": [
+            "2026-10-15"
+          ],
+          "matching_method": "Hard filtering followed by conservative weighted heuristic scoring v1.",
+          "constraints": {
+            "maximum_price_myr": 60000.0,
+            "minimum_seats": 6,
+            "excluded_brands": [
+              "toyota"
+            ]
+          },
+          "matches": [
+            {
+              "vehicle": {
+                "vehicle_id": "CL18923892",
+                "brand": "Perodua",
+                "model": "Alza",
+                "year": 2020,
+                "currency": "MYR",
+                "price_myr": 35888.0,
+                "seats": 7,
+                "source_kind": "listing",
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                "observed_on": "2026-10-15",
+                "variant": "1.5 SE",
+                "transmission": "Automatic",
+                "price_type": "asking",
+                "availability": "listed_snapshot",
+                "source_updated_on": "2026-09-21",
+                "mileage_km": null,
+                "mileage_min_km": 65000,
+                "mileage_max_km": 70000,
+                "condition": null,
+                "fuel_km_per_l": null,
+                "fuel_basis": null,
+                "fuel_source_reference": null,
+                "boot_litres": null,
+                "boot_configuration": null,
+                "length_mm": 4220,
+                "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                "evidence_notes": [
+                  "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                  "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+                ],
+                "vehicle_category": "passenger_car",
+                "wheels": 4
+              },
+              "preferred_brand_match": false,
+              "passed_rules": [
+                "FILTER_BUDGET",
+                "FILTER_SEATS",
+                "FILTER_EXCLUDED_BRAND",
+                "FILTER_AVAILABILITY",
+                "FILTER_PRICE_BASIS"
+              ],
+              "score_breakdown": {
+                "budget": {
+                  "normalized_value": 0.4018666666666667,
+                  "weight": 0.5,
+                  "weighted_points": 20.093333333333334,
+                  "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                },
+                "city_compactness": {
+                  "normalized_value": 0.52,
+                  "weight": 0.5,
+                  "weighted_points": 26.0,
+                  "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                }
+              },
+              "score": 46.093,
+              "score_upper_bound": 46.093,
+              "weighted_data_coverage_percent": 100.0,
+              "missing_scoring_features": [],
+              "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+              "rank": 1
+            },
+            {
+              "vehicle": {
+                "vehicle_id": "CL19418670",
+                "brand": "Perodua",
+                "model": "Alza",
+                "year": 2020,
+                "currency": "MYR",
+                "price_myr": 44800.0,
+                "seats": 7,
+                "source_kind": "listing",
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670",
+                "observed_on": "2026-10-15",
+                "variant": "1.5 SE",
+                "transmission": "Automatic",
+                "price_type": "asking",
+                "availability": "listed_snapshot",
+                "source_updated_on": "2026-09-20",
+                "mileage_km": null,
+                "mileage_min_km": 120000,
+                "mileage_max_km": 125000,
+                "condition": null,
+                "fuel_km_per_l": null,
+                "fuel_basis": null,
+                "fuel_source_reference": null,
+                "boot_litres": null,
+                "boot_configuration": null,
+                "length_mm": 4220,
+                "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                "evidence_notes": [
+                  "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                  "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+                ],
+                "vehicle_category": "passenger_car",
+                "wheels": 4
+              },
+              "preferred_brand_match": false,
+              "passed_rules": [
+                "FILTER_BUDGET",
+                "FILTER_SEATS",
+                "FILTER_EXCLUDED_BRAND",
+                "FILTER_AVAILABILITY",
+                "FILTER_PRICE_BASIS"
+              ],
+              "score_breakdown": {
+                "budget": {
+                  "normalized_value": 0.2533333333333333,
+                  "weight": 0.5,
+                  "weighted_points": 12.666666666666664,
+                  "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670"
+                },
+                "city_compactness": {
+                  "normalized_value": 0.52,
+                  "weight": 0.5,
+                  "weighted_points": 26.0,
+                  "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                }
+              },
+              "score": 38.667,
+              "score_upper_bound": 38.667,
+              "weighted_data_coverage_percent": 100.0,
+              "missing_scoring_features": [],
+              "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+              "rank": 2
+            },
+            {
+              "vehicle": {
+                "vehicle_id": "CL19122669",
+                "brand": "Perodua",
+                "model": "Alza",
+                "year": 2020,
+                "currency": "MYR",
+                "price_myr": 45000.0,
+                "seats": 7,
+                "source_kind": "listing",
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669",
+                "observed_on": "2026-10-15",
+                "variant": "1.5 SE",
+                "transmission": "Automatic",
+                "price_type": "asking",
+                "availability": "listed_snapshot",
+                "source_updated_on": "2026-09-21",
+                "mileage_km": null,
+                "mileage_min_km": 100000,
+                "mileage_max_km": 105000,
+                "condition": null,
+                "fuel_km_per_l": null,
+                "fuel_basis": null,
+                "fuel_source_reference": null,
+                "boot_litres": null,
+                "boot_configuration": null,
+                "length_mm": 4220,
+                "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                "evidence_notes": [
+                  "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                  "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+                ],
+                "vehicle_category": "passenger_car",
+                "wheels": 4
+              },
+              "preferred_brand_match": false,
+              "passed_rules": [
+                "FILTER_BUDGET",
+                "FILTER_SEATS",
+                "FILTER_EXCLUDED_BRAND",
+                "FILTER_AVAILABILITY",
+                "FILTER_PRICE_BASIS"
+              ],
+              "score_breakdown": {
+                "budget": {
+                  "normalized_value": 0.25,
+                  "weight": 0.5,
+                  "weighted_points": 12.5,
+                  "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669"
+                },
+                "city_compactness": {
+                  "normalized_value": 0.52,
+                  "weight": 0.5,
+                  "weighted_points": 26.0,
+                  "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                }
+              },
+              "score": 38.5,
+              "score_upper_bound": 38.5,
+              "weighted_data_coverage_percent": 100.0,
+              "missing_scoring_features": [],
+              "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+              "rank": 3
+            }
+          ],
+          "rejected": [
+            {
+              "vehicle_id": "CL18751444",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 64800 exceeds budget MYR 60000."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18249652",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 65800 exceeds budget MYR 60000."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18624149",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18807978",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18603852",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                },
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 61800 exceeds budget MYR 60000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS_UNKNOWN",
+                  "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18939959",
+              "brand": "Perodua",
+              "model": "Myvi",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18625566",
+              "brand": "Perodua",
+              "model": "Myvi",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18902191",
+              "brand": "Perodua",
+              "model": "Myvi",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                },
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CS_C606800",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "PT_LP63L6X1P7",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "PT_K4EDNMNYPG",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "PT_7PRLM3GLPK",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CS_C6RA000",
+              "brand": "Toyota",
+              "model": "Avanza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                },
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 73900 exceeds budget MYR 60000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS_UNKNOWN",
+                  "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                },
+                {
+                  "rule_id": "FILTER_EXCLUDED_BRAND",
+                  "reason": "Toyota is an excluded brand."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CS_CBFS600",
+              "brand": "Toyota",
+              "model": "Avanza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is reserved; this record is not an eligible listing snapshot."
+                },
+                {
+                  "rule_id": "FILTER_SEATS_UNKNOWN",
+                  "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                },
+                {
+                  "rule_id": "FILTER_EXCLUDED_BRAND",
+                  "reason": "Toyota is an excluded brand."
+                }
+              ]
+            }
+          ],
+          "checked_count": 17,
+          "matched_count": 3,
+          "scoring_notes": [
+            "Weights and anchors are design assumptions, not learned coefficients or market facts.",
+            "Unknown components contribute zero to the lower bound, not a claim of poor vehicle quality.",
+            "Fuel values are manufacturer claims, not measured used-car or city-driving consumption.",
+            "Boot volume is a luggage proxy, not passenger legroom or an overall space rating.",
+            "Fuel scoring unavailable for all eligible candidates; no fuel-economy recommendation can be supported."
+          ],
+          "scoring_weights": {
+            "budget": 0.5,
+            "city_compactness": 0.5
+          },
+          "scoring_anchors": {
+            "budget": "1 - asking_price / buyer_budget",
+            "fuel": "clip((km_per_l - 10) / 15, 0, 1); same claim basis only",
+            "luggage": "clip(boot_litres / 600, 0, 1); all seats up only",
+            "brand": "1 for a preferred brand, otherwise 0",
+            "city_compactness": "clip((5000 - length_mm) / 1500, 0, 1)"
+          },
+          "top_vehicle_ids": [
+            "CL18923892",
+            "CL19418670",
+            "CL19122669"
+          ]
+        },
+        "rules": [
+          {
+            "turn": 2,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_01",
+            "reason": "All stated household members are assumed to travel together; confirm if different.",
+            "derived_fact": {
+              "required_seats": 6
+            }
+          },
+          {
+            "turn": 2,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_02",
+            "reason": "Vehicle capacity must satisfy the passenger requirement.",
+            "derived_fact": {
+              "minimum_vehicle_seats": 6
+            }
+          },
+          {
+            "turn": 2,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_03",
+            "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+            "derived_fact": {
+              "lifestyle_profile": "economical_city_commuter"
+            }
+          }
+        ],
+        "tools": [
+          {
+            "turn": 2,
+            "category": "tools",
+            "name": "inspect_requirements",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "ready",
+              "missing_slots": [],
+              "questions": []
+            }
+          },
+          {
+            "turn": 2,
+            "category": "tools",
+            "name": "rank_vehicles",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "matches_found",
+              "buyer_reasoning": {
+                "extracted_profile": {
+                  "budget_myr": 60000.0,
+                  "family_size": 6,
+                  "required_seats": null,
+                  "usage": [
+                    "city_commute"
+                  ],
+                  "fuel_priority": "high",
+                  "space_priority": null,
+                  "preferred_brands": [],
+                  "excluded_brands": [
+                    "Toyota"
+                  ],
+                  "clarification_notes": [],
+                  "input_validation_notes": []
+                },
+                "derived_facts": {
+                  "budget_myr": 60000.0,
+                  "family_size": 6,
+                  "required_seats": 6,
+                  "usage": [
+                    "city_commute"
+                  ],
+                  "fuel_priority": "high",
+                  "space_priority": null,
+                  "preferred_brands": [],
+                  "excluded_brands": [
+                    "Toyota"
+                  ],
+                  "clarification_notes": [],
+                  "input_validation_notes": [],
+                  "minimum_vehicle_seats": 6,
+                  "lifestyle_profile": "economical_city_commuter"
+                },
+                "fired_rules": [
+                  {
+                    "rule_id": "BUY_01",
+                    "reason": "All stated household members are assumed to travel together; confirm if different.",
+                    "derived_fact": {
+                      "required_seats": 6
+                    }
+                  },
+                  {
+                    "rule_id": "BUY_02",
+                    "reason": "Vehicle capacity must satisfy the passenger requirement.",
+                    "derived_fact": {
+                      "minimum_vehicle_seats": 6
+                    }
+                  },
+                  {
+                    "rule_id": "BUY_03",
+                    "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+                    "derived_fact": {
+                      "lifestyle_profile": "economical_city_commuter"
+                    }
+                  }
+                ],
+                "missing_slots": [],
+                "clarification_questions": [],
+                "ready_for_matching": true
+              },
+              "dataset_notice": "Observed listing snapshots, not live inventory or confirmed transaction prices. Verify availability, fees and specifications with the source.",
+              "observed_on": [
+                "2026-10-15"
+              ],
+              "matching_method": "Hard filtering followed by conservative weighted heuristic scoring v1.",
+              "constraints": {
+                "maximum_price_myr": 60000.0,
+                "minimum_seats": 6,
+                "excluded_brands": [
+                  "toyota"
+                ]
+              },
+              "matches": [
+                {
+                  "vehicle": {
+                    "vehicle_id": "CL18923892",
+                    "brand": "Perodua",
+                    "model": "Alza",
+                    "year": 2020,
+                    "currency": "MYR",
+                    "price_myr": 35888.0,
+                    "seats": 7,
+                    "source_kind": "listing",
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                    "observed_on": "2026-10-15",
+                    "variant": "1.5 SE",
+                    "transmission": "Automatic",
+                    "price_type": "asking",
+                    "availability": "listed_snapshot",
+                    "source_updated_on": "2026-09-21",
+                    "mileage_km": null,
+                    "mileage_min_km": 65000,
+                    "mileage_max_km": 70000,
+                    "condition": null,
+                    "fuel_km_per_l": null,
+                    "fuel_basis": null,
+                    "fuel_source_reference": null,
+                    "boot_litres": null,
+                    "boot_configuration": null,
+                    "length_mm": 4220,
+                    "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                    "evidence_notes": [
+                      "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                      "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+                    ],
+                    "vehicle_category": "passenger_car",
+                    "wheels": 4
+                  },
+                  "preferred_brand_match": false,
+                  "passed_rules": [
+                    "FILTER_BUDGET",
+                    "FILTER_SEATS",
+                    "FILTER_EXCLUDED_BRAND",
+                    "FILTER_AVAILABILITY",
+                    "FILTER_PRICE_BASIS"
+                  ],
+                  "score_breakdown": {
+                    "budget": {
+                      "normalized_value": 0.4018666666666667,
+                      "weight": 0.5,
+                      "weighted_points": 20.093333333333334,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                    },
+                    "city_compactness": {
+                      "normalized_value": 0.52,
+                      "weight": 0.5,
+                      "weighted_points": 26.0,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                    }
+                  },
+                  "score": 46.093,
+                  "score_upper_bound": 46.093,
+                  "weighted_data_coverage_percent": 100.0,
+                  "missing_scoring_features": [],
+                  "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+                  "rank": 1
+                },
+                {
+                  "vehicle": {
+                    "vehicle_id": "CL19418670",
+                    "brand": "Perodua",
+                    "model": "Alza",
+                    "year": 2020,
+                    "currency": "MYR",
+                    "price_myr": 44800.0,
+                    "seats": 7,
+                    "source_kind": "listing",
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670",
+                    "observed_on": "2026-10-15",
+                    "variant": "1.5 SE",
+                    "transmission": "Automatic",
+                    "price_type": "asking",
+                    "availability": "listed_snapshot",
+                    "source_updated_on": "2026-09-20",
+                    "mileage_km": null,
+                    "mileage_min_km": 120000,
+                    "mileage_max_km": 125000,
+                    "condition": null,
+                    "fuel_km_per_l": null,
+                    "fuel_basis": null,
+                    "fuel_source_reference": null,
+                    "boot_litres": null,
+                    "boot_configuration": null,
+                    "length_mm": 4220,
+                    "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                    "evidence_notes": [
+                      "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                      "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+                    ],
+                    "vehicle_category": "passenger_car",
+                    "wheels": 4
+                  },
+                  "preferred_brand_match": false,
+                  "passed_rules": [
+                    "FILTER_BUDGET",
+                    "FILTER_SEATS",
+                    "FILTER_EXCLUDED_BRAND",
+                    "FILTER_AVAILABILITY",
+                    "FILTER_PRICE_BASIS"
+                  ],
+                  "score_breakdown": {
+                    "budget": {
+                      "normalized_value": 0.2533333333333333,
+                      "weight": 0.5,
+                      "weighted_points": 12.666666666666664,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670"
+                    },
+                    "city_compactness": {
+                      "normalized_value": 0.52,
+                      "weight": 0.5,
+                      "weighted_points": 26.0,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                    }
+                  },
+                  "score": 38.667,
+                  "score_upper_bound": 38.667,
+                  "weighted_data_coverage_percent": 100.0,
+                  "missing_scoring_features": [],
+                  "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+                  "rank": 2
+                },
+                {
+                  "vehicle": {
+                    "vehicle_id": "CL19122669",
+                    "brand": "Perodua",
+                    "model": "Alza",
+                    "year": 2020,
+                    "currency": "MYR",
+                    "price_myr": 45000.0,
+                    "seats": 7,
+                    "source_kind": "listing",
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669",
+                    "observed_on": "2026-10-15",
+                    "variant": "1.5 SE",
+                    "transmission": "Automatic",
+                    "price_type": "asking",
+                    "availability": "listed_snapshot",
+                    "source_updated_on": "2026-09-21",
+                    "mileage_km": null,
+                    "mileage_min_km": 100000,
+                    "mileage_max_km": 105000,
+                    "condition": null,
+                    "fuel_km_per_l": null,
+                    "fuel_basis": null,
+                    "fuel_source_reference": null,
+                    "boot_litres": null,
+                    "boot_configuration": null,
+                    "length_mm": 4220,
+                    "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                    "evidence_notes": [
+                      "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                      "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+                    ],
+                    "vehicle_category": "passenger_car",
+                    "wheels": 4
+                  },
+                  "preferred_brand_match": false,
+                  "passed_rules": [
+                    "FILTER_BUDGET",
+                    "FILTER_SEATS",
+                    "FILTER_EXCLUDED_BRAND",
+                    "FILTER_AVAILABILITY",
+                    "FILTER_PRICE_BASIS"
+                  ],
+                  "score_breakdown": {
+                    "budget": {
+                      "normalized_value": 0.25,
+                      "weight": 0.5,
+                      "weighted_points": 12.5,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669"
+                    },
+                    "city_compactness": {
+                      "normalized_value": 0.52,
+                      "weight": 0.5,
+                      "weighted_points": 26.0,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                    }
+                  },
+                  "score": 38.5,
+                  "score_upper_bound": 38.5,
+                  "weighted_data_coverage_percent": 100.0,
+                  "missing_scoring_features": [],
+                  "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+                  "rank": 3
+                }
+              ],
+              "rejected": [
+                {
+                  "vehicle_id": "CL18751444",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 64800 exceeds budget MYR 60000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18249652",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 65800 exceeds budget MYR 60000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18624149",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18807978",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18603852",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 61800 exceeds budget MYR 60000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18939959",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18625566",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18902191",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_C606800",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_LP63L6X1P7",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_K4EDNMNYPG",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_7PRLM3GLPK",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_C6RA000",
+                  "brand": "Toyota",
+                  "model": "Avanza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 73900 exceeds budget MYR 60000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    },
+                    {
+                      "rule_id": "FILTER_EXCLUDED_BRAND",
+                      "reason": "Toyota is an excluded brand."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_CBFS600",
+                  "brand": "Toyota",
+                  "model": "Avanza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is reserved; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    },
+                    {
+                      "rule_id": "FILTER_EXCLUDED_BRAND",
+                      "reason": "Toyota is an excluded brand."
+                    }
+                  ]
+                }
+              ],
+              "checked_count": 17,
+              "matched_count": 3,
+              "scoring_notes": [
+                "Weights and anchors are design assumptions, not learned coefficients or market facts.",
+                "Unknown components contribute zero to the lower bound, not a claim of poor vehicle quality.",
+                "Fuel values are manufacturer claims, not measured used-car or city-driving consumption.",
+                "Boot volume is a luggage proxy, not passenger legroom or an overall space rating.",
+                "Fuel scoring unavailable for all eligible candidates; no fuel-economy recommendation can be supported."
+              ],
+              "scoring_weights": {
+                "budget": 0.5,
+                "city_compactness": 0.5
+              },
+              "scoring_anchors": {
+                "budget": "1 - asking_price / buyer_budget",
+                "fuel": "clip((km_per_l - 10) / 15, 0, 1); same claim basis only",
+                "luggage": "clip(boot_litres / 600, 0, 1); all seats up only",
+                "brand": "1 for a preferred brand, otherwise 0",
+                "city_compactness": "clip((5000 - length_mm) / 1500, 0, 1)"
+              },
+              "top_vehicle_ids": [
+                "CL18923892",
+                "CL19418670",
+                "CL19122669"
+              ]
+            }
+          },
+          {
+            "turn": 2,
+            "category": "tools",
+            "name": "check_result",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "passed": true,
+              "checks": [
+                {
+                  "name": "finite_json_result",
+                  "passed": true
+                },
+                {
+                  "name": "all_eligible_ids_once",
+                  "passed": true
+                },
+                {
+                  "name": "status_agrees_with_matches",
+                  "passed": true
+                },
+                {
+                  "name": "weights_sum_to_one",
+                  "passed": true
+                },
+                {
+                  "name": "dataset_identity_CL18923892",
+                  "passed": true
+                },
+                {
+                  "name": "hard_constraints_CL18923892",
+                  "passed": true
+                },
+                {
+                  "name": "score_reconciles_CL18923892",
+                  "passed": true
+                },
+                {
+                  "name": "dataset_identity_CL19418670",
+                  "passed": true
+                },
+                {
+                  "name": "hard_constraints_CL19418670",
+                  "passed": true
+                },
+                {
+                  "name": "score_reconciles_CL19418670",
+                  "passed": true
+                },
+                {
+                  "name": "dataset_identity_CL19122669",
+                  "passed": true
+                },
+                {
+                  "name": "hard_constraints_CL19122669",
+                  "passed": true
+                },
+                {
+                  "name": "score_reconciles_CL19122669",
+                  "passed": true
+                },
+                {
+                  "name": "score_order",
+                  "passed": true
+                }
+              ]
+            }
+          },
+          {
+            "turn": 2,
+            "category": "tools",
+            "name": "finish",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "complete",
+              "outcome": "matches_found"
+            }
+          }
+        ],
+        "checks": [
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "finite_json_result",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "all_eligible_ids_once",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "status_agrees_with_matches",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "weights_sum_to_one",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "dataset_identity_CL18923892",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "hard_constraints_CL18923892",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "score_reconciles_CL18923892",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "dataset_identity_CL19418670",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "hard_constraints_CL19418670",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "score_reconciles_CL19418670",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "dataset_identity_CL19122669",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "hard_constraints_CL19122669",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "score_reconciles_CL19122669",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "score_order",
+            "passed": true
+          }
+        ],
+        "trace": [
+          {
+            "turn": 2,
+            "category": "model",
+            "phase": "sense",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 2,
+            "category": "facts",
+            "action": "update",
+            "slot": "buyer.budget_myr",
+            "value": 60000.0,
+            "operation": "set",
+            "evidence": "My vehicle budget is RM60000"
+          },
+          {
+            "turn": 2,
+            "category": "facts",
+            "action": "update",
+            "slot": "buyer.family_size",
+            "value": 6,
+            "operation": "set",
+            "evidence": "a six-person family"
+          },
+          {
+            "turn": 2,
+            "category": "facts",
+            "action": "update",
+            "slot": "buyer.usage",
+            "value": [
+              "city_commute"
+            ],
+            "operation": "add",
+            "evidence": "mainly city commuting"
+          },
+          {
+            "turn": 2,
+            "category": "facts",
+            "action": "update",
+            "slot": "buyer.excluded_brands",
+            "value": [
+              "Toyota"
+            ],
+            "operation": "add",
+            "evidence": "Exclude Toyota"
+          },
+          {
+            "turn": 2,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 2,
+            "category": "tools",
+            "name": "inspect_requirements",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "ready",
+              "missing_slots": [],
+              "questions": []
+            }
+          },
+          {
+            "turn": 2,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 2,
+            "category": "tools",
+            "name": "rank_vehicles",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "matches_found",
+              "buyer_reasoning": {
+                "extracted_profile": {
+                  "budget_myr": 60000.0,
+                  "family_size": 6,
+                  "required_seats": null,
+                  "usage": [
+                    "city_commute"
+                  ],
+                  "fuel_priority": "high",
+                  "space_priority": null,
+                  "preferred_brands": [],
+                  "excluded_brands": [
+                    "Toyota"
+                  ],
+                  "clarification_notes": [],
+                  "input_validation_notes": []
+                },
+                "derived_facts": {
+                  "budget_myr": 60000.0,
+                  "family_size": 6,
+                  "required_seats": 6,
+                  "usage": [
+                    "city_commute"
+                  ],
+                  "fuel_priority": "high",
+                  "space_priority": null,
+                  "preferred_brands": [],
+                  "excluded_brands": [
+                    "Toyota"
+                  ],
+                  "clarification_notes": [],
+                  "input_validation_notes": [],
+                  "minimum_vehicle_seats": 6,
+                  "lifestyle_profile": "economical_city_commuter"
+                },
+                "fired_rules": [
+                  {
+                    "rule_id": "BUY_01",
+                    "reason": "All stated household members are assumed to travel together; confirm if different.",
+                    "derived_fact": {
+                      "required_seats": 6
+                    }
+                  },
+                  {
+                    "rule_id": "BUY_02",
+                    "reason": "Vehicle capacity must satisfy the passenger requirement.",
+                    "derived_fact": {
+                      "minimum_vehicle_seats": 6
+                    }
+                  },
+                  {
+                    "rule_id": "BUY_03",
+                    "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+                    "derived_fact": {
+                      "lifestyle_profile": "economical_city_commuter"
+                    }
+                  }
+                ],
+                "missing_slots": [],
+                "clarification_questions": [],
+                "ready_for_matching": true
+              },
+              "dataset_notice": "Observed listing snapshots, not live inventory or confirmed transaction prices. Verify availability, fees and specifications with the source.",
+              "observed_on": [
+                "2026-10-15"
+              ],
+              "matching_method": "Hard filtering followed by conservative weighted heuristic scoring v1.",
+              "constraints": {
+                "maximum_price_myr": 60000.0,
+                "minimum_seats": 6,
+                "excluded_brands": [
+                  "toyota"
+                ]
+              },
+              "matches": [
+                {
+                  "vehicle": {
+                    "vehicle_id": "CL18923892",
+                    "brand": "Perodua",
+                    "model": "Alza",
+                    "year": 2020,
+                    "currency": "MYR",
+                    "price_myr": 35888.0,
+                    "seats": 7,
+                    "source_kind": "listing",
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                    "observed_on": "2026-10-15",
+                    "variant": "1.5 SE",
+                    "transmission": "Automatic",
+                    "price_type": "asking",
+                    "availability": "listed_snapshot",
+                    "source_updated_on": "2026-09-21",
+                    "mileage_km": null,
+                    "mileage_min_km": 65000,
+                    "mileage_max_km": 70000,
+                    "condition": null,
+                    "fuel_km_per_l": null,
+                    "fuel_basis": null,
+                    "fuel_source_reference": null,
+                    "boot_litres": null,
+                    "boot_configuration": null,
+                    "length_mm": 4220,
+                    "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                    "evidence_notes": [
+                      "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                      "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+                    ],
+                    "vehicle_category": "passenger_car",
+                    "wheels": 4
+                  },
+                  "preferred_brand_match": false,
+                  "passed_rules": [
+                    "FILTER_BUDGET",
+                    "FILTER_SEATS",
+                    "FILTER_EXCLUDED_BRAND",
+                    "FILTER_AVAILABILITY",
+                    "FILTER_PRICE_BASIS"
+                  ],
+                  "score_breakdown": {
+                    "budget": {
+                      "normalized_value": 0.4018666666666667,
+                      "weight": 0.5,
+                      "weighted_points": 20.093333333333334,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                    },
+                    "city_compactness": {
+                      "normalized_value": 0.52,
+                      "weight": 0.5,
+                      "weighted_points": 26.0,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                    }
+                  },
+                  "score": 46.093,
+                  "score_upper_bound": 46.093,
+                  "weighted_data_coverage_percent": 100.0,
+                  "missing_scoring_features": [],
+                  "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+                  "rank": 1
+                },
+                {
+                  "vehicle": {
+                    "vehicle_id": "CL19418670",
+                    "brand": "Perodua",
+                    "model": "Alza",
+                    "year": 2020,
+                    "currency": "MYR",
+                    "price_myr": 44800.0,
+                    "seats": 7,
+                    "source_kind": "listing",
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670",
+                    "observed_on": "2026-10-15",
+                    "variant": "1.5 SE",
+                    "transmission": "Automatic",
+                    "price_type": "asking",
+                    "availability": "listed_snapshot",
+                    "source_updated_on": "2026-09-20",
+                    "mileage_km": null,
+                    "mileage_min_km": 120000,
+                    "mileage_max_km": 125000,
+                    "condition": null,
+                    "fuel_km_per_l": null,
+                    "fuel_basis": null,
+                    "fuel_source_reference": null,
+                    "boot_litres": null,
+                    "boot_configuration": null,
+                    "length_mm": 4220,
+                    "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                    "evidence_notes": [
+                      "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                      "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+                    ],
+                    "vehicle_category": "passenger_car",
+                    "wheels": 4
+                  },
+                  "preferred_brand_match": false,
+                  "passed_rules": [
+                    "FILTER_BUDGET",
+                    "FILTER_SEATS",
+                    "FILTER_EXCLUDED_BRAND",
+                    "FILTER_AVAILABILITY",
+                    "FILTER_PRICE_BASIS"
+                  ],
+                  "score_breakdown": {
+                    "budget": {
+                      "normalized_value": 0.2533333333333333,
+                      "weight": 0.5,
+                      "weighted_points": 12.666666666666664,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670"
+                    },
+                    "city_compactness": {
+                      "normalized_value": 0.52,
+                      "weight": 0.5,
+                      "weighted_points": 26.0,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                    }
+                  },
+                  "score": 38.667,
+                  "score_upper_bound": 38.667,
+                  "weighted_data_coverage_percent": 100.0,
+                  "missing_scoring_features": [],
+                  "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+                  "rank": 2
+                },
+                {
+                  "vehicle": {
+                    "vehicle_id": "CL19122669",
+                    "brand": "Perodua",
+                    "model": "Alza",
+                    "year": 2020,
+                    "currency": "MYR",
+                    "price_myr": 45000.0,
+                    "seats": 7,
+                    "source_kind": "listing",
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669",
+                    "observed_on": "2026-10-15",
+                    "variant": "1.5 SE",
+                    "transmission": "Automatic",
+                    "price_type": "asking",
+                    "availability": "listed_snapshot",
+                    "source_updated_on": "2026-09-21",
+                    "mileage_km": null,
+                    "mileage_min_km": 100000,
+                    "mileage_max_km": 105000,
+                    "condition": null,
+                    "fuel_km_per_l": null,
+                    "fuel_basis": null,
+                    "fuel_source_reference": null,
+                    "boot_litres": null,
+                    "boot_configuration": null,
+                    "length_mm": 4220,
+                    "specs_source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                    "evidence_notes": [
+                      "Manually reviewed public page snapshot via web retrieval; stock and prices can change. Seller condition claims are not independent verification.",
+                      "Length from same 2020 1.5 SE listing specifications. Fuel/boot values not verified; new-generation Alza specifications are not applied."
+                    ],
+                    "vehicle_category": "passenger_car",
+                    "wheels": 4
+                  },
+                  "preferred_brand_match": false,
+                  "passed_rules": [
+                    "FILTER_BUDGET",
+                    "FILTER_SEATS",
+                    "FILTER_EXCLUDED_BRAND",
+                    "FILTER_AVAILABILITY",
+                    "FILTER_PRICE_BASIS"
+                  ],
+                  "score_breakdown": {
+                    "budget": {
+                      "normalized_value": 0.25,
+                      "weight": 0.5,
+                      "weighted_points": 12.5,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669"
+                    },
+                    "city_compactness": {
+                      "normalized_value": 0.52,
+                      "weight": 0.5,
+                      "weighted_points": 26.0,
+                      "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+                    }
+                  },
+                  "score": 38.5,
+                  "score_upper_bound": 38.5,
+                  "weighted_data_coverage_percent": 100.0,
+                  "missing_scoring_features": [],
+                  "ranking_explanation": "Sorted by evidence-supported lower-bound score; the upper bound reflects unknown components, not statistical confidence.",
+                  "rank": 3
+                }
+              ],
+              "rejected": [
+                {
+                  "vehicle_id": "CL18751444",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 64800 exceeds budget MYR 60000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18249652",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 65800 exceeds budget MYR 60000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18624149",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18807978",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18603852",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 61800 exceeds budget MYR 60000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18939959",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18625566",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18902191",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_C606800",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_LP63L6X1P7",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_K4EDNMNYPG",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_7PRLM3GLPK",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_C6RA000",
+                  "brand": "Toyota",
+                  "model": "Avanza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 73900 exceeds budget MYR 60000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    },
+                    {
+                      "rule_id": "FILTER_EXCLUDED_BRAND",
+                      "reason": "Toyota is an excluded brand."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_CBFS600",
+                  "brand": "Toyota",
+                  "model": "Avanza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is reserved; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    },
+                    {
+                      "rule_id": "FILTER_EXCLUDED_BRAND",
+                      "reason": "Toyota is an excluded brand."
+                    }
+                  ]
+                }
+              ],
+              "checked_count": 17,
+              "matched_count": 3,
+              "scoring_notes": [
+                "Weights and anchors are design assumptions, not learned coefficients or market facts.",
+                "Unknown components contribute zero to the lower bound, not a claim of poor vehicle quality.",
+                "Fuel values are manufacturer claims, not measured used-car or city-driving consumption.",
+                "Boot volume is a luggage proxy, not passenger legroom or an overall space rating.",
+                "Fuel scoring unavailable for all eligible candidates; no fuel-economy recommendation can be supported."
+              ],
+              "scoring_weights": {
+                "budget": 0.5,
+                "city_compactness": 0.5
+              },
+              "scoring_anchors": {
+                "budget": "1 - asking_price / buyer_budget",
+                "fuel": "clip((km_per_l - 10) / 15, 0, 1); same claim basis only",
+                "luggage": "clip(boot_litres / 600, 0, 1); all seats up only",
+                "brand": "1 for a preferred brand, otherwise 0",
+                "city_compactness": "clip((5000 - length_mm) / 1500, 0, 1)"
+              },
+              "top_vehicle_ids": [
+                "CL18923892",
+                "CL19418670",
+                "CL19122669"
+              ]
+            }
+          },
+          {
+            "turn": 2,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_01",
+            "reason": "All stated household members are assumed to travel together; confirm if different.",
+            "derived_fact": {
+              "required_seats": 6
+            }
+          },
+          {
+            "turn": 2,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_02",
+            "reason": "Vehicle capacity must satisfy the passenger requirement.",
+            "derived_fact": {
+              "minimum_vehicle_seats": 6
+            }
+          },
+          {
+            "turn": 2,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_03",
+            "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+            "derived_fact": {
+              "lifestyle_profile": "economical_city_commuter"
+            }
+          },
+          {
+            "turn": 2,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "finite_json_result",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "all_eligible_ids_once",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "status_agrees_with_matches",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "weights_sum_to_one",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "dataset_identity_CL18923892",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "hard_constraints_CL18923892",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "score_reconciles_CL18923892",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "dataset_identity_CL19418670",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "hard_constraints_CL19418670",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "score_reconciles_CL19418670",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "dataset_identity_CL19122669",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "hard_constraints_CL19122669",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "score_reconciles_CL19122669",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "score_order",
+            "passed": true
+          },
+          {
+            "turn": 2,
+            "category": "tools",
+            "name": "check_result",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "passed": true,
+              "checks": [
+                {
+                  "name": "finite_json_result",
+                  "passed": true
+                },
+                {
+                  "name": "all_eligible_ids_once",
+                  "passed": true
+                },
+                {
+                  "name": "status_agrees_with_matches",
+                  "passed": true
+                },
+                {
+                  "name": "weights_sum_to_one",
+                  "passed": true
+                },
+                {
+                  "name": "dataset_identity_CL18923892",
+                  "passed": true
+                },
+                {
+                  "name": "hard_constraints_CL18923892",
+                  "passed": true
+                },
+                {
+                  "name": "score_reconciles_CL18923892",
+                  "passed": true
+                },
+                {
+                  "name": "dataset_identity_CL19418670",
+                  "passed": true
+                },
+                {
+                  "name": "hard_constraints_CL19418670",
+                  "passed": true
+                },
+                {
+                  "name": "score_reconciles_CL19418670",
+                  "passed": true
+                },
+                {
+                  "name": "dataset_identity_CL19122669",
+                  "passed": true
+                },
+                {
+                  "name": "hard_constraints_CL19122669",
+                  "passed": true
+                },
+                {
+                  "name": "score_reconciles_CL19122669",
+                  "passed": true
+                },
+                {
+                  "name": "score_order",
+                  "passed": true
+                }
+              ]
+            }
+          },
+          {
+            "turn": 2,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 2,
+            "category": "tools",
+            "name": "finish",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "complete",
+              "outcome": "matches_found"
+            }
+          }
+        ],
+        "limits": {
+          "request_timeout_seconds": 45.0,
+          "turn_timeout_seconds": 180.0,
+          "model_retries": 1,
+          "maximum_tool_calls": 10,
+          "maximum_tool_errors": 2,
+          "maximum_input_characters": 6000
+        }
+      }
+    },
+    {
+      "case": "buy",
+      "turn": 3,
+      "input": "Change my budget to RM35000.",
+      "expected": {
+        "status": "complete",
+        "result.status": "no_matches",
+        "facts.family_size": 6,
+        "facts.fuel_priority": "high"
+      },
+      "actual": {
+        "status": "complete",
+        "result.status": "no_matches",
+        "facts.family_size": 6,
+        "facts.fuel_priority": "high"
+      },
+      "passed": true,
+      "elapsed_seconds": 52.1,
+      "response": {
+        "status": "complete",
+        "goal": "buy",
+        "message": "No saved listing satisfies all your hard constraints. Review the rejection reasons or explicitly change your requirements; no constraint was relaxed.",
+        "facts": {
+          "budget_myr": 35000.0,
+          "family_size": 6,
+          "usage": [
+            "city_commute"
+          ],
+          "fuel_priority": "high",
+          "excluded_brands": [
+            "Toyota"
+          ]
+        },
+        "result": {
+          "status": "no_matches",
+          "buyer_reasoning": {
+            "extracted_profile": {
+              "budget_myr": 35000.0,
+              "family_size": 6,
+              "required_seats": null,
+              "usage": [
+                "city_commute"
+              ],
+              "fuel_priority": "high",
+              "space_priority": null,
+              "preferred_brands": [],
+              "excluded_brands": [
+                "Toyota"
+              ],
+              "clarification_notes": [],
+              "input_validation_notes": []
+            },
+            "derived_facts": {
+              "budget_myr": 35000.0,
+              "family_size": 6,
+              "required_seats": 6,
+              "usage": [
+                "city_commute"
+              ],
+              "fuel_priority": "high",
+              "space_priority": null,
+              "preferred_brands": [],
+              "excluded_brands": [
+                "Toyota"
+              ],
+              "clarification_notes": [],
+              "input_validation_notes": [],
+              "minimum_vehicle_seats": 6,
+              "lifestyle_profile": "economical_city_commuter"
+            },
+            "fired_rules": [
+              {
+                "rule_id": "BUY_01",
+                "reason": "All stated household members are assumed to travel together; confirm if different.",
+                "derived_fact": {
+                  "required_seats": 6
+                }
+              },
+              {
+                "rule_id": "BUY_02",
+                "reason": "Vehicle capacity must satisfy the passenger requirement.",
+                "derived_fact": {
+                  "minimum_vehicle_seats": 6
+                }
+              },
+              {
+                "rule_id": "BUY_03",
+                "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+                "derived_fact": {
+                  "lifestyle_profile": "economical_city_commuter"
+                }
+              }
+            ],
+            "missing_slots": [],
+            "clarification_questions": [],
+            "ready_for_matching": true
+          },
+          "dataset_notice": "Observed listing snapshots, not live inventory or confirmed transaction prices. Verify availability, fees and specifications with the source.",
+          "observed_on": [
+            "2026-10-15"
+          ],
+          "matching_method": "Hard filtering followed by conservative weighted heuristic scoring v1.",
+          "constraints": {
+            "maximum_price_myr": 35000.0,
+            "minimum_seats": 6,
+            "excluded_brands": [
+              "toyota"
+            ]
+          },
+          "matches": [],
+          "rejected": [
+            {
+              "vehicle_id": "CL18923892",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 35888 exceeds budget MYR 35000."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL19122669",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 45000 exceeds budget MYR 35000."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL19418670",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 44800 exceeds budget MYR 35000."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18751444",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 64800 exceeds budget MYR 35000."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18249652",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 65800 exceeds budget MYR 35000."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18624149",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                },
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 58888 exceeds budget MYR 35000."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18807978",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                },
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 57800 exceeds budget MYR 35000."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18603852",
+              "brand": "Perodua",
+              "model": "Alza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                },
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 61800 exceeds budget MYR 35000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS_UNKNOWN",
+                  "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18939959",
+              "brand": "Perodua",
+              "model": "Myvi",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 40500 exceeds budget MYR 35000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18625566",
+              "brand": "Perodua",
+              "model": "Myvi",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 42800 exceeds budget MYR 35000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CL18902191",
+              "brand": "Perodua",
+              "model": "Myvi",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                },
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 44800 exceeds budget MYR 35000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CS_C606800",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 36600 exceeds budget MYR 35000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "PT_LP63L6X1P7",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 40800 exceeds budget MYR 35000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "PT_K4EDNMNYPG",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 40800 exceeds budget MYR 35000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "PT_7PRLM3GLPK",
+              "brand": "Perodua",
+              "model": "Bezza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 42800 exceeds budget MYR 35000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS",
+                  "reason": "5 seats is below the required 6."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CS_C6RA000",
+              "brand": "Toyota",
+              "model": "Avanza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                },
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 73900 exceeds budget MYR 35000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS_UNKNOWN",
+                  "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                },
+                {
+                  "rule_id": "FILTER_EXCLUDED_BRAND",
+                  "reason": "Toyota is an excluded brand."
+                }
+              ]
+            },
+            {
+              "vehicle_id": "CS_CBFS600",
+              "brand": "Toyota",
+              "model": "Avanza",
+              "reasons": [
+                {
+                  "rule_id": "FILTER_AVAILABILITY",
+                  "reason": "Source availability is reserved; this record is not an eligible listing snapshot."
+                },
+                {
+                  "rule_id": "FILTER_BUDGET",
+                  "reason": "Price MYR 58000 exceeds budget MYR 35000."
+                },
+                {
+                  "rule_id": "FILTER_SEATS_UNKNOWN",
+                  "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                },
+                {
+                  "rule_id": "FILTER_EXCLUDED_BRAND",
+                  "reason": "Toyota is an excluded brand."
+                }
+              ]
+            }
+          ],
+          "checked_count": 17,
+          "matched_count": 0,
+          "message": "No vehicle satisfies all hard constraints. Review the rejection reasons; constraints have not been relaxed.",
+          "scoring_notes": [
+            "Weights and anchors are design assumptions, not learned coefficients or market facts.",
+            "Unknown components contribute zero to the lower bound, not a claim of poor vehicle quality.",
+            "Fuel values are manufacturer claims, not measured used-car or city-driving consumption.",
+            "Boot volume is a luggage proxy, not passenger legroom or an overall space rating.",
+            "Fuel scoring unavailable for all eligible candidates; no fuel-economy recommendation can be supported."
+          ],
+          "scoring_weights": {
+            "budget": 0.5,
+            "city_compactness": 0.5
+          },
+          "scoring_anchors": {
+            "budget": "1 - asking_price / buyer_budget",
+            "fuel": "clip((km_per_l - 10) / 15, 0, 1); same claim basis only",
+            "luggage": "clip(boot_litres / 600, 0, 1); all seats up only",
+            "brand": "1 for a preferred brand, otherwise 0",
+            "city_compactness": "clip((5000 - length_mm) / 1500, 0, 1)"
+          },
+          "top_vehicle_ids": []
+        },
+        "rules": [
+          {
+            "turn": 3,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_01",
+            "reason": "All stated household members are assumed to travel together; confirm if different.",
+            "derived_fact": {
+              "required_seats": 6
+            }
+          },
+          {
+            "turn": 3,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_02",
+            "reason": "Vehicle capacity must satisfy the passenger requirement.",
+            "derived_fact": {
+              "minimum_vehicle_seats": 6
+            }
+          },
+          {
+            "turn": 3,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_03",
+            "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+            "derived_fact": {
+              "lifestyle_profile": "economical_city_commuter"
+            }
+          }
+        ],
+        "tools": [
+          {
+            "turn": 3,
+            "category": "tools",
+            "name": "inspect_requirements",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "ready",
+              "missing_slots": [],
+              "questions": []
+            }
+          },
+          {
+            "turn": 3,
+            "category": "tools",
+            "name": "rank_vehicles",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "no_matches",
+              "buyer_reasoning": {
+                "extracted_profile": {
+                  "budget_myr": 35000.0,
+                  "family_size": 6,
+                  "required_seats": null,
+                  "usage": [
+                    "city_commute"
+                  ],
+                  "fuel_priority": "high",
+                  "space_priority": null,
+                  "preferred_brands": [],
+                  "excluded_brands": [
+                    "Toyota"
+                  ],
+                  "clarification_notes": [],
+                  "input_validation_notes": []
+                },
+                "derived_facts": {
+                  "budget_myr": 35000.0,
+                  "family_size": 6,
+                  "required_seats": 6,
+                  "usage": [
+                    "city_commute"
+                  ],
+                  "fuel_priority": "high",
+                  "space_priority": null,
+                  "preferred_brands": [],
+                  "excluded_brands": [
+                    "Toyota"
+                  ],
+                  "clarification_notes": [],
+                  "input_validation_notes": [],
+                  "minimum_vehicle_seats": 6,
+                  "lifestyle_profile": "economical_city_commuter"
+                },
+                "fired_rules": [
+                  {
+                    "rule_id": "BUY_01",
+                    "reason": "All stated household members are assumed to travel together; confirm if different.",
+                    "derived_fact": {
+                      "required_seats": 6
+                    }
+                  },
+                  {
+                    "rule_id": "BUY_02",
+                    "reason": "Vehicle capacity must satisfy the passenger requirement.",
+                    "derived_fact": {
+                      "minimum_vehicle_seats": 6
+                    }
+                  },
+                  {
+                    "rule_id": "BUY_03",
+                    "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+                    "derived_fact": {
+                      "lifestyle_profile": "economical_city_commuter"
+                    }
+                  }
+                ],
+                "missing_slots": [],
+                "clarification_questions": [],
+                "ready_for_matching": true
+              },
+              "dataset_notice": "Observed listing snapshots, not live inventory or confirmed transaction prices. Verify availability, fees and specifications with the source.",
+              "observed_on": [
+                "2026-10-15"
+              ],
+              "matching_method": "Hard filtering followed by conservative weighted heuristic scoring v1.",
+              "constraints": {
+                "maximum_price_myr": 35000.0,
+                "minimum_seats": 6,
+                "excluded_brands": [
+                  "toyota"
+                ]
+              },
+              "matches": [],
+              "rejected": [
+                {
+                  "vehicle_id": "CL18923892",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 35888 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL19122669",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 45000 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL19418670",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 44800 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18751444",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 64800 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18249652",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 65800 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18624149",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 58888 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18807978",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 57800 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18603852",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 61800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18939959",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 40500 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18625566",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 42800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18902191",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 44800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_C606800",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 36600 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_LP63L6X1P7",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 40800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_K4EDNMNYPG",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 40800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_7PRLM3GLPK",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 42800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_C6RA000",
+                  "brand": "Toyota",
+                  "model": "Avanza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 73900 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    },
+                    {
+                      "rule_id": "FILTER_EXCLUDED_BRAND",
+                      "reason": "Toyota is an excluded brand."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_CBFS600",
+                  "brand": "Toyota",
+                  "model": "Avanza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is reserved; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 58000 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    },
+                    {
+                      "rule_id": "FILTER_EXCLUDED_BRAND",
+                      "reason": "Toyota is an excluded brand."
+                    }
+                  ]
+                }
+              ],
+              "checked_count": 17,
+              "matched_count": 0,
+              "message": "No vehicle satisfies all hard constraints. Review the rejection reasons; constraints have not been relaxed.",
+              "scoring_notes": [
+                "Weights and anchors are design assumptions, not learned coefficients or market facts.",
+                "Unknown components contribute zero to the lower bound, not a claim of poor vehicle quality.",
+                "Fuel values are manufacturer claims, not measured used-car or city-driving consumption.",
+                "Boot volume is a luggage proxy, not passenger legroom or an overall space rating.",
+                "Fuel scoring unavailable for all eligible candidates; no fuel-economy recommendation can be supported."
+              ],
+              "scoring_weights": {
+                "budget": 0.5,
+                "city_compactness": 0.5
+              },
+              "scoring_anchors": {
+                "budget": "1 - asking_price / buyer_budget",
+                "fuel": "clip((km_per_l - 10) / 15, 0, 1); same claim basis only",
+                "luggage": "clip(boot_litres / 600, 0, 1); all seats up only",
+                "brand": "1 for a preferred brand, otherwise 0",
+                "city_compactness": "clip((5000 - length_mm) / 1500, 0, 1)"
+              },
+              "top_vehicle_ids": []
+            }
+          },
+          {
+            "turn": 3,
+            "category": "tools",
+            "name": "check_result",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "passed": true,
+              "checks": [
+                {
+                  "name": "finite_json_result",
+                  "passed": true
+                },
+                {
+                  "name": "all_eligible_ids_once",
+                  "passed": true
+                },
+                {
+                  "name": "status_agrees_with_matches",
+                  "passed": true
+                },
+                {
+                  "name": "weights_sum_to_one",
+                  "passed": true
+                },
+                {
+                  "name": "score_order",
+                  "passed": true
+                }
+              ]
+            }
+          },
+          {
+            "turn": 3,
+            "category": "tools",
+            "name": "finish",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "complete",
+              "outcome": "no_matches"
+            }
+          }
+        ],
+        "checks": [
+          {
+            "turn": 3,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "finite_json_result",
+            "passed": true
+          },
+          {
+            "turn": 3,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "all_eligible_ids_once",
+            "passed": true
+          },
+          {
+            "turn": 3,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "status_agrees_with_matches",
+            "passed": true
+          },
+          {
+            "turn": 3,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "weights_sum_to_one",
+            "passed": true
+          },
+          {
+            "turn": 3,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "score_order",
+            "passed": true
+          }
+        ],
+        "trace": [
+          {
+            "turn": 3,
+            "category": "model",
+            "phase": "sense",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 3,
+            "category": "facts",
+            "action": "update",
+            "slot": "buyer.budget_myr",
+            "value": 35000.0,
+            "operation": "set",
+            "evidence": "RM35000"
+          },
+          {
+            "turn": 3,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 3,
+            "category": "tools",
+            "name": "inspect_requirements",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "ready",
+              "missing_slots": [],
+              "questions": []
+            }
+          },
+          {
+            "turn": 3,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 3,
+            "category": "tools",
+            "name": "rank_vehicles",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "no_matches",
+              "buyer_reasoning": {
+                "extracted_profile": {
+                  "budget_myr": 35000.0,
+                  "family_size": 6,
+                  "required_seats": null,
+                  "usage": [
+                    "city_commute"
+                  ],
+                  "fuel_priority": "high",
+                  "space_priority": null,
+                  "preferred_brands": [],
+                  "excluded_brands": [
+                    "Toyota"
+                  ],
+                  "clarification_notes": [],
+                  "input_validation_notes": []
+                },
+                "derived_facts": {
+                  "budget_myr": 35000.0,
+                  "family_size": 6,
+                  "required_seats": 6,
+                  "usage": [
+                    "city_commute"
+                  ],
+                  "fuel_priority": "high",
+                  "space_priority": null,
+                  "preferred_brands": [],
+                  "excluded_brands": [
+                    "Toyota"
+                  ],
+                  "clarification_notes": [],
+                  "input_validation_notes": [],
+                  "minimum_vehicle_seats": 6,
+                  "lifestyle_profile": "economical_city_commuter"
+                },
+                "fired_rules": [
+                  {
+                    "rule_id": "BUY_01",
+                    "reason": "All stated household members are assumed to travel together; confirm if different.",
+                    "derived_fact": {
+                      "required_seats": 6
+                    }
+                  },
+                  {
+                    "rule_id": "BUY_02",
+                    "reason": "Vehicle capacity must satisfy the passenger requirement.",
+                    "derived_fact": {
+                      "minimum_vehicle_seats": 6
+                    }
+                  },
+                  {
+                    "rule_id": "BUY_03",
+                    "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+                    "derived_fact": {
+                      "lifestyle_profile": "economical_city_commuter"
+                    }
+                  }
+                ],
+                "missing_slots": [],
+                "clarification_questions": [],
+                "ready_for_matching": true
+              },
+              "dataset_notice": "Observed listing snapshots, not live inventory or confirmed transaction prices. Verify availability, fees and specifications with the source.",
+              "observed_on": [
+                "2026-10-15"
+              ],
+              "matching_method": "Hard filtering followed by conservative weighted heuristic scoring v1.",
+              "constraints": {
+                "maximum_price_myr": 35000.0,
+                "minimum_seats": 6,
+                "excluded_brands": [
+                  "toyota"
+                ]
+              },
+              "matches": [],
+              "rejected": [
+                {
+                  "vehicle_id": "CL18923892",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 35888 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL19122669",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 45000 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL19418670",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 44800 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18751444",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 64800 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18249652",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 65800 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18624149",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 58888 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18807978",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 57800 exceeds budget MYR 35000."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18603852",
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 61800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18939959",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 40500 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18625566",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 42800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CL18902191",
+                  "brand": "Perodua",
+                  "model": "Myvi",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 44800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_C606800",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 36600 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_LP63L6X1P7",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 40800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_K4EDNMNYPG",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 40800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "PT_7PRLM3GLPK",
+                  "brand": "Perodua",
+                  "model": "Bezza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 42800 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS",
+                      "reason": "5 seats is below the required 6."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_C6RA000",
+                  "brand": "Toyota",
+                  "model": "Avanza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is sold; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 73900 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    },
+                    {
+                      "rule_id": "FILTER_EXCLUDED_BRAND",
+                      "reason": "Toyota is an excluded brand."
+                    }
+                  ]
+                },
+                {
+                  "vehicle_id": "CS_CBFS600",
+                  "brand": "Toyota",
+                  "model": "Avanza",
+                  "reasons": [
+                    {
+                      "rule_id": "FILTER_AVAILABILITY",
+                      "reason": "Source availability is reserved; this record is not an eligible listing snapshot."
+                    },
+                    {
+                      "rule_id": "FILTER_BUDGET",
+                      "reason": "Price MYR 58000 exceeds budget MYR 35000."
+                    },
+                    {
+                      "rule_id": "FILTER_SEATS_UNKNOWN",
+                      "reason": "Seat capacity is unknown; passenger eligibility cannot be verified."
+                    },
+                    {
+                      "rule_id": "FILTER_EXCLUDED_BRAND",
+                      "reason": "Toyota is an excluded brand."
+                    }
+                  ]
+                }
+              ],
+              "checked_count": 17,
+              "matched_count": 0,
+              "message": "No vehicle satisfies all hard constraints. Review the rejection reasons; constraints have not been relaxed.",
+              "scoring_notes": [
+                "Weights and anchors are design assumptions, not learned coefficients or market facts.",
+                "Unknown components contribute zero to the lower bound, not a claim of poor vehicle quality.",
+                "Fuel values are manufacturer claims, not measured used-car or city-driving consumption.",
+                "Boot volume is a luggage proxy, not passenger legroom or an overall space rating.",
+                "Fuel scoring unavailable for all eligible candidates; no fuel-economy recommendation can be supported."
+              ],
+              "scoring_weights": {
+                "budget": 0.5,
+                "city_compactness": 0.5
+              },
+              "scoring_anchors": {
+                "budget": "1 - asking_price / buyer_budget",
+                "fuel": "clip((km_per_l - 10) / 15, 0, 1); same claim basis only",
+                "luggage": "clip(boot_litres / 600, 0, 1); all seats up only",
+                "brand": "1 for a preferred brand, otherwise 0",
+                "city_compactness": "clip((5000 - length_mm) / 1500, 0, 1)"
+              },
+              "top_vehicle_ids": []
+            }
+          },
+          {
+            "turn": 3,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_01",
+            "reason": "All stated household members are assumed to travel together; confirm if different.",
+            "derived_fact": {
+              "required_seats": 6
+            }
+          },
+          {
+            "turn": 3,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_02",
+            "reason": "Vehicle capacity must satisfy the passenger requirement.",
+            "derived_fact": {
+              "minimum_vehicle_seats": 6
+            }
+          },
+          {
+            "turn": 3,
+            "category": "rules",
+            "tool": "rank_vehicles",
+            "rule_id": "BUY_03",
+            "reason": "City commuting plus a high fuel-economy preference activates the economical city profile.",
+            "derived_fact": {
+              "lifestyle_profile": "economical_city_commuter"
+            }
+          },
+          {
+            "turn": 3,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 3,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "finite_json_result",
+            "passed": true
+          },
+          {
+            "turn": 3,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "all_eligible_ids_once",
+            "passed": true
+          },
+          {
+            "turn": 3,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "status_agrees_with_matches",
+            "passed": true
+          },
+          {
+            "turn": 3,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "weights_sum_to_one",
+            "passed": true
+          },
+          {
+            "turn": 3,
+            "category": "checks",
+            "tool": "rank_vehicles",
+            "name": "score_order",
+            "passed": true
+          },
+          {
+            "turn": 3,
+            "category": "tools",
+            "name": "check_result",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "passed": true,
+              "checks": [
+                {
+                  "name": "finite_json_result",
+                  "passed": true
+                },
+                {
+                  "name": "all_eligible_ids_once",
+                  "passed": true
+                },
+                {
+                  "name": "status_agrees_with_matches",
+                  "passed": true
+                },
+                {
+                  "name": "weights_sum_to_one",
+                  "passed": true
+                },
+                {
+                  "name": "score_order",
+                  "passed": true
+                }
+              ]
+            }
+          },
+          {
+            "turn": 3,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 3,
+            "category": "tools",
+            "name": "finish",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "complete",
+              "outcome": "no_matches"
+            }
+          }
+        ],
+        "limits": {
+          "request_timeout_seconds": 45.0,
+          "turn_timeout_seconds": 180.0,
+          "model_retries": 1,
+          "maximum_tool_calls": 10,
+          "maximum_tool_errors": 2,
+          "maximum_input_characters": 6000
+        }
+      }
+    },
+    {
+      "case": "buy",
+      "turn": 4,
+      "input": "/reset",
+      "expected": {
+        "status": "reset",
+        "goal": null
+      },
+      "actual": {
+        "status": "reset",
+        "goal": null
+      },
+      "passed": true,
+      "elapsed_seconds": 0.0,
+      "response": {
+        "status": "reset",
+        "goal": null,
+        "message": "Session reset. Would you like to buy, sell, negotiate, or compare trade-in?",
+        "facts": {},
+        "result": null,
+        "rules": [],
+        "tools": [],
+        "checks": [],
+        "trace": [
+          {
+            "turn": 0,
+            "category": "system",
+            "action": "reset"
+          }
+        ],
+        "limits": {
+          "request_timeout_seconds": 45.0,
+          "turn_timeout_seconds": 180.0,
+          "model_retries": 1,
+          "maximum_tool_calls": 10,
+          "maximum_tool_errors": 2,
+          "maximum_input_characters": 6000
+        }
+      }
+    },
+    {
+      "case": "sell",
+      "turn": 1,
+      "input": "I want to sell my Perodua Alza 1.5 SE, manufactured in 2020, automatic, odometer 50000 m, fair condition. No major accident and no flood damage.",
+      "expected": {
+        "status": "complete",
+        "facts.mileage_km": 50,
+        "result.reference.median_asking_price_myr": 44800
+      },
+      "actual": {
+        "status": "needs_clarification",
+        "facts.mileage_km": 50.0,
+        "result.reference.median_asking_price_myr": null
+      },
+      "passed": false,
+      "elapsed_seconds": 59.23,
+      "response": {
+        "status": "needs_clarification",
+        "goal": "sell",
+        "message": "What is the manufacturing year?\nIs the transmission Automatic, Manual or D-CVT?\nDamage history must be explicitly true, false or unknown.",
+        "facts": {
+          "brand": "Perodua",
+          "model": "Alza",
+          "variant": "1.5 SE",
+          "mileage_km": 50.0,
+          "condition": "fair"
+        },
+        "result": null,
+        "rules": [],
+        "tools": [
+          {
+            "turn": 1,
+            "category": "tools",
+            "name": "inspect_requirements",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "needs_clarification",
+              "missing_slots": [
+                "seller.year",
+                "seller.transmission",
+                "seller.major_accident_reported",
+                "seller.flood_damage_reported"
+              ],
+              "questions": [
+                "What is the manufacturing year?",
+                "Is the transmission Automatic, Manual or D-CVT?",
+                "Damage history must be explicitly true, false or unknown."
+              ]
+            }
+          },
+          {
+            "turn": 1,
+            "category": "tools",
+            "name": "ask_user",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "questions": [
+                "What is the manufacturing year?",
+                "Is the transmission Automatic, Manual or D-CVT?",
+                "Damage history must be explicitly true, false or unknown."
+              ]
+            }
+          }
+        ],
+        "checks": [
+          {
+            "turn": 1,
+            "category": "checks",
+            "name": "source_grounding",
+            "passed": false,
+            "slot": "seller.year",
+            "proposed_value": "2020",
+            "detail": "Please state an integer manufacturing year."
+          },
+          {
+            "turn": 1,
+            "category": "checks",
+            "name": "source_grounding",
+            "passed": false,
+            "slot": "seller.transmission",
+            "proposed_value": "automatic",
+            "detail": "Please state Automatic, Manual or D-CVT explicitly."
+          },
+          {
+            "turn": 1,
+            "category": "checks",
+            "name": "source_grounding",
+            "passed": false,
+            "slot": "seller.major_accident_reported",
+            "proposed_value": "false",
+            "detail": "Damage history must be explicitly true, false or unknown."
+          },
+          {
+            "turn": 1,
+            "category": "checks",
+            "name": "source_grounding",
+            "passed": false,
+            "slot": "seller.flood_damage_reported",
+            "proposed_value": "false",
+            "detail": "Damage history must be explicitly true, false or unknown."
+          }
+        ],
+        "trace": [
+          {
+            "turn": 1,
+            "category": "model",
+            "phase": "sense",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 1,
+            "category": "facts",
+            "action": "switch_goal",
+            "previous": null,
+            "goal": "sell"
+          },
+          {
+            "turn": 1,
+            "category": "facts",
+            "action": "update",
+            "slot": "seller.brand",
+            "value": "Perodua",
+            "operation": "set",
+            "evidence": "Perodua"
+          },
+          {
+            "turn": 1,
+            "category": "facts",
+            "action": "update",
+            "slot": "seller.model",
+            "value": "Alza",
+            "operation": "set",
+            "evidence": "Alza"
+          },
+          {
+            "turn": 1,
+            "category": "facts",
+            "action": "update",
+            "slot": "seller.variant",
+            "value": "1.5 SE",
+            "operation": "set",
+            "evidence": "1.5 SE"
+          },
+          {
+            "turn": 1,
+            "category": "checks",
+            "name": "source_grounding",
+            "passed": false,
+            "slot": "seller.year",
+            "proposed_value": "2020",
+            "detail": "Please state an integer manufacturing year."
+          },
+          {
+            "turn": 1,
+            "category": "checks",
+            "name": "source_grounding",
+            "passed": false,
+            "slot": "seller.transmission",
+            "proposed_value": "automatic",
+            "detail": "Please state Automatic, Manual or D-CVT explicitly."
+          },
+          {
+            "turn": 1,
+            "category": "facts",
+            "action": "update",
+            "slot": "seller.mileage_km",
+            "value": 50.0,
+            "operation": "set",
+            "evidence": "50000 m"
+          },
+          {
+            "turn": 1,
+            "category": "facts",
+            "action": "update",
+            "slot": "seller.condition",
+            "value": "fair",
+            "operation": "set",
+            "evidence": "fair condition"
+          },
+          {
+            "turn": 1,
+            "category": "checks",
+            "name": "source_grounding",
+            "passed": false,
+            "slot": "seller.major_accident_reported",
+            "proposed_value": "false",
+            "detail": "Damage history must be explicitly true, false or unknown."
+          },
+          {
+            "turn": 1,
+            "category": "checks",
+            "name": "source_grounding",
+            "passed": false,
+            "slot": "seller.flood_damage_reported",
+            "proposed_value": "false",
+            "detail": "Damage history must be explicitly true, false or unknown."
+          },
+          {
+            "turn": 1,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 1,
+            "category": "tools",
+            "name": "inspect_requirements",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "status": "needs_clarification",
+              "missing_slots": [
+                "seller.year",
+                "seller.transmission",
+                "seller.major_accident_reported",
+                "seller.flood_damage_reported"
+              ],
+              "questions": [
+                "What is the manufacturing year?",
+                "Is the transmission Automatic, Manual or D-CVT?",
+                "Damage history must be explicitly true, false or unknown."
+              ]
+            }
+          },
+          {
+            "turn": 1,
+            "category": "model",
+            "phase": "plan",
+            "attempt": 1,
+            "success": true
+          },
+          {
+            "turn": 1,
+            "category": "tools",
+            "name": "ask_user",
+            "arguments": {},
+            "executed": true,
+            "observation": {
+              "questions": [
+                "What is the manufacturing year?",
+                "Is the transmission Automatic, Manual or D-CVT?",
+                "Damage history must be explicitly true, false or unknown."
+              ]
+            }
+          }
+        ],
+        "limits": {
+          "request_timeout_seconds": 45.0,
+          "turn_timeout_seconds": 180.0,
+          "model_retries": 1,
+          "maximum_tool_calls": 10,
+          "maximum_tool_errors": 2,
+          "maximum_input_characters": 6000
+        }
+      }
+    },
+    {
+      "case": "negotiate",
+      "turn": 1,
+      "input": "I want to negotiate as a buyer for a Perodua Alza 1.5 SE, manufactured in 2020, automatic. The seller currently quotes RM46000 excluding fees. My total purchase budget including fees is RM46000. All fees total RM1500 and are confirmed complete.",
+      "expected": {
+        "status": "complete",
+        "result.suggested_counter_price_myr": 44500,
+        "result.valuation_evidence.reference.median_asking_price_myr": 44800
+      },
+      "actual": {
+        "status": "timeout",
+        "result.suggested_counter_price_myr": null,
+        "result.valuation_evidence.reference.median_asking_price_myr": null
+      },
+      "passed": false,
+      "elapsed_seconds": 90.03,
+      "response": {
+        "status": "timeout",
+        "goal": null,
+        "message": "The local model request failed or timed out. Check Ollama and the downloaded model, then retry. Validated facts are retained; no successful tool execution is invented.",
+        "facts": {},
+        "result": null,
+        "rules": [],
+        "tools": [],
+        "checks": [],
+        "trace": [
+          {
+            "turn": 1,
+            "category": "model",
+            "phase": "sense",
+            "attempt": 1,
+            "success": false,
+            "error": "TimeoutError"
+          },
+          {
+            "turn": 1,
+            "category": "model",
+            "phase": "sense",
+            "attempt": 2,
+            "success": false,
+            "error": "TimeoutError"
+          },
+          {
+            "turn": 1,
+            "category": "system",
+            "action": "stop_on_error",
+            "reason": "timeout",
+            "error": "TimeoutError"
+          }
+        ],
+        "limits": {
+          "request_timeout_seconds": 45.0,
+          "turn_timeout_seconds": 180.0,
+          "model_retries": 1,
+          "maximum_tool_calls": 10,
+          "maximum_tool_errors": 2,
+          "maximum_input_characters": 6000
+        }
+      }
+    },
+    {
+      "case": "trade_in",
+      "turn": 1,
+      "input": "I want to compare trade-in with private sale. My current car is a Perodua Alza 1.5 SE, manufactured in 2020, automatic. The trade-in gross offer is RM35000 and trade-in disposal fees are RM500. The old loan settlement is RM10000.",
+      "expected": {
+        "status": "needs_clarification"
+      },
+      "actual": {
+        "status": "timeout"
+      },
+      "passed": false,
+      "elapsed_seconds": 90.05,
+      "response": {
+        "status": "timeout",
+        "goal": null,
+        "message": "The local model request failed or timed out. Check Ollama and the downloaded model, then retry. Validated facts are retained; no successful tool execution is invented.",
+        "facts": {},
+        "result": null,
+        "rules": [],
+        "tools": [],
+        "checks": [],
+        "trace": [
+          {
+            "turn": 1,
+            "category": "model",
+            "phase": "sense",
+            "attempt": 1,
+            "success": false,
+            "error": "TimeoutError"
+          },
+          {
+            "turn": 1,
+            "category": "model",
+            "phase": "sense",
+            "attempt": 2,
+            "success": false,
+            "error": "TimeoutError"
+          },
+          {
+            "turn": 1,
+            "category": "system",
+            "action": "stop_on_error",
+            "reason": "timeout",
+            "error": "TimeoutError"
+          }
+        ],
+        "limits": {
+          "request_timeout_seconds": 45.0,
+          "turn_timeout_seconds": 180.0,
+          "model_retries": 1,
+          "maximum_tool_calls": 10,
+          "maximum_tool_errors": 2,
+          "maximum_input_characters": 6000
+        }
+      }
+    }
+  ],
+  "passed": false
+}

@@ -1,0 +1,9 @@
+{
+  "currency": "MYR",
+  "trade_in_replacement": {"price_myr": 65000, "fees_myr": 1000, "fees_confirmed_complete": true},
+  "private_sale_replacement": {"price_myr": 65000, "fees_myr": null, "fees_confirmed_complete": false},
+  "trade_in_quote": {"price_myr": 35000, "fees_myr": 500, "fees_confirmed_complete": true},
+  "private_sale_quote": {"price_myr": 40000, "fees_myr": 1000, "fees_confirmed_complete": true},
+  "loan_settlement_myr": 10000,
+  "priority": "net_cost"
+}

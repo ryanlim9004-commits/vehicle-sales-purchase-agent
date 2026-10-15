@@ -44,12 +44,14 @@ class VehicleFrame(BaseModel):
 
     @model_validator(mode='after')
     def check_dates(self):
-        if self.year > self.observed_on.year + 1:
+        if self.year > self.observed_on.year:
             raise ValueError('Vehicle year is inconsistent with the observation date.')
         if self.source_updated_on and self.source_updated_on > self.observed_on:
             raise ValueError('Source update date cannot be after the observation date.')
         if self.mileage_min_km is not None and self.mileage_max_km is not None and self.mileage_min_km > self.mileage_max_km:
             raise ValueError('Mileage lower bound cannot exceed the upper bound.')
+        if self.mileage_km is not None and ((self.mileage_min_km is not None and self.mileage_km < self.mileage_min_km) or (self.mileage_max_km is not None and self.mileage_km > self.mileage_max_km)):
+            raise ValueError('Exact mileage must agree with any supplied mileage bounds.')
         if self.source_kind != 'synthetic_demo':
             if not self.variant or not self.variant.strip():
                 raise ValueError('Real records require a stated variant.')
@@ -59,6 +61,12 @@ class VehicleFrame(BaseModel):
             parsed = urlsplit(self.source_reference)
             if parsed.scheme != 'https' or not parsed.netloc:
                 raise ValueError('Real records require an HTTPS source URL.')
+            if self.fuel_km_per_l is not None and self.fuel_basis == 'synthetic_demo':
+                raise ValueError('Real records cannot use a synthetic fuel claim basis.')
+            for reference, used in [(self.fuel_source_reference, self.fuel_km_per_l is not None), (self.specs_source_reference, self.length_mm is not None or self.boot_litres is not None)]:
+                parsed = urlsplit(reference or '')
+                if used and (parsed.scheme != 'https' or not parsed.netloc):
+                    raise ValueError('Real fuel and size features require HTTPS source references.')
         if self.fuel_km_per_l is not None and (not self.fuel_basis or not self.fuel_source_reference):
             raise ValueError('Fuel values require a test/claim basis and source.')
         if (self.length_mm is not None or self.boot_litres is not None) and not self.specs_source_reference:

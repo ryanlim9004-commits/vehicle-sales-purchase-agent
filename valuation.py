@@ -27,7 +27,7 @@ def key(text):
     return ' '.join((text or '').casefold().split())
 
 
-def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerCarFrame], *, as_of: date, illustrative_adjustments=False, policy=None):
+def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerCarFrame], *, as_of: date, illustrative_adjustments=False, policy=None, identity_reference_only=False):
     policy = policy or ValuationPolicy()
     result = {'status':'needs_clarification', 'seller_profile':seller.model_dump(), 'as_of':as_of.isoformat(),
               'policy':policy.model_dump(), 'comparables':[], 'excluded_records':[], 'fired_rules':[],
@@ -45,10 +45,14 @@ def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerC
     required = {'brand':'What is the vehicle brand?', 'model':'What is the vehicle model?', 'variant':'What is the exact variant, for example 1.5 SE?',
                 'year':'What is the manufacturing year?', 'transmission':'Is the transmission Automatic, Manual or D-CVT?',
                 'mileage_km':'What is the mileage in kilometres?', 'condition':'Is the reported condition good, fair or poor?'}
+    if identity_reference_only and not illustrative_adjustments:
+        required.pop('mileage_km')
+        required.pop('condition')
+        result['reference_scope'] = 'Identity-only unadjusted asking-price reference; no seller mileage or condition is inferred.'
     for slot, question in required.items():
         if getattr(seller, slot) is None or (slot == 'condition' and seller.condition == 'unknown'):
             result['clarification_questions'].append(question)
-    if seller.year and seller.year > as_of.year + 1:
+    if seller.year and seller.year > as_of.year:
         result['clarification_questions'].append('The manufacturing year is beyond this valuation date; please clarify.')
     if result['clarification_questions']:
         trace.append({'rule_id':'VAL_REQUIRED','reason':'Required or conflicting seller facts must be clarified before calculation.'})

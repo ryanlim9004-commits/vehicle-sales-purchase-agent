@@ -8,6 +8,31 @@ from vehicle_frame import load_vehicles
 ROOT = Path(__file__).resolve().parent
 
 
+def check_receipts(rows, receipts):
+    """Check local lineage consistency, not whether the original advert is true."""
+    issues = []
+    by_id = {v.vehicle_id: v.model_dump(mode='json') for v in rows}
+    sources = receipts.get('sources', [])
+    receipt_ids = [r.get('vehicle_id') for r in sources]
+    if len(receipt_ids) != len(set(receipt_ids)):
+        issues.append('Duplicate vehicle IDs in source receipts.')
+    if set(receipt_ids) != set(by_id):
+        issues.append('Source-receipt IDs do not exactly cover the dataset IDs.')
+    for receipt in sources:
+        identity = receipt.get('vehicle_id')
+        row = by_id.get(identity)
+        if row is None:
+            continue
+        if receipt.get('url') != row['source_reference']:
+            issues.append(f'{identity}: source URL differs from its receipt.')
+        fields = receipt.get('fields', {})
+        required = {'brand', 'model', 'variant', 'year', 'price_myr', 'price_type', 'seats', 'mileage_km', 'mileage_min_km', 'mileage_max_km', 'availability', 'source_updated_on'}
+        for name in sorted(required | set(fields)):
+            if name not in fields or fields[name] != row.get(name):
+                issues.append(f'{identity}: {name} differs from or is missing in its receipt.')
+    return issues
+
+
 def profile_data(path):
     rows = load_vehicles(path)
     count = len(rows)
@@ -27,6 +52,24 @@ def profile_data(path):
         signature = (v.brand, v.model, v.variant, v.year, v.price_myr, v.mileage_km, v.mileage_min_km, v.mileage_max_km)
         signature_groups.setdefault(signature, []).append(v.vehicle_id)
     duplicates = [ids for ids in signature_groups.values() if len(ids) > 1]
+    receipt_check = {'status': 'not_checked', 'note': 'No matching curated receipt file selected.'}
+    if Path(path).resolve() == (ROOT/'data'/'vehicles_real.json').resolve():
+        receipt_path = ROOT/'data'/'source_receipts.json'
+        if receipt_path.exists():
+            receipt_issues = check_receipts(rows, json.loads(receipt_path.read_text(encoding='utf-8')))
+            critical.extend(receipt_issues)
+            receipt_check = {'status': 'failed' if receipt_issues else 'passed', 'checked_records': len(rows), 'issues': receipt_issues,
+                             'note': 'Local receipt consistency only; this does not independently verify source truth or current stock.'}
+        else:
+            critical.append('Curated source receipt file is missing.')
+            receipt_check = {'status': 'failed', 'issues': ['Receipt file missing.']}
+    groups = Counter((v.brand, v.model, v.variant, v.year, v.transmission) for v in rows
+                     if v.source_kind == 'listing' and v.price_type == 'asking' and v.availability == 'listed_snapshot'
+                     and v.price_myr is not None and v.source_updated_on is not None
+                     and 0 <= (date(2026, 10, 15) - v.source_updated_on).days <= 90
+                     and v.observed_on <= date(2026, 10, 15))
+    comparable_groups = [dict(zip(('brand', 'model', 'variant', 'year', 'transmission'), signature), count=n, meets_minimum_three=n >= 3)
+                         for signature, n in sorted(groups.items(), key=lambda item: str(item[0]))]
     return {'snapshot_date': '2026-10-15', 'row_count': count,
             'grain': 'one source advertisement/inventory ID; cross-platform VIN identity is not verified',
             'unique_ids': len({v.vehicle_id for v in rows}), 'unique_source_urls': len(set(urls)),
@@ -35,6 +78,9 @@ def profile_data(path):
             'by_model': dict(Counter(f'{v.brand} {v.model}' for v in rows)),
             'missingness': missing, 'mileage_exact_or_range_count': known_mileage,
             'source_update_older_than_60_days_ids': old, 'possible_duplicate_signatures': duplicates,
+            'receipt_check': receipt_check,
+            'valuation_comparable_groups': comparable_groups,
+            'comparable_policy': 'Exact brand/model/variant/year/transmission; eligible asking snapshots with known updates within 90 days of 2026-10-15; minimum three. Not a statistical sufficiency guarantee.',
             'critical_issues': critical,
             'limitations': ['Small convenience sample, not representative of the Malaysian market.',
                            'No verified transaction prices or independently inspected condition labels.',

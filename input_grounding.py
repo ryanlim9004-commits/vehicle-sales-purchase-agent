@@ -188,6 +188,10 @@ def ground_seller(text, profile):
 
 def ground_buyer(text, profile):
     data=profile.model_dump()
+    if re.search(r"\b(not everyone|not all|won't all|will not all)\b.{0,50}\b(travel|ride|together)\b", text, re.I):
+        data['household_travels_together']=False
+    elif not re.search(r'\b(everyone|all)\b.{0,50}\b(travel|ride|together)\b', text, re.I):
+        data['household_travels_together']=None
     amount,evidence,issue=budget_from_text(text)
     data['budget_myr']=amount
     questions=list(profile.clarification_notes)

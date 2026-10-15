@@ -1,0 +1,11 @@
+{
+  "currency": "MYR",
+  "role": "seller",
+  "vehicle": {"brand": "Perodua", "model": "Alza", "variant": "1.5 SE", "year": 2020, "transmission": "Automatic"},
+  "asking_price_myr": 45000,
+  "current_offer_myr": 40000,
+  "fees_myr": 1000,
+  "fees_confirmed_complete": true,
+  "seller_minimum_net_myr": 38000,
+  "loan_settlement_myr": 5000
+}

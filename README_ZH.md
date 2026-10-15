@@ -1,5 +1,11 @@
 # 第 1 课：把买车需求转换为 BuyerProfileFrame
 
+最新（2026-10-15）：阶段1–7复核与修复、阶段8多轮Agent Loop基础版已完成。运行`agent_cli.py --as-of 2026-10-15`，支持英文追问回答、修改条件、任务切换、实际工具执行与结果检查。见[阶段8运行教学](STAGE8_GUIDE_ZH.md)、[阶段1–7核对](STAGES1_7_AUDIT_ZH.md)及[验证记录](STAGE8_RESULTS.md)。134项单元测试、16个既有工具场景复核、最终8轮真实模型验收（含一次reset）通过；不是总体准确率或市场验证。下一步英文UI与更广评估、报告和视频。
+
+阶段7历史记录：Negotiation/Trade-In独立tools及`main.py --negotiate`／`--trade-in`入口已完成，详见 `STAGE7_GUIDE_ZH.md`。当时94项回归、8个阶段7场景通过；本课以下内容是第一课的历史教学范围，完整多轮入口以最新阶段8说明为准。
+
+阶段5/6历史验收：真实数据/Scoring及Valuation基础版已核对与修复；当时67项回归、10个场景通过。见 `STAGE5_STAGE6_REVIEW_ZH.md`。本文件及LESSON2–4为历史教学课次，不能按编号判断当前进度。
+
 2026-10-15 输入错误修复：新增 Python 原文核对层，修正 m／miles／km、预算币种及相关边界。复测命令、结果与报告证据见 `INPUT_VALIDATION_FIX_ZH.md`。旧阶段记录保留为当时的进度。
 
 Stage 4 估价tool已完成基础版：见 `LESSON4_ZH.md`，运行 `--value`。默认返回可核查挂牌reference；`--illustrative-adjustments`仅为明确标注的教学假设模式。
@@ -10,7 +16,7 @@ Stage 2 已完成：VehicleFrame + 预算/座位/排除品牌筛选。运行与�
 
 2026-10-14 更新：应用输入、输出、Prompt、追问及错误信息统一使用英文；这份教学说明保留中文。旧中文示例用于解释概念，运行时请使用下方英文命令。
 
-这一阶段实现 **NLU/Slot Extraction + Frame + 小型 Forward Chaining**。暂时不会推荐真实车辆，也没有完整 Agent Loop；后续阶段会加入三个工具和任务循环。
+本课当时实现 **NLU/Slot Extraction + Frame + 小型 Forward Chaining**。以下按第一课的范围讲解；当前完整功能及运行入口见页首最新记录。
 
 环境已在本机完成：项目 venv、Python 依赖、Ollama 和 qwen3:4b。5 项规则测试及 4 项 live model cases 已通过，见 STAGE1_RESULTS.md 与 evaluation-results.json。
 
@@ -24,7 +30,7 @@ Stage 2 已完成：VehicleFrame + 预算/座位/排除品牌筛选。运行与�
 4. Python 规则 BUY_02：required_seats → minimum_vehicle_seats。
 5. Python 规则 BUY_03：city_commute AND fuel_priority=high → economical_city_commuter。
 
-第 3 步假设所有家庭成员一起乘车，trace 中明确标出；如用户明确要求的 seats 比 family_size 小，则追问，不覆盖用户事实。实际推荐前用户可纠正该假设。
+第 3 步假设所有家庭成员一起乘车，trace 中明确标出；如用户明确要求的 seats 比 family_size 小，则追问，不覆盖用户事实。现已增加BUY_04与household_travels_together，用户可澄清并非全家同行，系统保留家庭人数、使用明确的座位需求。
 
 `null` 表示未知；空的 preferred_brands 表示尚无明确品牌偏好。Validation 只能检查类型/范围，无法保证 LLM 正确理解原文，因此还需要自然语言案例评估。
 
@@ -83,7 +89,7 @@ ollama pull qwen3:4b
 
 ## 当前边界与下一课
 
-这是单轮 extraction demonstration。它还没有 conversation memory、正式车辆 dataset、匹配排名、估价、议价或完整 Agent Loop。下一课先定义 VehicleFrame、数据来源和硬约束筛选；不要跳过独立工具验证。
+本课的main.py命令演示单轮extraction；后续课次已加入VehicleFrame、来源快照、排名、估价与议价。当前多轮memory及Agent Loop请从页首的阶段8入口运行。
 
 Stage 1 的代码主要用于展示 Frame slots/ranges/unknown、Production Rules 与 rule trace。Class inheritance 和完整 Knowledge Base 会在下一阶段展开。
 

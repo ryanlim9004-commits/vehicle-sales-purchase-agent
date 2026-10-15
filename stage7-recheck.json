@@ -1,0 +1,958 @@
+{
+  "reviewed_on": "2026-10-15",
+  "method": "Five real CLI runs and three direct tool acceptance scenarios; all consultation quotes and time estimates are synthetic fixtures.",
+  "reference_basis": "CLI negotiation cases call the actual valuation tool on the saved real-source listing snapshot.",
+  "limitations": "No Ollama extraction, autonomous agent, executed negotiation, or market-success evaluation is claimed.",
+  "cases": [
+    {
+      "case": "buyer_with_actual_valuation_tool",
+      "expected": {
+        "status": "advice_ready",
+        "suggested_counter_price_myr": 44500,
+        "calculations.offered_total_cost_myr": 47500
+      },
+      "actual": {
+        "status": "advice_ready",
+        "suggested_counter_price_myr": 44500.0,
+        "calculations.offered_total_cost_myr": 47500.0
+      },
+      "passed": true,
+      "result": {
+        "status": "advice_ready",
+        "profile": {
+          "currency": "MYR",
+          "role": "buyer",
+          "vehicle": {
+            "brand": "Perodua",
+            "model": "Alza",
+            "variant": "1.5 SE",
+            "year": 2020,
+            "transmission": "Automatic"
+          },
+          "asking_price_myr": 47000.0,
+          "current_offer_myr": 46000.0,
+          "fees_myr": 1500.0,
+          "fees_confirmed_complete": true,
+          "buyer_total_budget_myr": 46000.0,
+          "seller_minimum_net_myr": null,
+          "loan_settlement_myr": null,
+          "clarification_notes": []
+        },
+        "as_of": "2026-10-15",
+        "action": "counter_offer",
+        "suggested_counter_price_myr": 44500.0,
+        "calculations": {
+          "offered_total_cost_myr": 47500.0,
+          "total_budget_myr": 46000.0,
+          "maximum_vehicle_price_myr": 44500.0,
+          "formula": "Total cost = offered vehicle price + fees; vehicle-price cap = total budget - fees."
+        },
+        "price_position": "above_observed_asking_range",
+        "fired_rules": [
+          {
+            "rule_id": "NEG_BUY_BUDGET",
+            "reason": "The current total exceeds the budget. The proposed vehicle price plus fees stays within the budget."
+          }
+        ],
+        "clarification_questions": [],
+        "policy": {
+          "version": "negotiation-v1",
+          "method": "Hand-authored decision tree; no trained model.",
+          "buyer_limit": "Total cash price including all stated buyer fees.",
+          "seller_limit": "Minimum net proceeds after all stated fees and current-loan settlement.",
+          "counter_anchor": "Unadjusted asking median when available, bounded by the user limit and stated asking price; otherwise the user limit or stated asking price."
+        },
+        "limitations": [
+          "Suggestions do not execute, accept or guarantee any deal.",
+          "Asking-price evidence does not establish a fair transaction price or an optimal counter-offer.",
+          "Purchase financing, interest and future ownership costs are not modelled."
+        ],
+        "valuation_evidence": {
+          "status": "asking_reference",
+          "reference": {
+            "price_basis": "asking",
+            "comparable_count": 3,
+            "median_asking_price_myr": 44800.0,
+            "observed_asking_range_myr": [
+              35888.0,
+              45000.0
+            ],
+            "personalized_for_mileage_or_condition": false
+          },
+          "as_of": "2026-10-15",
+          "sources": [
+            {
+              "vehicle_id": "CL18923892",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+            },
+            {
+              "vehicle_id": "CL19122669",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669"
+            },
+            {
+              "vehicle_id": "CL19418670",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670"
+            }
+          ],
+          "note": "Only the unadjusted asking-price reference is used. An illustrative adjustment is never treated as validated market evidence."
+        }
+      }
+    },
+    {
+      "case": "seller_with_actual_valuation_tool",
+      "expected": {
+        "status": "advice_ready",
+        "suggested_counter_price_myr": 44800,
+        "calculations.minimum_vehicle_price_myr": 44000
+      },
+      "actual": {
+        "status": "advice_ready",
+        "suggested_counter_price_myr": 44800.0,
+        "calculations.minimum_vehicle_price_myr": 44000.0
+      },
+      "passed": true,
+      "result": {
+        "status": "advice_ready",
+        "profile": {
+          "currency": "MYR",
+          "role": "seller",
+          "vehicle": {
+            "brand": "Perodua",
+            "model": "Alza",
+            "variant": "1.5 SE",
+            "year": 2020,
+            "transmission": "Automatic"
+          },
+          "asking_price_myr": 45000.0,
+          "current_offer_myr": 40000.0,
+          "fees_myr": 1000.0,
+          "fees_confirmed_complete": true,
+          "buyer_total_budget_myr": null,
+          "seller_minimum_net_myr": 38000.0,
+          "loan_settlement_myr": 5000.0,
+          "clarification_notes": []
+        },
+        "as_of": "2026-10-15",
+        "action": "counter_offer",
+        "suggested_counter_price_myr": 44800.0,
+        "calculations": {
+          "offered_net_proceeds_myr": 34000.0,
+          "minimum_net_proceeds_myr": 38000.0,
+          "minimum_vehicle_price_myr": 44000.0,
+          "formula": "Net proceeds = offered vehicle price - fees - loan settlement; minimum vehicle price = minimum net + fees + loan settlement."
+        },
+        "price_position": "within_observed_asking_range",
+        "fired_rules": [
+          {
+            "rule_id": "NEG_SELL_RESERVE",
+            "reason": "The bid leaves less than the required net proceeds. The counter covers the stated reserve, fees and settlement."
+          }
+        ],
+        "clarification_questions": [],
+        "policy": {
+          "version": "negotiation-v1",
+          "method": "Hand-authored decision tree; no trained model.",
+          "buyer_limit": "Total cash price including all stated buyer fees.",
+          "seller_limit": "Minimum net proceeds after all stated fees and current-loan settlement.",
+          "counter_anchor": "Unadjusted asking median when available, bounded by the user limit and stated asking price; otherwise the user limit or stated asking price."
+        },
+        "limitations": [
+          "Suggestions do not execute, accept or guarantee any deal.",
+          "Asking-price evidence does not establish a fair transaction price or an optimal counter-offer.",
+          "Purchase financing, interest and future ownership costs are not modelled."
+        ],
+        "valuation_evidence": {
+          "status": "asking_reference",
+          "reference": {
+            "price_basis": "asking",
+            "comparable_count": 3,
+            "median_asking_price_myr": 44800.0,
+            "observed_asking_range_myr": [
+              35888.0,
+              45000.0
+            ],
+            "personalized_for_mileage_or_condition": false
+          },
+          "as_of": "2026-10-15",
+          "sources": [
+            {
+              "vehicle_id": "CL18923892",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892"
+            },
+            {
+              "vehicle_id": "CL19122669",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669"
+            },
+            {
+              "vehicle_id": "CL19418670",
+              "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670"
+            }
+          ],
+          "note": "Only the unadjusted asking-price reference is used. An illustrative adjustment is never treated as validated market evidence."
+        }
+      }
+    },
+    {
+      "case": "trade_in_vs_private_sale",
+      "expected": {
+        "status": "comparison_ready",
+        "paths.trade_in.cash_difference_myr": 41500,
+        "paths.private_sale.cash_difference_myr": 37000,
+        "comparison.private_sale_cash_advantage_myr": 4500,
+        "suggested_path": "private_sale"
+      },
+      "actual": {
+        "status": "comparison_ready",
+        "paths.trade_in.cash_difference_myr": 41500.0,
+        "paths.private_sale.cash_difference_myr": 37000.0,
+        "comparison.private_sale_cash_advantage_myr": 4500.0,
+        "suggested_path": "private_sale"
+      },
+      "passed": true,
+      "result": {
+        "status": "comparison_ready",
+        "profile": {
+          "currency": "MYR",
+          "current_vehicle": {
+            "brand": null,
+            "model": null,
+            "variant": null,
+            "year": null,
+            "transmission": null
+          },
+          "trade_in_replacement": {
+            "price_myr": 65000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true
+          },
+          "private_sale_replacement": {
+            "price_myr": 65000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true
+          },
+          "trade_in_quote": {
+            "price_myr": 35000.0,
+            "fees_myr": 500.0,
+            "fees_confirmed_complete": true,
+            "estimated_completion_days": 2.0,
+            "estimated_effort_hours": 2.0
+          },
+          "private_sale_quote": {
+            "price_myr": 40000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true,
+            "estimated_completion_days": 21.0,
+            "estimated_effort_hours": 12.0
+          },
+          "loan_settlement_myr": 10000.0,
+          "available_cash_myr": 50000.0,
+          "priority": "net_cost",
+          "clarification_notes": []
+        },
+        "paths": {
+          "trade_in": {
+            "status": "calculated",
+            "missing_fields": [],
+            "replacement_price_myr": 65000.0,
+            "replacement_fees_myr": 1000.0,
+            "gross_offer_myr": 35000.0,
+            "disposal_fees_myr": 500.0,
+            "loan_settlement_myr": 10000.0,
+            "net_proceeds_myr": 24500.0,
+            "cash_difference_myr": 41500.0,
+            "cash_required_myr": 41500.0,
+            "cash_surplus_myr": 0.0,
+            "within_available_cash": true,
+            "estimated_completion_days": 2.0,
+            "estimated_effort_hours": 2.0
+          },
+          "private_sale": {
+            "status": "calculated",
+            "missing_fields": [],
+            "replacement_price_myr": 65000.0,
+            "replacement_fees_myr": 1000.0,
+            "gross_offer_myr": 40000.0,
+            "disposal_fees_myr": 1000.0,
+            "loan_settlement_myr": 10000.0,
+            "net_proceeds_myr": 29000.0,
+            "cash_difference_myr": 37000.0,
+            "cash_required_myr": 37000.0,
+            "cash_surplus_myr": 0.0,
+            "within_available_cash": true,
+            "estimated_completion_days": 21.0,
+            "estimated_effort_hours": 12.0
+          }
+        },
+        "comparison": {
+          "lower_cash_difference_path": "private_sale",
+          "private_sale_cash_advantage_myr": 4500.0,
+          "advantage_sign": "Positive favours private sale; negative favours trade-in. Path-specific replacement prices and fees are included."
+        },
+        "suggested_path": "private_sale",
+        "fired_rules": [
+          {
+            "rule_id": "TRADE_CALCULATE",
+            "path": "trade_in",
+            "reason": "All cash components and fee totals are explicit; the current loan is settled once."
+          },
+          {
+            "rule_id": "TRADE_CALCULATE",
+            "path": "private_sale",
+            "reason": "All cash components and fee totals are explicit; the current loan is settled once."
+          },
+          {
+            "rule_id": "TRADE_COMPARE",
+            "reason": "Compare full cash differences rather than gross offers alone."
+          },
+          {
+            "rule_id": "TRADE_PRIORITY",
+            "reason": "Choose the lower cash_difference_myr among paths not known to exceed the cash limit; priority is user-stated."
+          }
+        ],
+        "clarification_questions": [],
+        "policy": {
+          "version": "trade-in-v1",
+          "method": "Deterministic calculator plus hand-authored preference rules.",
+          "net_proceeds_formula": "Gross offer - disposal fees - current loan settlement",
+          "cash_difference_formula": "Replacement price + replacement fees - net proceeds",
+          "sign_convention": "Positive cash difference requires additional cash; negative means a cash surplus.",
+          "fee_scope": "Each quoted fee must include the full applicable fee total and be explicitly confirmed complete. Do not double count a fee or loan settlement."
+        },
+        "limitations": [
+          "All prices are user-provided quotes/scenarios; private-sale proceeds are not guaranteed.",
+          "Completion days and effort hours are user-provided estimates, not measured dealer service guarantees.",
+          "No time-to-money conversion, purchase-loan interest or future running costs are assumed.",
+          "A linked asking-price reference is context only, never an inferred dealer trade-in cash offer or guaranteed private-sale proceeds."
+        ],
+        "asking_price_context": {
+          "status": "not_provided",
+          "reference": null
+        },
+        "time_comparison": {
+          "faster_path": "trade_in",
+          "lower_effort_path": "trade_in",
+          "basis": "User-provided estimates; unknown estimates remain unassessed."
+        },
+        "message": "A conditional suggestion based on the stated priority and known quotes; verify terms before deciding."
+      }
+    },
+    {
+      "case": "unknown_fees_no_fabricated_total",
+      "expected": {
+        "status": "needs_clarification",
+        "paths.private_sale.cash_difference_myr": null,
+        "comparison": null,
+        "suggested_path": null
+      },
+      "actual": {
+        "status": "needs_clarification",
+        "paths.private_sale.cash_difference_myr": null,
+        "comparison": null,
+        "suggested_path": null
+      },
+      "passed": true,
+      "result": {
+        "status": "needs_clarification",
+        "profile": {
+          "currency": "MYR",
+          "current_vehicle": {
+            "brand": null,
+            "model": null,
+            "variant": null,
+            "year": null,
+            "transmission": null
+          },
+          "trade_in_replacement": {
+            "price_myr": 65000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true
+          },
+          "private_sale_replacement": {
+            "price_myr": 65000.0,
+            "fees_myr": null,
+            "fees_confirmed_complete": false
+          },
+          "trade_in_quote": {
+            "price_myr": 35000.0,
+            "fees_myr": 500.0,
+            "fees_confirmed_complete": true,
+            "estimated_completion_days": null,
+            "estimated_effort_hours": null
+          },
+          "private_sale_quote": {
+            "price_myr": 40000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true,
+            "estimated_completion_days": null,
+            "estimated_effort_hours": null
+          },
+          "loan_settlement_myr": 10000.0,
+          "available_cash_myr": null,
+          "priority": "net_cost",
+          "clarification_notes": []
+        },
+        "paths": {
+          "trade_in": {
+            "status": "calculated",
+            "missing_fields": [],
+            "replacement_price_myr": 65000.0,
+            "replacement_fees_myr": 1000.0,
+            "gross_offer_myr": 35000.0,
+            "disposal_fees_myr": 500.0,
+            "loan_settlement_myr": 10000.0,
+            "net_proceeds_myr": 24500.0,
+            "cash_difference_myr": 41500.0,
+            "cash_required_myr": 41500.0,
+            "cash_surplus_myr": 0.0,
+            "within_available_cash": null,
+            "estimated_completion_days": null,
+            "estimated_effort_hours": null
+          },
+          "private_sale": {
+            "status": "needs_clarification",
+            "missing_fields": [
+              "private_sale_replacement.fees_myr",
+              "private_sale_replacement.fees_confirmed_complete"
+            ],
+            "replacement_price_myr": 65000.0,
+            "replacement_fees_myr": null,
+            "gross_offer_myr": 40000.0,
+            "disposal_fees_myr": 1000.0,
+            "loan_settlement_myr": 10000.0,
+            "net_proceeds_myr": null,
+            "cash_difference_myr": null,
+            "cash_required_myr": null,
+            "cash_surplus_myr": null,
+            "within_available_cash": null,
+            "estimated_completion_days": null,
+            "estimated_effort_hours": null
+          }
+        },
+        "comparison": null,
+        "suggested_path": null,
+        "fired_rules": [
+          {
+            "rule_id": "TRADE_CALCULATE",
+            "path": "trade_in",
+            "reason": "All cash components and fee totals are explicit; the current loan is settled once."
+          },
+          {
+            "rule_id": "TRADE_REQUIRED",
+            "reason": "A complete financial comparison is withheld until missing or partial amounts are resolved."
+          }
+        ],
+        "clarification_questions": [
+          "Confirm the missing or incomplete values for private_sale: private_sale_replacement.fees_myr, private_sale_replacement.fees_confirmed_complete. Zero fees must be stated explicitly."
+        ],
+        "policy": {
+          "version": "trade-in-v1",
+          "method": "Deterministic calculator plus hand-authored preference rules.",
+          "net_proceeds_formula": "Gross offer - disposal fees - current loan settlement",
+          "cash_difference_formula": "Replacement price + replacement fees - net proceeds",
+          "sign_convention": "Positive cash difference requires additional cash; negative means a cash surplus.",
+          "fee_scope": "Each quoted fee must include the full applicable fee total and be explicitly confirmed complete. Do not double count a fee or loan settlement."
+        },
+        "limitations": [
+          "All prices are user-provided quotes/scenarios; private-sale proceeds are not guaranteed.",
+          "Completion days and effort hours are user-provided estimates, not measured dealer service guarantees.",
+          "No time-to-money conversion, purchase-loan interest or future running costs are assumed.",
+          "A linked asking-price reference is context only, never an inferred dealer trade-in cash offer or guaranteed private-sale proceeds."
+        ],
+        "asking_price_context": {
+          "status": "not_provided",
+          "reference": null
+        },
+        "time_comparison": {
+          "faster_path": null,
+          "lower_effort_path": null,
+          "basis": "User-provided estimates; unknown estimates remain unassessed."
+        }
+      }
+    },
+    {
+      "case": "buyer_without_price_evidence",
+      "expected": {
+        "status": "limited_advice",
+        "price_position": "not_assessed",
+        "suggested_counter_price_myr": 44500
+      },
+      "actual": {
+        "status": "limited_advice",
+        "price_position": "not_assessed",
+        "suggested_counter_price_myr": 44500.0
+      },
+      "passed": true,
+      "result": {
+        "status": "limited_advice",
+        "profile": {
+          "currency": "MYR",
+          "role": "buyer",
+          "vehicle": {
+            "brand": "Perodua",
+            "model": "Alza",
+            "variant": "1.5 SE",
+            "year": 2020,
+            "transmission": "Automatic"
+          },
+          "asking_price_myr": 47000.0,
+          "current_offer_myr": 46000.0,
+          "fees_myr": 1500.0,
+          "fees_confirmed_complete": true,
+          "buyer_total_budget_myr": 46000.0,
+          "seller_minimum_net_myr": null,
+          "loan_settlement_myr": null,
+          "clarification_notes": []
+        },
+        "as_of": "2026-10-15",
+        "action": "counter_offer",
+        "suggested_counter_price_myr": 44500.0,
+        "calculations": {
+          "offered_total_cost_myr": 47500.0,
+          "total_budget_myr": 46000.0,
+          "maximum_vehicle_price_myr": 44500.0,
+          "formula": "Total cost = offered vehicle price + fees; vehicle-price cap = total budget - fees."
+        },
+        "price_position": "not_assessed",
+        "fired_rules": [
+          {
+            "rule_id": "NEG_BUY_BUDGET",
+            "reason": "The current total exceeds the budget. The proposed vehicle price plus fees stays within the budget."
+          }
+        ],
+        "clarification_questions": [],
+        "policy": {
+          "version": "negotiation-v1",
+          "method": "Hand-authored decision tree; no trained model.",
+          "buyer_limit": "Total cash price including all stated buyer fees.",
+          "seller_limit": "Minimum net proceeds after all stated fees and current-loan settlement.",
+          "counter_anchor": "Unadjusted asking median when available, bounded by the user limit and stated asking price; otherwise the user limit or stated asking price."
+        },
+        "limitations": [
+          "Suggestions do not execute, accept or guarantee any deal.",
+          "Asking-price evidence does not establish a fair transaction price or an optimal counter-offer.",
+          "Purchase financing, interest and future ownership costs are not modelled.",
+          "No usable linked valuation reference: advice concerns the stated budget/reserve only; price fairness is not assessed."
+        ],
+        "valuation_evidence": {
+          "status": "not_provided",
+          "reference": null
+        }
+      }
+    },
+    {
+      "case": "different_replacement_quote_reverses_financial_result",
+      "expected": {
+        "suggested_path": "trade_in",
+        "comparison.private_sale_cash_advantage_myr": -500
+      },
+      "actual": {
+        "suggested_path": "trade_in",
+        "comparison.private_sale_cash_advantage_myr": -500.0
+      },
+      "passed": true,
+      "result": {
+        "status": "comparison_ready",
+        "profile": {
+          "currency": "MYR",
+          "current_vehicle": {
+            "brand": null,
+            "model": null,
+            "variant": null,
+            "year": null,
+            "transmission": null
+          },
+          "trade_in_replacement": {
+            "price_myr": 60000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true
+          },
+          "private_sale_replacement": {
+            "price_myr": 65000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true
+          },
+          "trade_in_quote": {
+            "price_myr": 35000.0,
+            "fees_myr": 500.0,
+            "fees_confirmed_complete": true,
+            "estimated_completion_days": 2.0,
+            "estimated_effort_hours": 2.0
+          },
+          "private_sale_quote": {
+            "price_myr": 40000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true,
+            "estimated_completion_days": 21.0,
+            "estimated_effort_hours": 12.0
+          },
+          "loan_settlement_myr": 10000.0,
+          "available_cash_myr": 50000.0,
+          "priority": "net_cost",
+          "clarification_notes": []
+        },
+        "paths": {
+          "trade_in": {
+            "status": "calculated",
+            "missing_fields": [],
+            "replacement_price_myr": 60000.0,
+            "replacement_fees_myr": 1000.0,
+            "gross_offer_myr": 35000.0,
+            "disposal_fees_myr": 500.0,
+            "loan_settlement_myr": 10000.0,
+            "net_proceeds_myr": 24500.0,
+            "cash_difference_myr": 36500.0,
+            "cash_required_myr": 36500.0,
+            "cash_surplus_myr": 0.0,
+            "within_available_cash": true,
+            "estimated_completion_days": 2.0,
+            "estimated_effort_hours": 2.0
+          },
+          "private_sale": {
+            "status": "calculated",
+            "missing_fields": [],
+            "replacement_price_myr": 65000.0,
+            "replacement_fees_myr": 1000.0,
+            "gross_offer_myr": 40000.0,
+            "disposal_fees_myr": 1000.0,
+            "loan_settlement_myr": 10000.0,
+            "net_proceeds_myr": 29000.0,
+            "cash_difference_myr": 37000.0,
+            "cash_required_myr": 37000.0,
+            "cash_surplus_myr": 0.0,
+            "within_available_cash": true,
+            "estimated_completion_days": 21.0,
+            "estimated_effort_hours": 12.0
+          }
+        },
+        "comparison": {
+          "lower_cash_difference_path": "trade_in",
+          "private_sale_cash_advantage_myr": -500.0,
+          "advantage_sign": "Positive favours private sale; negative favours trade-in. Path-specific replacement prices and fees are included."
+        },
+        "suggested_path": "trade_in",
+        "fired_rules": [
+          {
+            "rule_id": "TRADE_CALCULATE",
+            "path": "trade_in",
+            "reason": "All cash components and fee totals are explicit; the current loan is settled once."
+          },
+          {
+            "rule_id": "TRADE_CALCULATE",
+            "path": "private_sale",
+            "reason": "All cash components and fee totals are explicit; the current loan is settled once."
+          },
+          {
+            "rule_id": "TRADE_COMPARE",
+            "reason": "Compare full cash differences rather than gross offers alone."
+          },
+          {
+            "rule_id": "TRADE_PRIORITY",
+            "reason": "Choose the lower cash_difference_myr among paths not known to exceed the cash limit; priority is user-stated."
+          }
+        ],
+        "clarification_questions": [],
+        "policy": {
+          "version": "trade-in-v1",
+          "method": "Deterministic calculator plus hand-authored preference rules.",
+          "net_proceeds_formula": "Gross offer - disposal fees - current loan settlement",
+          "cash_difference_formula": "Replacement price + replacement fees - net proceeds",
+          "sign_convention": "Positive cash difference requires additional cash; negative means a cash surplus.",
+          "fee_scope": "Each quoted fee must include the full applicable fee total and be explicitly confirmed complete. Do not double count a fee or loan settlement."
+        },
+        "limitations": [
+          "All prices are user-provided quotes/scenarios; private-sale proceeds are not guaranteed.",
+          "Completion days and effort hours are user-provided estimates, not measured dealer service guarantees.",
+          "No time-to-money conversion, purchase-loan interest or future running costs are assumed.",
+          "A linked asking-price reference is context only, never an inferred dealer trade-in cash offer or guaranteed private-sale proceeds."
+        ],
+        "asking_price_context": {
+          "status": "not_provided",
+          "reference": null
+        },
+        "time_comparison": {
+          "faster_path": "trade_in",
+          "lower_effort_path": "trade_in",
+          "basis": "User-provided estimates; unknown estimates remain unassessed."
+        },
+        "message": "A conditional suggestion based on the stated priority and known quotes; verify terms before deciding."
+      }
+    },
+    {
+      "case": "explicit_speed_priority",
+      "expected": {
+        "suggested_path": "trade_in",
+        "time_comparison.faster_path": "trade_in"
+      },
+      "actual": {
+        "suggested_path": "trade_in",
+        "time_comparison.faster_path": "trade_in"
+      },
+      "passed": true,
+      "result": {
+        "status": "comparison_ready",
+        "profile": {
+          "currency": "MYR",
+          "current_vehicle": {
+            "brand": null,
+            "model": null,
+            "variant": null,
+            "year": null,
+            "transmission": null
+          },
+          "trade_in_replacement": {
+            "price_myr": 65000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true
+          },
+          "private_sale_replacement": {
+            "price_myr": 65000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true
+          },
+          "trade_in_quote": {
+            "price_myr": 35000.0,
+            "fees_myr": 500.0,
+            "fees_confirmed_complete": true,
+            "estimated_completion_days": 2.0,
+            "estimated_effort_hours": 2.0
+          },
+          "private_sale_quote": {
+            "price_myr": 40000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true,
+            "estimated_completion_days": 21.0,
+            "estimated_effort_hours": 12.0
+          },
+          "loan_settlement_myr": 10000.0,
+          "available_cash_myr": 50000.0,
+          "priority": "speed",
+          "clarification_notes": []
+        },
+        "paths": {
+          "trade_in": {
+            "status": "calculated",
+            "missing_fields": [],
+            "replacement_price_myr": 65000.0,
+            "replacement_fees_myr": 1000.0,
+            "gross_offer_myr": 35000.0,
+            "disposal_fees_myr": 500.0,
+            "loan_settlement_myr": 10000.0,
+            "net_proceeds_myr": 24500.0,
+            "cash_difference_myr": 41500.0,
+            "cash_required_myr": 41500.0,
+            "cash_surplus_myr": 0.0,
+            "within_available_cash": true,
+            "estimated_completion_days": 2.0,
+            "estimated_effort_hours": 2.0
+          },
+          "private_sale": {
+            "status": "calculated",
+            "missing_fields": [],
+            "replacement_price_myr": 65000.0,
+            "replacement_fees_myr": 1000.0,
+            "gross_offer_myr": 40000.0,
+            "disposal_fees_myr": 1000.0,
+            "loan_settlement_myr": 10000.0,
+            "net_proceeds_myr": 29000.0,
+            "cash_difference_myr": 37000.0,
+            "cash_required_myr": 37000.0,
+            "cash_surplus_myr": 0.0,
+            "within_available_cash": true,
+            "estimated_completion_days": 21.0,
+            "estimated_effort_hours": 12.0
+          }
+        },
+        "comparison": {
+          "lower_cash_difference_path": "private_sale",
+          "private_sale_cash_advantage_myr": 4500.0,
+          "advantage_sign": "Positive favours private sale; negative favours trade-in. Path-specific replacement prices and fees are included."
+        },
+        "suggested_path": "trade_in",
+        "fired_rules": [
+          {
+            "rule_id": "TRADE_CALCULATE",
+            "path": "trade_in",
+            "reason": "All cash components and fee totals are explicit; the current loan is settled once."
+          },
+          {
+            "rule_id": "TRADE_CALCULATE",
+            "path": "private_sale",
+            "reason": "All cash components and fee totals are explicit; the current loan is settled once."
+          },
+          {
+            "rule_id": "TRADE_COMPARE",
+            "reason": "Compare full cash differences rather than gross offers alone."
+          },
+          {
+            "rule_id": "TRADE_PRIORITY",
+            "reason": "Choose the lower estimated_completion_days among paths not known to exceed the cash limit; priority is user-stated."
+          }
+        ],
+        "clarification_questions": [],
+        "policy": {
+          "version": "trade-in-v1",
+          "method": "Deterministic calculator plus hand-authored preference rules.",
+          "net_proceeds_formula": "Gross offer - disposal fees - current loan settlement",
+          "cash_difference_formula": "Replacement price + replacement fees - net proceeds",
+          "sign_convention": "Positive cash difference requires additional cash; negative means a cash surplus.",
+          "fee_scope": "Each quoted fee must include the full applicable fee total and be explicitly confirmed complete. Do not double count a fee or loan settlement."
+        },
+        "limitations": [
+          "All prices are user-provided quotes/scenarios; private-sale proceeds are not guaranteed.",
+          "Completion days and effort hours are user-provided estimates, not measured dealer service guarantees.",
+          "No time-to-money conversion, purchase-loan interest or future running costs are assumed.",
+          "A linked asking-price reference is context only, never an inferred dealer trade-in cash offer or guaranteed private-sale proceeds."
+        ],
+        "asking_price_context": {
+          "status": "not_provided",
+          "reference": null
+        },
+        "time_comparison": {
+          "faster_path": "trade_in",
+          "lower_effort_path": "trade_in",
+          "basis": "User-provided estimates; unknown estimates remain unassessed."
+        },
+        "message": "A conditional suggestion based on the stated priority and known quotes; verify terms before deciding."
+      }
+    },
+    {
+      "case": "available_cash_overrides_speed_priority",
+      "expected": {
+        "suggested_path": "private_sale",
+        "paths.trade_in.within_available_cash": false
+      },
+      "actual": {
+        "suggested_path": "private_sale",
+        "paths.trade_in.within_available_cash": false
+      },
+      "passed": true,
+      "result": {
+        "status": "comparison_ready",
+        "profile": {
+          "currency": "MYR",
+          "current_vehicle": {
+            "brand": null,
+            "model": null,
+            "variant": null,
+            "year": null,
+            "transmission": null
+          },
+          "trade_in_replacement": {
+            "price_myr": 65000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true
+          },
+          "private_sale_replacement": {
+            "price_myr": 65000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true
+          },
+          "trade_in_quote": {
+            "price_myr": 35000.0,
+            "fees_myr": 500.0,
+            "fees_confirmed_complete": true,
+            "estimated_completion_days": 2.0,
+            "estimated_effort_hours": 2.0
+          },
+          "private_sale_quote": {
+            "price_myr": 40000.0,
+            "fees_myr": 1000.0,
+            "fees_confirmed_complete": true,
+            "estimated_completion_days": 21.0,
+            "estimated_effort_hours": 12.0
+          },
+          "loan_settlement_myr": 10000.0,
+          "available_cash_myr": 40000.0,
+          "priority": "speed",
+          "clarification_notes": []
+        },
+        "paths": {
+          "trade_in": {
+            "status": "calculated",
+            "missing_fields": [],
+            "replacement_price_myr": 65000.0,
+            "replacement_fees_myr": 1000.0,
+            "gross_offer_myr": 35000.0,
+            "disposal_fees_myr": 500.0,
+            "loan_settlement_myr": 10000.0,
+            "net_proceeds_myr": 24500.0,
+            "cash_difference_myr": 41500.0,
+            "cash_required_myr": 41500.0,
+            "cash_surplus_myr": 0.0,
+            "within_available_cash": false,
+            "estimated_completion_days": 2.0,
+            "estimated_effort_hours": 2.0
+          },
+          "private_sale": {
+            "status": "calculated",
+            "missing_fields": [],
+            "replacement_price_myr": 65000.0,
+            "replacement_fees_myr": 1000.0,
+            "gross_offer_myr": 40000.0,
+            "disposal_fees_myr": 1000.0,
+            "loan_settlement_myr": 10000.0,
+            "net_proceeds_myr": 29000.0,
+            "cash_difference_myr": 37000.0,
+            "cash_required_myr": 37000.0,
+            "cash_surplus_myr": 0.0,
+            "within_available_cash": true,
+            "estimated_completion_days": 21.0,
+            "estimated_effort_hours": 12.0
+          }
+        },
+        "comparison": {
+          "lower_cash_difference_path": "private_sale",
+          "private_sale_cash_advantage_myr": 4500.0,
+          "advantage_sign": "Positive favours private sale; negative favours trade-in. Path-specific replacement prices and fees are included."
+        },
+        "suggested_path": "private_sale",
+        "fired_rules": [
+          {
+            "rule_id": "TRADE_CALCULATE",
+            "path": "trade_in",
+            "reason": "All cash components and fee totals are explicit; the current loan is settled once."
+          },
+          {
+            "rule_id": "TRADE_CALCULATE",
+            "path": "private_sale",
+            "reason": "All cash components and fee totals are explicit; the current loan is settled once."
+          },
+          {
+            "rule_id": "TRADE_COMPARE",
+            "reason": "Compare full cash differences rather than gross offers alone."
+          },
+          {
+            "rule_id": "TRADE_PRIORITY",
+            "reason": "Choose the lower estimated_completion_days among paths not known to exceed the cash limit; priority is user-stated."
+          }
+        ],
+        "clarification_questions": [],
+        "policy": {
+          "version": "trade-in-v1",
+          "method": "Deterministic calculator plus hand-authored preference rules.",
+          "net_proceeds_formula": "Gross offer - disposal fees - current loan settlement",
+          "cash_difference_formula": "Replacement price + replacement fees - net proceeds",
+          "sign_convention": "Positive cash difference requires additional cash; negative means a cash surplus.",
+          "fee_scope": "Each quoted fee must include the full applicable fee total and be explicitly confirmed complete. Do not double count a fee or loan settlement."
+        },
+        "limitations": [
+          "All prices are user-provided quotes/scenarios; private-sale proceeds are not guaranteed.",
+          "Completion days and effort hours are user-provided estimates, not measured dealer service guarantees.",
+          "No time-to-money conversion, purchase-loan interest or future running costs are assumed.",
+          "A linked asking-price reference is context only, never an inferred dealer trade-in cash offer or guaranteed private-sale proceeds."
+        ],
+        "asking_price_context": {
+          "status": "not_provided",
+          "reference": null
+        },
+        "time_comparison": {
+          "faster_path": "trade_in",
+          "lower_effort_path": "trade_in",
+          "basis": "User-provided estimates; unknown estimates remain unassessed."
+        },
+        "message": "A conditional suggestion based on the stated priority and known quotes; verify terms before deciding."
+      }
+    }
+  ],
+  "passed": true
+}
