@@ -1,4 +1,8 @@
 """Repeatable development audit; captures pre-fix evidence without valuations."""
+# Learning guide:
+# Capture actual model readings for nine unit/currency/history edge cases.
+# Before/after filenames describe when evidence was collected, not a code mode.
+# --output chooses the evidence file; use a new name to avoid overwriting history.
 import json
 from pathlib import Path
 from time import perf_counter

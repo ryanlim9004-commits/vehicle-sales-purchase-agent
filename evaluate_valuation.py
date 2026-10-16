@@ -1,4 +1,8 @@
 """One development smoke case, not a market-accuracy evaluation."""
+# Learning guide:
+# Run one real-model seller extraction followed by the valuation tool.
+# Compare key fields and the saved-snapshot asking median; record latency.
+# Running the script replaces stage4-live-result.json; this is not market validation.
 import json
 from datetime import date
 from pathlib import Path

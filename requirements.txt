@@ -1,2 +1,5 @@
+# Allowed direct dependency ranges for a new environment.
+# Pydantic validates Frames/JSON schemas; Ollama connects Python to the local model.
+# Use requirements-lock.txt instead to reproduce the recorded exact versions.
 pydantic>=2.10,<3
 ollama>=0.5,<1

@@ -1,4 +1,8 @@
 """Actual local-model, multi-turn acceptance; never substitutes scripted replies."""
+# Learning guide:
+# Replay four actual Ollama consultation scenarios with explicit expectations.
+# Check nested result fields after each turn and save timing plus full traces.
+# These are development cases used in debugging, not an independent holdout.
 import argparse
 import json
 import time
@@ -29,6 +33,8 @@ CASES = {
 }
 
 
+# Read a dotted expected-field path safely; a missing intermediate field yields None and fails
+# the expectation.
 def projected(result, path):
     value = result
     for part in path.split('.'):
@@ -38,6 +44,8 @@ def projected(result, path):
     return value
 
 
+# Replay selected scenarios against real Ollama, checkpoint every turn and return failure when
+# an expectation does not match.
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--case', choices=list(CASES), help='Run one scenario group instead of all groups')

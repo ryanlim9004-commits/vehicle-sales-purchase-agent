@@ -1,12 +1,19 @@
 """Stage 2: deterministic hard-constraint filtering, not preference ranking."""
+# Learning guide:
+# Apply mandatory eligibility rules before any lifestyle preference score.
+# Read BuyerProfileFrame plus validated vehicle records; return matches and reasons.
+# A preferred brand is a soft preference; an excluded brand is a hard rejection.
 from buyer_profile import BuyerProfileFrame, reason_about_profile
 from vehicle_frame import PassengerCarFrame
 
 
+# Ignore letter case and surrounding spaces when comparing stated brand preferences.
 def normalize_brand(brand: str) -> str:
     return brand.strip().casefold()
 
 
+# Return every eligible record and every rejection reason; do not score preferences or relax
+# hard requirements.
 def filter_vehicles(profile: BuyerProfileFrame, vehicles: list[PassengerCarFrame]) -> dict:
     reasoning = reason_about_profile(profile)
     result = {
@@ -26,6 +33,8 @@ def filter_vehicles(profile: BuyerProfileFrame, vehicles: list[PassengerCarFrame
     budget, seats = facts['budget_myr'], facts['minimum_vehicle_seats']
     result['constraints'] = {'maximum_price_myr': budget, 'minimum_seats': seats, 'excluded_brands': sorted(excluded)}
     for vehicle in vehicles:
+        # Collect every failed condition for this row instead of stopping at
+        # the first failure; the explanation shows why a car cannot qualify.
         rejected = []
         if vehicle.source_kind != 'synthetic_demo' and (vehicle.source_kind != 'listing' or vehicle.price_type != 'asking'):
             rejected.append({'rule_id': 'FILTER_PRICE_BASIS', 'reason': 'A transaction record is historical evidence, not an asking-price listing available for purchase.'})
@@ -49,6 +58,8 @@ def filter_vehicles(profile: BuyerProfileFrame, vehicles: list[PassengerCarFrame
                 'preferred_brand_match': normalize_brand(vehicle.brand) in preferred,
                 'passed_rules': ['FILTER_BUDGET', 'FILTER_SEATS', 'FILTER_EXCLUDED_BRAND'] + ([] if vehicle.source_kind == 'synthetic_demo' else ['FILTER_AVAILABILITY', 'FILTER_PRICE_BASIS']),
             })
+    # This order is for stable display only. scoring.rank_vehicles performs
+    # preference ranking later; cheap-first order is not a lifestyle score.
     result['matches'].sort(key=lambda item: (item['vehicle']['price_myr'], item['vehicle']['vehicle_id']))
     result['checked_count'] = len(vehicles)
     result['matched_count'] = len(result['matches'])

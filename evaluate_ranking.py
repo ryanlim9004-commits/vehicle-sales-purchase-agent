@@ -1,4 +1,8 @@
 """Reproducible live English extraction + curated-data scoring smoke test."""
+# Learning guide:
+# Exercise actual English extraction, hard filtering and lifestyle scoring.
+# Expected top IDs belong to the frozen dataset and the stated scoring policy.
+# Running the script replaces stage3-live-results.json; no website search occurs.
 import json
 from pathlib import Path
 from time import perf_counter

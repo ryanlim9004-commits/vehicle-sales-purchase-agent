@@ -1,4 +1,8 @@
 """Per-turn evidence validation; omission never erases previously known facts."""
+# Learning guide:
+# Validate evidence for each proposed update before merging session facts.
+# Use the current user message, not model claims, as the source of a correction.
+# Labelled quote rules keep replacement prices, gross offers and fees separate.
 import re
 from decimal import Decimal
 from pydantic import ValidationError
@@ -10,6 +14,8 @@ from seller_profile import SellerVehicleFrame
 QUOTE_MONEY_SLOTS = {f'trade_in.{scope}.{field}' for scope in ('trade_in_replacement', 'private_sale_replacement', 'trade_in_quote', 'private_sale_quote') for field in ('price_myr', 'fees_myr')}
 
 
+# Recover amounts only when current wording labels both the financial path and the
+# replacement/disposal role.
 def explicit_quote_amounts(message):
     """Recover only explicitly labelled cash quotes; never use a market reference.
 
@@ -46,6 +52,8 @@ def explicit_quote_amounts(message):
     return recovered
 
 
+# Accept one explicitly stated MYR amount or supported zero/debt-free wording; do not perform
+# exchange conversion.
 def money_from_evidence(text, slot):
     # Explicit zero is supported for fees/debt. Absence is never a zero.
     if slot.endswith('fees_myr') and re.search(r'\b(no fees|zero fees|fees are zero)\b', text, re.I):
@@ -63,11 +71,15 @@ def money_from_evidence(text, slot):
     return float(amounts[0])
 
 
+# Check the quoted substring and slot-specific unit/type/context rules before accepting a
+# model-proposed value.
 def grounded_value(update, message, state):
     evidence, value, slot = update.evidence.strip(), update.value, update.slot
     if evidence.casefold() not in message.casefold():
         raise ValueError('A proposed fact could not be traced to this message. Please restate it explicitly.')
     if isinstance(value, str):
+        # Only lossless representation repairs are allowed here, such as
+        # "2020" -> 2020 or "false" -> False; do not invent semantic facts.
         if slot.endswith(('_reported', 'fees_confirmed_complete', 'household_travels_together')) and value.casefold() in ('true', 'false'):
             value = value.casefold() == 'true'
         if slot.endswith('.year') and re.fullmatch(r'\d{4}', value):
@@ -121,6 +133,8 @@ def grounded_value(update, message, state):
             raise ValueError('Please clarify the stated accident/flood history; clean history cannot be inferred from condition.')
         return answer
     if slot.endswith('fees_confirmed_complete'):
+        # A positive substring is insufficient when its sentence contains an
+        # exception, e.g. "all fees complete, except insurance is unknown".
         if not isinstance(value, bool):
             raise ValueError('Please confirm whether the stated fee total is complete.')
         positive = re.search(r'\b(all|total|complete|confirmed|fully)\b', evidence, re.I)
@@ -168,8 +182,12 @@ def grounded_value(update, message, state):
     return value
 
 
+# Merge grounded current-turn updates, invalidate unsafe old facts, recover labelled quotes and
+# record provenance/rules.
 def apply_patch(state, patch, message):
     original_goal = state.goal
+    # Record the old identity before patching so changed-vehicle corrections
+    # can invalidate dependent quote/loan data after new facts are merged.
     original_identity = state.negotiation.vehicle.model_dump() if state.goal == 'negotiate' else state.trade_in.current_vehicle.model_dump() if state.goal == 'trade_in' else {}
     quote_amounts = explicit_quote_amounts(message)
     if patch.goal is not None and patch.goal != state.goal:
@@ -229,6 +247,8 @@ def apply_patch(state, patch, message):
                 state.ranked_vehicle_ids = []
                 state.selected_vehicle_id = None
     if state.goal == original_goal and state.goal in ('negotiate', 'trade_in'):
+        # Old-vehicle quotes depend on identity. Preserve only amounts that
+        # were explicitly refreshed in this same turn, plus user budget limits.
         current = state.negotiation.vehicle if state.goal == 'negotiate' else state.trade_in.current_vehicle
         changed_vehicle = any(previous is not None and str(previous).strip().casefold() != str(getattr(current, field)).strip().casefold() for field, previous in original_identity.items())
         if changed_vehicle:

@@ -1,4 +1,8 @@
 """Reproducible source/grain/completeness checks for the curated seed dataset."""
+# Learning guide:
+# Profile the saved listing snapshot and compare local source receipts.
+# Report missingness, possible duplicate ads and exact comparable-group coverage.
+# The collection date is fixed for reproducibility; this is not a live stock check.
 import json
 from collections import Counter
 from datetime import date
@@ -8,6 +12,8 @@ from vehicle_frame import load_vehicles
 ROOT = Path(__file__).resolve().parent
 
 
+# Compare local IDs, URLs and recorded fields; agreement proves local lineage consistency, not
+# advertisement truth.
 def check_receipts(rows, receipts):
     """Check local lineage consistency, not whether the original advert is true."""
     issues = []
@@ -33,6 +39,8 @@ def check_receipts(rows, receipts):
     return issues
 
 
+# Summarize a validated dataset, receipt issues and exact comparable coverage using the fixed
+# collection date.
 def profile_data(path):
     rows = load_vehicles(path)
     count = len(rows)
@@ -68,6 +76,8 @@ def profile_data(path):
                      and v.price_myr is not None and v.source_updated_on is not None
                      and 0 <= (date(2026, 10, 15) - v.source_updated_on).days <= 90
                      and v.observed_on <= date(2026, 10, 15))
+    # Total rows alone do not establish valuation support: count eligible
+    # observations separately for each exact identity under the freshness rule.
     comparable_groups = [dict(zip(('brand', 'model', 'variant', 'year', 'transmission'), signature), count=n, meets_minimum_three=n >= 3)
                          for signature, n in sorted(groups.items(), key=lambda item: str(item[0]))]
     return {'snapshot_date': '2026-10-15', 'row_count': count,

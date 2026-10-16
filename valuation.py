@@ -1,4 +1,8 @@
 """Traceable rule-based listing reference, plus opt-in educational scenarios."""
+# Learning guide:
+# Calculate a reproducible asking-price reference from comparable listings.
+# Default mode uses an unadjusted median and observed range, not a learned model.
+# Optional mileage/condition factors are uncalibrated teaching assumptions.
 from datetime import date
 from decimal import Decimal, ROUND_HALF_UP
 from statistics import median
@@ -7,6 +11,8 @@ from seller_profile import SellerVehicleFrame
 from vehicle_frame import PassengerCarFrame
 
 
+# Expose reproducible sample/freshness rules and optional teaching factors; these defaults are
+# not learned coefficients.
 class ValuationPolicy(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True, allow_inf_nan=False)
     version: str = 'valuation-v1-educational'
@@ -19,14 +25,19 @@ class ValuationPolicy(BaseModel):
     poor_factor: float = Field(default=0.85, gt=0, le=1)
 
 
+# Round to MYR cents with Decimal and ROUND_HALF_UP; return a JSON-compatible number.
 def money(value):
     return float(Decimal(str(value)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP))
 
 
+# Normalize identity text for exact case/whitespace-insensitive comparisons, without fuzzy model
+# merging.
 def key(text):
     return ' '.join((text or '').casefold().split())
 
 
+# Require supported seller facts, select recent exact-identity ads, and return a reference or an
+# explicit refusal state.
 def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerCarFrame], *, as_of: date, illustrative_adjustments=False, policy=None, identity_reference_only=False):
     policy = policy or ValuationPolicy()
     result = {'status':'needs_clarification', 'seller_profile':seller.model_dump(), 'as_of':as_of.isoformat(),
@@ -38,6 +49,7 @@ def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerC
                              'Price ranges are observed/assumption-based ranges, not statistical confidence intervals.']}
     trace = result['fired_rules']
     if seller.major_accident_reported is True or seller.flood_damage_reported is True:
+        # Damage is a stop/inspection rule, not a made-up percentage penalty.
         result['status'] = 'inspection_required'
         trace.append({'rule_id':'VAL_DAMAGE','reason':'Major accident or flood damage reported; generic price estimation is withheld.'})
         result['clarification_questions'].append('Obtain an independent inspection before relying on a valuation.')
@@ -46,6 +58,9 @@ def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerC
                 'year':'What is the manufacturing year?', 'transmission':'Is the transmission Automatic, Manual or D-CVT?',
                 'mileage_km':'What is the mileage in kilometres?', 'condition':'Is the reported condition good, fair or poor?'}
     if identity_reference_only and not illustrative_adjustments:
+        # Negotiation/Trade-In can ask for background prices using identity
+        # alone. Personal mileage/condition is not needed for an unadjusted
+        # identity-group median, so these facts must not be invented.
         required.pop('mileage_km')
         required.pop('condition')
         result['reference_scope'] = 'Identity-only unadjusted asking-price reference; no seller mileage or condition is inferred.'
@@ -58,6 +73,8 @@ def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerC
         trace.append({'rule_id':'VAL_REQUIRED','reason':'Required or conflicting seller facts must be clarified before calculation.'})
         return result
     seen_ids, seen_sources = set(), set()
+    # Exact comparability deliberately avoids mixing variants or applying a
+    # second unsupported age-depreciation deduction to same-year used prices.
     for v in vehicles:
         reasons = []
         if v.vehicle_id in seen_ids or v.source_reference in seen_sources:
@@ -91,10 +108,13 @@ def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerC
     comps = result['comparables']
     trace.append({'rule_id':'VAL_COMPARABLES','reason':'Same brand/model/variant/year/transmission, eligible real listings, known recent source dates, unique source/ID.', 'accepted_count':len(comps)})
     if len(comps) < policy.minimum_comparables:
+        # Three is a teaching-policy minimum, not a statistical guarantee.
         result['status'] = 'insufficient_evidence'
         result['message'] = f'Need at least {policy.minimum_comparables} comparable listings; found {len(comps)}. No price estimate is returned.'
         return result
     prices = [c['asking_price_myr'] for c in comps]
+    # Median is the middle price (or mean of the two middle prices); min/max
+    # describes the observed adverts, not a guaranteed sale or confidence band.
     base = median(prices)
     result['reference'] = {'price_basis':'asking', 'comparable_count':len(comps), 'median_asking_price_myr':money(base),
                            'observed_asking_range_myr':[money(min(prices)),money(max(prices))],
@@ -106,6 +126,8 @@ def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerC
     if seller.major_accident_reported is None or seller.flood_damage_reported is None:
         result['limitations'].append('Damage history is unknown; good/fair/poor is self-reported and does not establish accident/flood history.')
     if not illustrative_adjustments:
+        # This is the normal exit. Everything below is an explicit opt-in
+        # educational scenario with uncalibrated mileage/condition assumptions.
         trace.append({'rule_id':'VAL_NO_CALIBRATION','reason':'No verified market mileage/condition factors. Default mode returns the unadjusted listing reference only.'})
         return result
     intervals = []
@@ -121,6 +143,10 @@ def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerC
         result['limitations'].append('Illustrative adjustment withheld: seller mileage is outside the observed envelope; extrapolation is not supported.')
         return result
     lo, hi = median(a for a,b in intervals), median(b for a,b in intervals)
+    # Retain the two ends of the reference-mileage interval rather than claim
+    # that every advertised range supplied an exact odometer reading.
+    # For the optional scenario, convert a reference-mileage difference to a capped multiplier
+    # around 1.
     def factor(reference):
         delta = (reference-seller.mileage_km)/10000 * policy.mileage_rate_per_10000_km
         return 1 + max(-policy.maximum_mileage_adjustment,min(policy.maximum_mileage_adjustment,delta))

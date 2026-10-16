@@ -1,4 +1,8 @@
 """Live regression checks for numeric grounding and the existing tool pipelines."""
+# Learning guide:
+# Combine three live extraction/tool regressions with nine saved audit checks.
+# Requires existing input-audit-before.json and input-audit-after.json.
+# Running the script replaces input-fix-verification.json; development evidence only.
 import json
 from datetime import date
 from pathlib import Path

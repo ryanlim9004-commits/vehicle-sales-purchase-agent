@@ -4,6 +4,8 @@ An educational Python + Ollama project for used-vehicle consultation in Malaysia
 
 **Status, 15 October 2026:** the Stage 1–7 consultation tools and Stage 8 bounded Agent Loop are implemented. `agent_cli.py` supports English multi-turn memory, corrections, goal changes, validated tool selection/execution and result checks. `main.py` remains the explicit-action tool CLI. Streamlit UI, independent holdout evaluation and final assignment materials remain pending.
 
+**Learning notes, 16 October 2026:** all 34 Python modules and 275 class/function definitions now have English explanations, with additional comments for rules, calculations and Agent stages. This comment-only revision preserves every Python AST, configuration setting and existing JSON record; all 134 unit tests passed again. Start with the [Chinese code guide](CODE_GUIDE_ZH.md), [command reference](COMMANDS_ZH.md) and [JSON reference](docs/JSON_FILES_GUIDE_ZH.md). Check details in `comment-only-verification.json`.
+
 ## Implemented features
 
 - **Frames:** BuyerProfileFrame, SellerVehicleFrame and VehicleFrame, including typed slots, unknown values, validation and selected inheritance.
@@ -125,6 +127,9 @@ The current baseline has **134 passing test methods**, including 40 Agent method
 | `test_*.py`, `evaluate_*.py`, `audit_input_cases.py` | Unit tests and model evaluations |
 | `STAGE*_RESULTS.md`, evaluation JSON files | Dated implementation evidence |
 | [Chinese lessons](README_ZH.md) | Beginner learning entry point |
+| [Code reading guide](CODE_GUIDE_ZH.md) | Python concepts, file responsibilities, algorithms and test interpretation |
+| [Command reference](COMMANDS_ZH.md) | PowerShell commands, CLI flags, prerequisites and output files |
+| [JSON reference](docs/JSON_FILES_GUIDE_ZH.md) | Dataset, fixture, evaluation and session field explanations |
 | [Input validation fix](INPUT_VALIDATION_FIX_ZH.md) | Reproduction, correction and regression evidence |
 | [Stage 5/6 acceptance review](STAGE5_STAGE6_REVIEW_ZH.md) | Requirements, fixes, current boundaries and verification |
 | [Data dictionary](docs/DATA_DICTIONARY.md) | Record grain, units, evidence and unknown-value rules |

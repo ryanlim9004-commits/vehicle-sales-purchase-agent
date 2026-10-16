@@ -1,4 +1,8 @@
 """Interactive English CLI for the local, tool-calling vehicle agent."""
+# Learning guide:
+# User entry point for an English multi-turn consultation.
+# One AgentController instance keeps facts while this CLI is open.
+# --session optionally saves typed facts locally; --json exposes the audit trace.
 import argparse
 import json
 from datetime import date
@@ -6,6 +10,8 @@ from pathlib import Path
 from agent_controller import AgentController, OllamaBackend, load_session, save_session
 
 
+# Create or restore one controller; feed interactive, single-message or scripted turns and
+# display checked responses.
 def main():
     parser = argparse.ArgumentParser(description='Multi-turn local vehicle consultation Agent Loop')
     parser.add_argument('--model', default='qwen3:4b')
@@ -27,6 +33,8 @@ def main():
             print('Vehicle Consultation Agent. Use /reset to clear facts, /stop to cancel, /quit to exit.')
         failed = False
         while True:
+            # Scripted runs pop supplied messages; interactive runs wait for
+            # the next answer. Both feed the same stateful controller method.
             if messages is not None:
                 if not messages:
                     break
@@ -59,4 +67,6 @@ def main():
 
 
 if __name__ == '__main__':
+    # Keep process-spawning entry code under this guard on Windows, so a child
+    # importing the module does not start a second interactive application.
     raise SystemExit(main())

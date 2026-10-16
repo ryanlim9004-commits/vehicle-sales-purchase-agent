@@ -1,4 +1,8 @@
 """Reproduce hand-reviewed numeric facts; not a scraper or live inventory fetcher."""
+# Learning guide:
+# Rebuild saved JSON from manually reviewed advertisement facts below.
+# Running this script rewrites vehicles_real.json and source_receipts.json.
+# It makes no website requests and does not refresh the observation date.
 import json
 from pathlib import Path
 
@@ -10,6 +14,8 @@ OLD_ALZA = 'https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warran
 rows = []
 
 
+# Build one reviewed record, retain point/range mileage and attach only generation-matched
+# reference specifications.
 def add(key, model, variant, year, price, seats, mileage, url, *, state='listed_snapshot', updated=None, family=None, brand='Perodua', notes=()):
     row = dict(vehicle_id=key, brand=brand, model=model, variant=variant, year=year, currency='MYR', price_myr=price, seats=seats,
                source_kind='listing', price_type='asking', source_reference=url, observed_on='2026-10-15', availability=state,
@@ -34,6 +40,9 @@ def add(key, model, variant, year, price, seats, mileage, url, *, state='listed_
     rows.append(row)
 
 
+# The following calls encode reviewed facts, not data fetched by this script.
+# Arguments are ID, model, variant, manufacturing year, MYR asking price, seats,
+# point/range mileage in km, and source URL. Keep sold/reserved rows for audit.
 add('CL18923892','Alza','1.5 SE',2020,35888,7,(65000,70000),OLD_ALZA,updated='2026-09-21',family='old_alza')
 add('CL19122669','Alza','1.5 SE',2020,45000,7,(100000,105000),'https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669',updated='2026-09-21',family='old_alza')
 add('CL19418670','Alza','1.5 SE',2020,44800,7,(120000,125000),'https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670',updated='2026-09-20',family='old_alza')

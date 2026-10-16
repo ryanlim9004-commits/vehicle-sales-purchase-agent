@@ -1,3 +1,7 @@
+# Learning guide:
+# Offline tests for hard constraints, frame validation and duplicate IDs.
+# Synthetic records make eligibility boundaries independent of live listings.
+# Temporary files isolate loader tests from the real dataset.
 import json
 import tempfile
 import unittest
@@ -10,34 +14,42 @@ from matching import filter_vehicles
 DATA = Path(__file__).resolve().parent / 'data' / 'vehicles_demo.json'
 
 
+# Group hard-filter and vehicle-loader regression tests using synthetic records.
 class MatchingTests(unittest.TestCase):
+    # Prepare fresh fixtures for this test so another test cannot change its starting assumptions.
     def setUp(self):
         self.vehicles = load_vehicles(DATA)
 
+    # Build a valid baseline buyer and override only the facts relevant to this test.
     def profile(self, **changes):
         return BuyerProfileFrame.model_validate(dict(budget_myr=60000, family_size=6, usage=['city_commute']) | changes)
 
+    # Extract ordered matched IDs so tests can compare candidate membership and display order.
     def ids(self, result):
         return [item['vehicle']['vehicle_id'] for item in result['matches']]
 
+    # A vehicle exactly on the price/seat boundary remains eligible for the family.
     def test_family_and_inclusive_budget_boundary(self):
         result = filter_vehicles(self.profile(), self.vehicles)
         self.assertEqual(self.ids(result), ['DEMO001', 'DEMO002', 'DEMO006'])
         self.assertEqual(result['checked_count'], 8)
         self.assertTrue(all(v['vehicle']['price_myr'] <= 60000 and v['vehicle']['seats'] >= 6 for v in result['matches']))
 
+    # Case changes and whitespace must not bypass a stated brand exclusion.
     def test_excluded_brand_case_and_whitespace(self):
         result = filter_vehicles(self.profile(excluded_brands=[' tOyOtA ']), self.vehicles)
         self.assertEqual(self.ids(result), ['DEMO001', 'DEMO006'])
         rejected = next(r for r in result['rejected'] if r['vehicle_id'] == 'DEMO002')
         self.assertEqual(rejected['reasons'][0]['rule_id'], 'FILTER_EXCLUDED_BRAND')
 
+    # Unknown required price or seat data cannot pass a hard constraint.
     def test_missing_values_are_not_eligible(self):
         result = filter_vehicles(self.profile(), self.vehicles)
         reasons = {r['vehicle_id']: r['reasons'][0]['rule_id'] for r in result['rejected']}
         self.assertEqual(reasons['DEMO007'], 'FILTER_PRICE_UNKNOWN')
         self.assertEqual(reasons['DEMO008'], 'FILTER_SEATS_UNKNOWN')
 
+    # A rejected record must retain every failed hard-constraint reason.
     def test_all_failed_constraints_explained(self):
         result = filter_vehicles(self.profile(budget_myr=30000, excluded_brands=['Toyota']), self.vehicles)
         row = next(r for r in result['rejected'] if r['vehicle_id'] == 'DEMO005')
@@ -45,17 +57,20 @@ class MatchingTests(unittest.TestCase):
         self.assertEqual(result['status'], 'no_matches')
         self.assertEqual(result['constraints']['maximum_price_myr'], 30000)
 
+    # Do not scan candidates when buyer facts are missing or contradictory.
     def test_missing_and_conflicting_profile_blocks_filtering(self):
         for profile in [BuyerProfileFrame(), self.profile(required_seats=5), self.profile(preferred_brands=['Toyota'], excluded_brands=[' toyota '])]:
             result = filter_vehicles(profile, self.vehicles)
             self.assertEqual(result['status'], 'needs_clarification')
             self.assertEqual(result['checked_count'], 0)
 
+    # Preferring one brand must not remove otherwise eligible brands.
     def test_preferred_brand_is_soft_not_exclusion(self):
         result = filter_vehicles(self.profile(preferred_brands=['TOYOTA']), self.vehicles)
         self.assertEqual(self.ids(result), ['DEMO001', 'DEMO002', 'DEMO006'])
         self.assertEqual([r['vehicle']['vehicle_id'] for r in result['matches'] if r['preferred_brand_match']], ['DEMO002'])
 
+    # Inherited defaults are present, while invalid price/seat/currency/text values are rejected.
     def test_frame_inheritance_defaults_and_validation(self):
         self.assertEqual(self.vehicles[0].wheels, 4)
         self.assertEqual(self.vehicles[0].currency, 'MYR')
@@ -64,6 +79,7 @@ class MatchingTests(unittest.TestCase):
             with self.subTest(changes=changes), self.assertRaises(ValidationError):
                 PassengerCarFrame.model_validate_json(json.dumps(raw | changes))
 
+    # Loading repeated IDs must fail rather than count one record twice.
     def test_duplicate_ids_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'duplicates.json'

@@ -1,11 +1,14 @@
+# Local interpreter packages and bytecode are regenerated, not source files.
 .venv/
 __pycache__/
 *.pyc
+# Keep real environment secrets and private keys out of version control.
 .env
 .env.*
 !.env.example
 *.pem
 *.key
+# Test/type/lint outputs and editor preferences are local development files.
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -13,8 +16,10 @@ __pycache__/
 htmlcov/
 .idea/
 .vscode/
+# Temporary output and operating-system metadata do not belong in a commit.
 *.log
 *.tmp
 Thumbs.db
 .DS_Store
+# Conversation memory may contain user details; the application saves it locally.
 sessions/

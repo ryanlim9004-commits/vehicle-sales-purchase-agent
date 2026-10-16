@@ -1,5 +1,7 @@
 # 第 1 课：把买车需求转换为 BuyerProfileFrame
 
+2026-10-16学习入口：34个Python文件、275个类／函数已补英文解释，并在关键规则、公式及Agent步骤加入注释。阅读[全项目代码指南](CODE_GUIDE_ZH.md)、[PowerShell命令解释](COMMANDS_ZH.md)、[JSON资料解释](docs/JSON_FILES_GUIDE_ZH.md)。本轮只补comments和说明，AST／配置／既有JSON未改变，134项回归再次通过。
+
 最新（2026-10-15）：阶段1–7复核与修复、阶段8多轮Agent Loop基础版已完成。运行`agent_cli.py --as-of 2026-10-15`，支持英文追问回答、修改条件、任务切换、实际工具执行与结果检查。见[阶段8运行教学](STAGE8_GUIDE_ZH.md)、[阶段1–7核对](STAGES1_7_AUDIT_ZH.md)及[验证记录](STAGE8_RESULTS.md)。134项单元测试、16个既有工具场景复核、最终8轮真实模型验收（含一次reset）通过；不是总体准确率或市场验证。下一步英文UI与更广评估、报告和视频。
 
 阶段7历史记录：Negotiation/Trade-In独立tools及`main.py --negotiate`／`--trade-in`入口已完成，详见 `STAGE7_GUIDE_ZH.md`。当时94项回归、8个阶段7场景通过；本课以下内容是第一课的历史教学范围，完整多轮入口以最新阶段8说明为准。

@@ -1,9 +1,14 @@
 """Compare explicit cash purchase quotes with signed net proceeds and outlay."""
+# Learning guide:
+# Compare trade-in and private-sale paths using their own replacement packages.
+# Signed cash difference = replacement price + fees - net disposal proceeds.
+# Convenience uses user-estimated days/hours; a path name is not evidence of speed.
 from consultation_frames import TradeInFrame, NegotiationFrame
 from negotiation import decimal, asking_evidence
 from valuation import money
 
 
+# Compare known values only; return None for missing evidence and tie for equal alternatives.
 def winner(values, smaller=True):
     if any(value is None for value in values.values()):
         return None
@@ -12,6 +17,8 @@ def winner(values, smaller=True):
     return (min if smaller else max)(values, key=values.get)
 
 
+# Compute each complete cash path, compare full outlays and make a conditional choice within the
+# stated cash limit.
 def compare_trade_in(profile: TradeInFrame, *, valuation_result=None, as_of=None):
     result = {'status': 'needs_clarification', 'profile': profile.model_dump(), 'paths': {},
               'comparison': None, 'suggested_path': None, 'fired_rules': [],
@@ -41,6 +48,8 @@ def compare_trade_in(profile: TradeInFrame, *, valuation_result=None, as_of=None
     if profile.loan_settlement_myr is None:
         questions.append('What is the current vehicle loan settlement amount? Enter zero only if confirmed debt-free.')
     for name in ('trade_in', 'private_sale'):
+        # Each path owns a replacement quote AND a disposal quote. Dealer
+        # package discounts may differ, so never copy one path's purchase price.
         replacement = getattr(profile, name + '_replacement')
         disposal = getattr(profile, name + '_quote')
         missing = []
@@ -61,6 +70,9 @@ def compare_trade_in(profile: TradeInFrame, *, valuation_result=None, as_of=None
         if missing:
             questions.append(f'Confirm the missing or incomplete values for {name}: ' + ', '.join(missing) + '. Zero fees must be stated explicitly.')
         else:
+            # First settle the old loan once from gross disposal proceeds.
+            # Then subtract those net proceeds from the replacement package.
+            # Keep negative values: a shortfall or surplus is meaningful.
             net = decimal(disposal.price_myr) - decimal(disposal.fees_myr) - decimal(profile.loan_settlement_myr)
             outlay = decimal(replacement.price_myr) + decimal(replacement.fees_myr) - net
             row.update(net_proceeds_myr=money(net), cash_difference_myr=money(outlay),
@@ -85,6 +97,8 @@ def compare_trade_in(profile: TradeInFrame, *, valuation_result=None, as_of=None
         'advantage_sign': 'Positive favours private sale; negative favours trade-in. Path-specific replacement prices and fees are included.'})
     trace.append({'rule_id': 'TRADE_COMPARE', 'reason': 'Compare full cash differences rather than gross offers alone.'})
     eligible = [name for name, row in rows.items() if row['within_available_cash'] is not False]
+    # Financial feasibility precedes the preferred speed/effort/cost criterion.
+    # An unknown cash limit permits only a conditional affordability statement.
     if not eligible:
         result['message'] = 'Neither path fits the stated available cash. Review replacement prices or the cash limit.'
         trace.append({'rule_id': 'TRADE_CASH_LIMIT', 'reason': 'No path may be suggested above the stated cash limit.'})

@@ -1,0 +1,242 @@
+{
+  "reviewed_on": "2026-10-16",
+  "base_commit": "1c5c612bb5e45d23b3f1611ea9a907c4880931a3",
+  "change_scope": "English Python comments and learning documentation; no algorithm, prompt, schema, fixture or evidence change.",
+  "python_files": [
+    {
+      "file": "agent_cli.py",
+      "full_ast_identical": true,
+      "ast_sha256": "a2dfda51db15ecb5204671edbb9fdfa75790cc452a1235cf96d9c966a2a6703d"
+    },
+    {
+      "file": "agent_controller.py",
+      "full_ast_identical": true,
+      "ast_sha256": "ebfae989942306535eb49b2c46068b0f3762af87de40abdbf14f44aae2e9216e"
+    },
+    {
+      "file": "agent_grounding.py",
+      "full_ast_identical": true,
+      "ast_sha256": "3d4bb4b37ee498be941779ef273492a16a31881bb062a0c61a5189b088147cce"
+    },
+    {
+      "file": "agent_state.py",
+      "full_ast_identical": true,
+      "ast_sha256": "6c4f358f000bec5fe160074a3c6bf071acec568df941f2091721e8ca823a5545"
+    },
+    {
+      "file": "agent_tools.py",
+      "full_ast_identical": true,
+      "ast_sha256": "b0ceb1e80e81cb8e40f1636974706f6b01d669e22ab30d6215b6ac00be7b30f2"
+    },
+    {
+      "file": "audit_input_cases.py",
+      "full_ast_identical": true,
+      "ast_sha256": "e5ee2519faa16c624477935fb3f5eaf6e1b46339d451f6afd7c8e2a4aff3a4bd"
+    },
+    {
+      "file": "buyer_profile.py",
+      "full_ast_identical": true,
+      "ast_sha256": "92c3ce92387ca62891504c4e43e8c30e57b773246c9a282b879fdc2393a0071a"
+    },
+    {
+      "file": "check_data_quality.py",
+      "full_ast_identical": true,
+      "ast_sha256": "fb1969978af029933926d1c480b68054729ae364d1ba180349df1d89ecc2a055"
+    },
+    {
+      "file": "consultation_frames.py",
+      "full_ast_identical": true,
+      "ast_sha256": "d08b43933ad8399c4303cf87213b1d0bde802191ee43435b7796e5a5dba0f56b"
+    },
+    {
+      "file": "evaluate_agent.py",
+      "full_ast_identical": true,
+      "ast_sha256": "10719e04c40a32461fe7f04bca41e0929958b9fd17d6058cafffb5ae7f6a38b7"
+    },
+    {
+      "file": "evaluate_extraction.py",
+      "full_ast_identical": true,
+      "ast_sha256": "eca2ca187fafe96bb196dab7f16896290b003cee744b595ae7a673db9df282ba"
+    },
+    {
+      "file": "evaluate_input_fix.py",
+      "full_ast_identical": true,
+      "ast_sha256": "bdf6f3f55fc72aed162a0af19bcd6917f26f18489d6f4b02b9534c7b22086884"
+    },
+    {
+      "file": "evaluate_negotiation.py",
+      "full_ast_identical": true,
+      "ast_sha256": "7a471a4d1e214ecace759a473a3ecf5b8dbdbe222ad32014928f30f0cb25647a"
+    },
+    {
+      "file": "evaluate_ranking.py",
+      "full_ast_identical": true,
+      "ast_sha256": "7f83481fa5d9a756c0187a7a09d5df7bd808c463ab798ce0c7d7132ca04bdead"
+    },
+    {
+      "file": "evaluate_stage5_stage6.py",
+      "full_ast_identical": true,
+      "ast_sha256": "9b2734aed7c8e8e9b4eb8179daf227b966a6d11092015c857e7cd415db6eba65"
+    },
+    {
+      "file": "evaluate_valuation.py",
+      "full_ast_identical": true,
+      "ast_sha256": "125c47e9b4b0d5fc67d034aa8e1e22dfcd4bea53ac754b75ea23b0f94649bebc"
+    },
+    {
+      "file": "input_grounding.py",
+      "full_ast_identical": true,
+      "ast_sha256": "0b51b55131ff8640a767c9d92a641e7d51066abbd27a6cd668f3f371a85e8428"
+    },
+    {
+      "file": "main.py",
+      "full_ast_identical": true,
+      "ast_sha256": "75f2b10f2016e8f4dfecfdfa0116408a10f828b62a3e9a6acaccbc180f2501ef"
+    },
+    {
+      "file": "matching.py",
+      "full_ast_identical": true,
+      "ast_sha256": "b2784848fe3e0464454de89d91192a30a280f193574b28a4f6fb77b64978b3ba"
+    },
+    {
+      "file": "negotiation.py",
+      "full_ast_identical": true,
+      "ast_sha256": "f3366e9c3627a66cf196490b3e64e22fe5e2d47812b8cc5eadbdc92682bff6cb"
+    },
+    {
+      "file": "scoring.py",
+      "full_ast_identical": true,
+      "ast_sha256": "fff54a7a08d142a964fc2d1c342f6dad7cb7850b7f687f40d7b64bfc34dad691"
+    },
+    {
+      "file": "seller_profile.py",
+      "full_ast_identical": true,
+      "ast_sha256": "285842bb0b8e63e7d1f31619371950d1ec97b69f0610778e3305ca86410dba2e"
+    },
+    {
+      "file": "test_agent.py",
+      "full_ast_identical": true,
+      "ast_sha256": "ec205c94a06227dc874ea68a77d1f1248f452347aff4104b42ebc802cc1d9cc4"
+    },
+    {
+      "file": "test_input_grounding.py",
+      "full_ast_identical": true,
+      "ast_sha256": "c090e4926e951c81bb75034da28c2fa529315cb50deef37a9c85adb448a59d19"
+    },
+    {
+      "file": "test_matching.py",
+      "full_ast_identical": true,
+      "ast_sha256": "c8a2b90255d0c47e47050dd66a896fe92528d679a9b13c91b5e59b0928a3f3a8"
+    },
+    {
+      "file": "test_negotiation.py",
+      "full_ast_identical": true,
+      "ast_sha256": "b16e5f082eff9190ba1bba5ad66b2904708b8a30bf8e4c4a8b5879e6d2060d52"
+    },
+    {
+      "file": "test_profile.py",
+      "full_ast_identical": true,
+      "ast_sha256": "8e0564a138b324cc09276254b50be8b130afd9a392aa48687c38eaf77a6c0c41"
+    },
+    {
+      "file": "test_scoring.py",
+      "full_ast_identical": true,
+      "ast_sha256": "af9577e595d46a5aef75d9a83190456064aa3b878554b8eeab04293bc6c4fc55"
+    },
+    {
+      "file": "test_stage5_audit.py",
+      "full_ast_identical": true,
+      "ast_sha256": "a9f6302519ce77d9c2ede8724337c74090e1b6352712f9100c8133591e45c52f"
+    },
+    {
+      "file": "test_valuation.py",
+      "full_ast_identical": true,
+      "ast_sha256": "d5e41d12002f7d699694f54cee93d6b8ac05fcf03513d29b9ff127a96829fd01"
+    },
+    {
+      "file": "trade_in.py",
+      "full_ast_identical": true,
+      "ast_sha256": "960cac81472de8a1e8045e5fd44ab1ec72346acb5334ca2b713988cfba565857"
+    },
+    {
+      "file": "valuation.py",
+      "full_ast_identical": true,
+      "ast_sha256": "815d4c133bdb085c61211bcb0db5756a0c63f88299093844abda2e37f0bd62d8"
+    },
+    {
+      "file": "vehicle_frame.py",
+      "full_ast_identical": true,
+      "ast_sha256": "5eb1474b8271ba462c93e592eff81342f499bfda72258bb6e265783ad9e64ef3"
+    },
+    {
+      "file": "data/build_curated_snapshot.py",
+      "full_ast_identical": true,
+      "ast_sha256": "4b82925840e8384ba46cb3269cb06619028be7c1407c18da8a6d959a0eb2278c"
+    }
+  ],
+  "annotated_class_function_definitions": 275,
+  "configurations": [
+    {
+      "file": ".gitignore",
+      "effective_lines_identical": true
+    },
+    {
+      "file": ".gitattributes",
+      "effective_lines_identical": true
+    },
+    {
+      "file": "requirements.txt",
+      "effective_lines_identical": true
+    },
+    {
+      "file": "requirements-lock.txt",
+      "effective_lines_identical": true
+    }
+  ],
+  "unchanged_existing_json_files": [
+    "data/quality_report.json",
+    "data/source_receipts.json",
+    "data/vehicles_demo.json",
+    "data/vehicles_real.json",
+    "evaluation-results-english.json",
+    "evaluation-results.json",
+    "examples/agent_buy_dialogue.json",
+    "examples/city_buyer.json",
+    "examples/family_buyer.json",
+    "examples/family_no_toyota.json",
+    "examples/negotiation_buyer.json",
+    "examples/negotiation_seller.json",
+    "examples/seller_alza.json",
+    "examples/trade_in.json",
+    "examples/trade_in_unknown_fees.json",
+    "input-audit-after.json",
+    "input-audit-before.json",
+    "input-fix-verification.json",
+    "stage3-fixture-result.json",
+    "stage3-live-results.json",
+    "stage4-live-result.json",
+    "stage4-reference.json",
+    "stage4-scenario.json",
+    "stage5-stage6-acceptance.json",
+    "stage7-recheck.json",
+    "stage7-results.json",
+    "stage8-live-before-quote-role-fix.json",
+    "stage8-live-before-trade-scope-fix.json",
+    "stage8-live-initial-failures.json",
+    "stage8-live-results.json",
+    "stage8-smoke-fixed.json",
+    "stage8-smoke.json",
+    "stage8-structured-smoke.json",
+    "stage8-valid-actions-smoke.json",
+    "stages1-7-tool-recheck.json",
+    "trade-in-reference-recheck.json"
+  ],
+  "unit_tests": {
+    "status": "passed",
+    "test_methods": 134,
+    "elapsed_seconds": 1.936,
+    "command": ".\\.venv\\Scripts\\python.exe -m unittest -q test_profile test_matching test_scoring test_valuation test_input_grounding test_stage5_audit test_negotiation test_agent",
+    "real_model_called": false
+  },
+  "passed": true
+}

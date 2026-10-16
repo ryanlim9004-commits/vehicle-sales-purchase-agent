@@ -1,4 +1,8 @@
 """Allowlisted tools built from validated session facts and actual observations."""
+# Learning guide:
+# Register allowed consultation tools and execute them from checked state.
+# The model requests a tool; Python owns its parameters, execution and checks.
+# The finish action requires a real active-goal result and passing verification.
 import json
 import re
 from decimal import Decimal
@@ -15,14 +19,18 @@ from negotiation import advise_negotiation
 from trade_in import compare_trade_in
 
 
+# Signal a rejected tool request that can be repaired within the controller error budget.
 class ToolError(ValueError):
     pass
 
 
+# All non-selection tools take no model-supplied business arguments; facts come from validated
+# session state.
 class EmptyArgs(StrictFrame):
     pass
 
 
+# Selection accepts one bounded candidate ID; eligibility is checked again during execution.
 class SelectArgs(StrictFrame):
     vehicle_id: str = Field(min_length=1, max_length=100)
 
@@ -40,16 +48,22 @@ DESCRIPTIONS = {
     'finish': 'Finish only after the active goal business tool ran and check_result passed. The controller renders verified numbers.'}
 
 
+# Describe registered functions in a conventional tool-schema format; the active controller uses
+# constrained JSON requests.
 def tool_specs():
     return [{'type': 'function', 'function': {'name': name, 'description': description,
              'parameters': (SelectArgs if name == 'select_vehicle' else EmptyArgs).model_json_schema()}}
             for name, description in DESCRIPTIONS.items()]
 
 
+# A reference identity is complete only with brand, model, variant, manufacturing year and
+# transmission.
 def identity_complete(frame):
     return all(getattr(frame, name) is not None for name in ('brand', 'model', 'variant', 'year', 'transmission'))
 
 
+# Return canonical missing/conflicting slot questions for the active goal; known damage follows
+# the inspection path.
 def requirements(state, as_of):
     missing = dict(state.issues)
     if state.goal is None:
@@ -105,9 +119,14 @@ def requirements(state, as_of):
     return missing
 
 
+# Independently reconcile actual result IDs, constraints, arithmetic and user limits before a
+# result may finish.
 def verify_observation(tool, result, state, cars, as_of):
     checks = []
+    # Verification reads original facts/data again; it does not trust a tool's
+    # own success label or merely ask the language model whether it looks right.
 
+    # Append a named boolean check so failures can be inspected instead of hidden in a final answer.
     def check(name, condition):
         checks.append({'name': name, 'passed': bool(condition)})
 
@@ -191,7 +210,11 @@ def verify_observation(tool, result, state, cars, as_of):
     return checks
 
 
+# Track actual per-turn execution, reference evidence and check status separately from the model
+# conversation.
 class ToolRuntime:
+    # Start each turn with no trusted observation or cached completion flag; share only the
+    # validated session facts.
     def __init__(self, state, cars, as_of):
         self.state, self.cars, self.as_of = state, cars, as_of
         self.reference = None
@@ -203,6 +226,8 @@ class ToolRuntime:
         self.done = None
         self.selection_done = False
 
+    # Constrain the next action by inspection, missing facts, requested selection and
+    # check/finish state.
     def available_tools(self, message):
         """Expose only state-valid actions, rather than unrelated task tools."""
         if not self.inspected:
@@ -224,6 +249,8 @@ class ToolRuntime:
             choices.append('get_price_reference')
         return choices
 
+    # Validate a registered request, enforce preconditions, execute real Python tools and record
+    # the resulting state.
     def call(self, name, arguments):
         if name not in DESCRIPTIONS:
             raise ToolError('Unknown tool. Only the provided read-only consultation tools are permitted.')
@@ -265,6 +292,8 @@ class ToolRuntime:
                 self.state.event('checks', tool=self.last_tool, **item)
             return {'passed': self.checked, 'checks': checks}
         if name == 'finish':
+            # A checked result for another goal cannot complete this task.
+            # Complete means the consultation result is ready, not a deal closed.
             expected = {'buy': 'rank_vehicles', 'sell': 'estimate_vehicle_value', 'negotiate': 'advise_negotiation', 'trade_in': 'compare_trade_in'}.get(self.state.goal)
             if not self.checked or self.last_tool != expected or self.last_result is None:
                 raise ToolError('Finish requires the active goal business observation and a passing check_result.')
@@ -278,6 +307,8 @@ class ToolRuntime:
             raise ToolError('Required facts are missing or conflicting. Use ask_user and wait for the reply.')
         expected = {'buy': 'rank_vehicles', 'sell': 'estimate_vehicle_value', 'negotiate': 'advise_negotiation', 'trade_in': 'compare_trade_in'}.get(self.state.goal)
         if name == 'get_price_reference':
+            # Derive the lookup from confirmed identity, not model-provided
+            # prices. The returned asking median never fills a gross-offer slot.
             current = self.state.negotiation.vehicle if self.state.goal == 'negotiate' else self.state.trade_in.current_vehicle
             if self.state.goal not in ('negotiate', 'trade_in') or not identity_complete(current):
                 raise ToolError('A price reference requires complete negotiation vehicle identity. Without it, only limited limit-based advice is possible.')
@@ -303,6 +334,8 @@ class ToolRuntime:
             if identity_complete(self.state.trade_in.current_vehicle) and self.reference is None:
                 raise ToolError('Obtain get_price_reference for the stated current vehicle before comparing quotes. It is context, not an inferred trade-in offer.')
             result = compare_trade_in(self.state.trade_in, valuation_result=self.reference, as_of=self.as_of)
+        # Any new business observation invalidates the previous check flag.
+        # This forces check_result to verify the exact result that will be shown.
         self.last_tool, self.last_result, self.checked = name, result, False
         if name == 'rank_vehicles':
             self.state.ranked_vehicle_ids = [r['vehicle']['vehicle_id'] for r in result['matches']]

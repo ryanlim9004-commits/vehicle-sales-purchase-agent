@@ -1,4 +1,8 @@
 """Hand-authored decision tree; price anchors are not learned or optimal offers."""
+# Learning guide:
+# Run a handwritten buyer/seller decision tree on explicit quotes and limits.
+# A linked valuation must be an actual tool observation with matching identity/date.
+# Suggestions respect cash limits; the program never accepts or executes a deal.
 from datetime import date
 from decimal import Decimal
 from statistics import median
@@ -6,10 +10,14 @@ from consultation_frames import NegotiationFrame
 from valuation import key, money
 
 
+# Construct Decimal from text to avoid importing the binary representation of a float into money
+# arithmetic.
 def decimal(value):
     return Decimal(str(value))
 
 
+# Validate the supplied tool observation identity, date, unique sources and reference arithmetic
+# before using its anchor.
 def asking_evidence(profile, valuation_result, as_of):
     """Check a valuation TOOL result before linking it to this consultation.
 
@@ -52,6 +60,8 @@ def asking_evidence(profile, valuation_result, as_of):
     return evidence, []
 
 
+# Apply ordered buyer/seller rules using complete fees and stated limits; without evidence,
+# assess only those limits.
 def advise_negotiation(profile: NegotiationFrame, *, as_of: date, valuation_result=None):
     result = {'status': 'needs_clarification', 'profile': profile.model_dump(), 'as_of': as_of.isoformat(),
               'action': None, 'suggested_counter_price_myr': None, 'calculations': {},
@@ -99,6 +109,8 @@ def advise_negotiation(profile: NegotiationFrame, *, as_of: date, valuation_resu
     if not ref:
         result['limitations'].append('No usable linked valuation reference: advice concerns the stated budget/reserve only; price fairness is not assessed.')
 
+    # Write one chosen action/counter and its rule explanation into the result, consistently
+    # across tree branches.
     def decision(rule, action, reason, counter=None):
         result['action'] = action
         result['suggested_counter_price_myr'] = money(counter) if counter is not None else None
@@ -106,6 +118,8 @@ def advise_negotiation(profile: NegotiationFrame, *, as_of: date, valuation_resu
 
     if profile.role == 'buyer':
         budget = decimal(profile.buyer_total_budget_myr)
+        # Buyer hard limit: vehicle counter + fees <= total purchase budget.
+        # A website asking anchor can lower the counter, never raise this cap.
         cap = budget - fees
         result['calculations'] = {'offered_total_cost_myr': money(offer + fees), 'total_budget_myr': money(budget),
                                   'maximum_vehicle_price_myr': money(max(Decimal(0), cap)),
@@ -128,6 +142,8 @@ def advise_negotiation(profile: NegotiationFrame, *, as_of: date, valuation_resu
             decision('NEG_BUY_WITHIN_LIMIT', 'review_offer', 'The quote fits the stated budget. Review the vehicle and terms; no deal is automatically accepted.')
     else:
         settlement = decimal(profile.loan_settlement_myr)
+        # Seller hard limit: counter - fees - loan settlement >= minimum net.
+        # The required gross vehicle-price floor therefore adds both costs.
         minimum = decimal(profile.seller_minimum_net_myr)
         floor = minimum + fees + settlement
         net = offer - fees - settlement

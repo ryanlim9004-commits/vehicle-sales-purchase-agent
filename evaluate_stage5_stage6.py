@@ -1,4 +1,8 @@
 """Acceptance scenarios for data/scoring and valuation. Optional real Ollama calls."""
+# Learning guide:
+# Recheck eight fixed-input data/scoring/valuation scenarios.
+# --live adds two actual Ollama extraction-to-tool cases.
+# --output selects the result file; use a new name to preserve earlier evidence.
 import argparse
 import json
 from datetime import date
@@ -16,6 +20,7 @@ ROOT = Path(__file__).resolve().parent
 AS_OF = date(2026, 10, 15)
 
 
+# Run saved-data acceptance cases; call the real model only when the live argument is enabled.
 def run(live=False):
     cars = load_vehicles(ROOT/'data/vehicles_real.json')
     city = BuyerProfileFrame.model_validate_json((ROOT/'examples/city_buyer.json').read_text(encoding='utf-8'))
@@ -23,6 +28,7 @@ def run(live=False):
     seller = SellerVehicleFrame.model_validate_json((ROOT/'examples/seller_alza.json').read_text(encoding='utf-8'))
     checks = []
 
+    # Append an inspectable expected-versus-actual check without changing the tool result.
     def record(name, expected, actual):
         checks.append({'case': name, 'expected': expected, 'actual': actual, 'passed': expected == actual})
 

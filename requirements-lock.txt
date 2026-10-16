@@ -1,3 +1,7 @@
+# Exact package versions from the working project virtual environment.
+# Direct application dependencies are pydantic and ollama; remaining packages
+# support their typing, validation, HTTP transport and certificate handling.
+# pip ignores these comments: no package versions are changed by this explanation.
 annotated-types==0.8.0
 anyio==4.15.1
 certifi==2026.7.22

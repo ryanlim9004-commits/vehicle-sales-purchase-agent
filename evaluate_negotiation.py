@@ -1,4 +1,8 @@
 """Saved Stage 7 acceptance examples. No model calls or live market queries."""
+# Learning guide:
+# Recheck five actual CLI runs and three direct financial-tool scenarios.
+# All consultation quotes and time estimates here are synthetic fixtures.
+# Running the script replaces stage7-results.json; no model or market calls occur.
 import json
 import subprocess
 import sys
@@ -9,6 +13,8 @@ from trade_in import compare_trade_in
 ROOT = Path(__file__).resolve().parent
 
 
+# Invoke the real single-turn CLI with this interpreter and parse JSON only when its process
+# exits successfully.
 def cli(name, *flags):
     args = [sys.executable, str(ROOT/'main.py'), '--fixture', str(ROOT/'examples'/name), *flags]
     process = subprocess.run(args, cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
@@ -17,9 +23,13 @@ def cli(name, *flags):
     return json.loads(process.stdout)
 
 
+# Collect eight deterministic acceptance cases, including linked references, unknown fees and
+# package/cash-limit changes.
 def run():
     records = []
 
+    # Compare selected nested output fields with explicit expectations and retain the full
+    # result as evidence.
     def record(name, result, expected):
         actual = {}
         for path in expected:

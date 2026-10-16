@@ -1,11 +1,19 @@
 """Vehicle knowledge representation: inherited slots, ranges, and provenance."""
+# Learning guide:
+# Define the schema for one saved vehicle advertisement or teaching record.
+# PassengerCarFrame demonstrates inheritance from the general VehicleFrame.
+# Validators enforce units, evidence metadata and internal consistency, not source truth.
 from datetime import date
 from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, field_validator, model_validator
 
 
+# Represent one source record, including price basis, observation dates, units, availability and
+# provenance.
 class VehicleFrame(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True, allow_inf_nan=False)
+    # Identity + price/seat slots support hard matching. Evidence slots below
+    # explain where values came from and which comparisons they can support.
     vehicle_id: str = Field(min_length=1)
     brand: str = Field(min_length=1)
     model: str = Field(min_length=1)
@@ -21,10 +29,14 @@ class VehicleFrame(BaseModel):
     price_type: Literal['asking', 'transaction', 'illustrative'] | None = None
     availability: Literal['listed_snapshot', 'sold', 'reserved', 'unknown'] = 'unknown'
     source_updated_on: date | None = None
+    # An exact point and an advertised interval are different evidence. Retain
+    # a range when that is all the source provides; do not invent its midpoint.
     mileage_km: int | None = Field(default=None, ge=0)
     mileage_min_km: int | None = Field(default=None, ge=0)
     mileage_max_km: int | None = Field(default=None, ge=0)
     condition: str | None = None
+    # Feature units are encoded in names: km/L, litres and millimetres. A fuel
+    # claim basis and boot seat configuration are needed for fair comparisons.
     fuel_km_per_l: float | None = Field(default=None, gt=0, le=100)
     fuel_basis: Literal['eco_driving_claim', 'MDC_claim', 'synthetic_demo'] | None = None
     fuel_source_reference: str | None = None
@@ -34,6 +46,7 @@ class VehicleFrame(BaseModel):
     specs_source_reference: str | None = None
     evidence_notes: list[str] = Field(default_factory=list)
 
+    # Reject blank required identity/source fields after removing surrounding whitespace.
     @field_validator('vehicle_id', 'brand', 'model', 'source_reference')
     @classmethod
     def clean_text(cls, value: str) -> str:
@@ -42,6 +55,8 @@ class VehicleFrame(BaseModel):
             raise ValueError('Text slots cannot contain only whitespace.')
         return value
 
+    # Cross-check dates, mileage bounds, price/source types and feature evidence after
+    # individual fields validate.
     @model_validator(mode='after')
     def check_dates(self):
         if self.year > self.observed_on.year:
@@ -53,6 +68,8 @@ class VehicleFrame(BaseModel):
         if self.mileage_km is not None and ((self.mileage_min_km is not None and self.mileage_km < self.mileage_min_km) or (self.mileage_max_km is not None and self.mileage_km > self.mileage_max_km)):
             raise ValueError('Exact mileage must agree with any supplied mileage bounds.')
         if self.source_kind != 'synthetic_demo':
+            # A sold advertisement still contains an asking price. A sale label
+            # alone cannot turn it into a verified transaction-price record.
             if not self.variant or not self.variant.strip():
                 raise ValueError('Real records require a stated variant.')
             if self.price_type != ('asking' if self.source_kind == 'listing' else 'transaction'):
@@ -76,12 +93,15 @@ class VehicleFrame(BaseModel):
         return self
 
 
+# Inherit all vehicle slots and add passenger-car defaults; do not infer missing seats or prices.
 class PassengerCarFrame(VehicleFrame):
     # Class frame: passenger cars inherit common vehicle slots and this default.
     vehicle_category: Literal['passenger_car'] = 'passenger_car'
     wheels: Literal[4] = 4
 
 
+# Load JSON into typed passenger-car records and reject repeated record IDs before a tool can
+# use them.
 def load_vehicles(path) -> list[PassengerCarFrame]:
     from pathlib import Path
     vehicles = TypeAdapter(list[PassengerCarFrame]).validate_json(Path(path).read_text(encoding='utf-8'))

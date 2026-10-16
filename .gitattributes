@@ -1,3 +1,4 @@
+# Store project text with LF line endings so Windows/Linux diffs stay consistent.
 * text=auto eol=lf
 *.py text eol=lf
 *.json text eol=lf

@@ -3,9 +3,15 @@
 These guards cover explicit numeric/unit forms; they are not a full English parser.
 Unsupported or conflicting expressions are clarified rather than guessed.
 """
+# Learning guide:
+# Check the original wording after single-turn model extraction.
+# Regexes support bounded English number, unit, currency and history forms.
+# Return unknown plus a question when evidence is missing, conflicting or unsupported.
 import re
 from decimal import Decimal
 
+# Regex named groups preserve the written number together with its unit or
+# currency. Decimal conversion happens only after the surrounding role is checked.
 DIGITS = r'[+-]?(?:\d{1,3}(?:,\d{3})+|\d{1,3}(?: \d{3})+|\d+)(?:\.\d+)?'
 WORDS = r'(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million)'
 NUMBER = rf'(?:{DIGITS}\s*[kK]?|{WORDS}(?:[\s-]+(?:and\s+)?{WORDS})*)'
@@ -16,6 +22,8 @@ UNITS = dict(zip('zero one two three four five six seven eight nine ten eleven t
 UNITS.update(dict(zip('twenty thirty forty fifty sixty seventy eighty ninety'.split(),range(20,100,10))))
 
 
+# Parse supported digit, k-suffix or English-number forms into Decimal, without guessing unknown
+# words.
 def number_value(raw):
     raw = raw.strip().lower()
     if re.fullmatch(rf'{DIGITS}\s*k?',raw):
@@ -37,14 +45,18 @@ def number_value(raw):
     return Decimal(total+current)
 
 
+# Read a bounded preceding clause so unit/currency guards can distinguish an amount from nearby
+# context.
 def clause_before(text, start):
     return re.split(r'[,;.!?\n]',text[max(0,start-80):start])[-1]
 
 
+# Read a bounded following clause to detect daily distances, instalments and other context markers.
 def clause_after(text, end):
     return re.split(r'[,;.!?\n]',text[end:end+65])[0]
 
 
+# Return (kilometres, evidence notes, issue); only one supported exact odometer reading is accepted.
 def mileage_from_text(text):
     values, evidence = [], []
     for match in DISTANCE.finditer(text):
@@ -62,6 +74,8 @@ def mileage_from_text(text):
             return None, [], 'Please provide the exact odometer reading and its unit; a range or approximate limit was supplied.'
         value = number_value(match['number'])
         unit = match['unit'].lower()
+        # All stored odometer values use kilometres: m * 0.001; miles *
+        # 1.609344. The magnitude must follow the source unit, not an LLM guess.
         factor = Decimal('0.001') if unit in ('m','metre','metres','meter','meters') else Decimal('1.609344') if unit in ('mi','mile','miles') else Decimal(1)
         km = value*factor
         if km < 0 or km > 2000000:
@@ -75,6 +89,8 @@ def mileage_from_text(text):
     return float(values[0]), evidence, None
 
 
+# Return a positive total MYR budget, using an explicit range upper bound;
+# foreign/monthly/conflicting totals ask again.
 def budget_from_text(text):
     # Accept the user's existing compact spelling "budgetRM50000".
     text = re.sub(r'(?i)(budget)(?=RM|MYR)',r'\1 ',text)
@@ -120,19 +136,27 @@ def budget_from_text(text):
     return float(totals[0]), evidence, None
 
 
+# Mask unsupported currency amounts only in the model input; original wording still drives the
+# final currency check.
 def buyer_extraction_text(text):
     """Keep unrelated facts extractable when the budget uses an unsupported currency.
 
     Original text is still passed to ground_buyer; no exchange conversion occurs.
     """
+    # Keep MYR money text unchanged and substitute a clarification marker for each
+    # foreign-currency match.
     def replace(match):
         currency=(match['currency'] or match['suffix_currency']).upper()
         return match.group() if currency in ('MYR','RM','RINGGIT') else '[foreign-currency amount omitted; ask for MYR budget]'
     return MONEY.sub(replace,text)
 
 
+# Recheck mileage, manufacturing year and damage wording; revalidate the frame and attach source
+# notes/questions.
 def ground_seller(text, profile):
     data = profile.model_dump()
+    # Replace the proposed model mileage with the independently parsed source
+    # value, even when the proposed number looked valid to the schema.
     notes = []
     questions = list(profile.clarification_notes)
     mileage, evidence, issue = mileage_from_text(text)
@@ -186,6 +210,8 @@ def ground_seller(text, profile):
     return type(profile).model_validate(data)
 
 
+# Ground total budget and household travel, conservatively recover explicit seats/use, and keep
+# unrelated known facts.
 def ground_buyer(text, profile):
     data=profile.model_dump()
     if re.search(r"\b(not everyone|not all|won't all|will not all)\b.{0,50}\b(travel|ride|together)\b", text, re.I):

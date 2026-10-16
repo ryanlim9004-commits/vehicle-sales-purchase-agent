@@ -1,4 +1,8 @@
 """Small inspectable live-model evaluation, separate from rule unit tests."""
+# Learning guide:
+# Run four English buyer messages through the actual local model.
+# Compare selected extracted slots and save reasoning plus elapsed time.
+# Running the script replaces evaluation-results-english.json.
 import argparse
 import json
 from pathlib import Path
@@ -14,6 +18,8 @@ CASES = [
 ]
 
 
+# Extract each real-model case, compare selected slots and write pass/fail plus latency to the
+# English evaluation file.
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', default='qwen3:4b')

@@ -1,4 +1,8 @@
 """Regression checks for the Stage 5 acceptance review."""
+# Learning guide:
+# Regression tests for concrete data/scoring issues found in the Stage 5 audit.
+# Cover evidence type, provenance, dates, mileage consistency and receipt coverage.
+# The suite checks local consistency, not whether an advertisement is true.
 import json
 import unittest
 from copy import deepcopy
@@ -13,11 +17,14 @@ from check_data_quality import profile_data
 ROOT = Path(__file__).resolve().parent
 
 
+# Keep discovered data/provenance bugs fixed through focused regression examples.
 class Stage5AuditTests(unittest.TestCase):
+    # Prepare fresh fixtures for this test so another test cannot change its starting assumptions.
     def setUp(self):
         self.cars = load_vehicles(ROOT / 'data/vehicles_real.json')
         self.profile = BuyerProfileFrame(budget_myr=50000, required_seats=5, usage=['city_commute'])
 
+    # A historical transaction price is not an available asking-price advertisement.
     def test_transaction_record_never_recommended_for_purchase(self):
         raw = self.cars[0].model_dump(mode='json')
         raw.update(source_kind='transaction', price_type='transaction')
@@ -26,23 +33,28 @@ class Stage5AuditTests(unittest.TestCase):
         self.assertEqual(result['matched_count'], 0)
         self.assertTrue(any(r['rule_id'] == 'FILTER_PRICE_BASIS' for r in result['rejected'][0]['reasons']))
 
+    # An exact mileage value cannot contradict its supplied lower/upper bounds.
     def test_mileage_point_must_agree_with_range(self):
         raw = self.cars[0].model_dump(mode='json')
         for changes in [{'mileage_km': 900}, {'mileage_km': 80000}, {'mileage_km': 80000, 'mileage_min_km': None}]:
             with self.subTest(changes=changes), self.assertRaises(ValidationError):
                 PassengerCarFrame.model_validate_json(json.dumps(raw | changes))
 
+    # A record cannot claim a vehicle manufactured after its observation date.
     def test_manufacturing_year_cannot_be_after_observation(self):
         raw = self.cars[0].model_dump(mode='json')
         with self.assertRaises(ValidationError):
             PassengerCarFrame.model_validate_json(json.dumps(raw | {'year': 2027}))
 
+    # Real fuel/size features need valid HTTPS evidence rather than synthetic labels or
+    # arbitrary text.
     def test_real_features_require_real_https_evidence(self):
         raw = next(v for v in self.cars if v.fuel_km_per_l is not None).model_dump(mode='json')
         for changes in [{'fuel_basis': 'synthetic_demo'}, {'fuel_source_reference': 'unverified'}, {'specs_source_reference': ' '}, {'fuel_source_reference': 'http://example.test/specs'}]:
             with self.subTest(changes=changes), self.assertRaises(ValidationError):
                 PassengerCarFrame.model_validate_json(json.dumps(raw | changes))
 
+    # Receipt validation checks field agreement for each source record, not just overall counts.
     def test_receipts_are_compared_by_id_and_field(self):
         from check_data_quality import check_receipts
         receipts = json.loads((ROOT / 'data/source_receipts.json').read_text(encoding='utf-8'))
@@ -53,12 +65,14 @@ class Stage5AuditTests(unittest.TestCase):
         for modified in [dict(receipts, sources=receipts['sources'][1:]), dict(receipts, sources=receipts['sources'] + [receipts['sources'][0]])]:
             self.assertTrue(check_receipts(self.cars, modified))
 
+    # The quality report must expose receipt status and exact-group sample coverage.
     def test_quality_reports_comparable_coverage_and_receipt_check(self):
         result = profile_data(ROOT / 'data/vehicles_real.json')
         self.assertEqual(result['receipt_check']['status'], 'passed')
         sufficient = [g for g in result['valuation_comparable_groups'] if g['meets_minimum_three']]
         self.assertEqual([(g['model'], g['year'], g['count']) for g in sufficient], [('Alza', 2020, 3)])
 
+    # Saved-data lifestyle ranking reflects preferences while retaining every hard constraint.
     def test_real_rank_is_not_price_order_and_respects_constraints(self):
         p = self.profile.model_copy(update={'fuel_priority': 'high', 'space_priority': 'high'})
         filtered = filter_vehicles(p, self.cars)
