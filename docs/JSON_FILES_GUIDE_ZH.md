@@ -2,6 +2,8 @@
 
 更新：2026-10-16。JSON不支持普通代码comments；本文件解释它们，原始数据和历史结果没有为了注释而改写。
 
+阶段9新增stage9-browser-buy.json／stage9-browser-trade.json／stage9-browser-sell.json／stage9-browser-negotiation.json，保存真实浏览器买车两轮、Trade-In一轮、卖车一轮与议价一轮的手动导出及验证说明，共5个独立model-driven turns。negotiation导出也包含先前seller turn，不重复计数。它们来自实际Ollama与tools；客户金额／偏好为synthetic场景，来源广告仍为保存快照。浏览器导出的vehicle-consultation.json不是可导入恢复的session文件；第一版不自动写聊天历史。
+
 ## 1. 先认识JSON写法
 
 ```json

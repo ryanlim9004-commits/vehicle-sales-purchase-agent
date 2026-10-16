@@ -1,0 +1,11 @@
+# This version is a local browser app; do not expose the model server to a LAN.
+[server]
+address = "127.0.0.1"
+headless = true
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+base = "light"
+primaryColor = "#0F766E"

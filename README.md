@@ -2,9 +2,17 @@
 
 An educational Python + Ollama project for used-vehicle consultation in Malaysia. Application prompts, inputs and outputs use English; accompanying Chinese lessons explain the implementation for beginners.
 
-**Status, 15 October 2026:** the Stage 1–7 consultation tools and Stage 8 bounded Agent Loop are implemented. `agent_cli.py` supports English multi-turn memory, corrections, goal changes, validated tool selection/execution and result checks. `main.py` remains the explicit-action tool CLI. Streamlit UI, independent holdout evaluation and final assignment materials remain pending.
+**Status, 16 October 2026:** the Stage 1–8 consultation backend and Stage 9 English Streamlit UI are implemented. `streamlit_app.py` provides chat, supplementary forms, checked comparisons/calculations, source evidence and manual exports. `agent_cli.py` remains the multi-turn CLI; `main.py` remains the explicit-action CLI. Independent holdout evaluation, broader data coverage and final assignment materials remain pending.
 
-**Learning notes, 16 October 2026:** all 34 Python modules and 275 class/function definitions now have English explanations, with additional comments for rules, calculations and Agent stages. This comment-only revision preserves every Python AST, configuration setting and existing JSON record; all 134 unit tests passed again. Start with the [Chinese code guide](CODE_GUIDE_ZH.md), [command reference](COMMANDS_ZH.md) and [JSON reference](docs/JSON_FILES_GUIDE_ZH.md). Check details in `comment-only-verification.json`.
+**Learning notes:** the historical annotation-only revision covered 34 Python modules and 275 class/function definitions, preserving their ASTs and passing the then-current 134 tests. Stage 9 adds functional code with English explanations; the old `comment-only-verification.json` is historical evidence, not a claim that the UI revision leaves behavior unchanged. Start with the [Chinese code guide](CODE_GUIDE_ZH.md), [command reference](COMMANDS_ZH.md) and [JSON reference](docs/JSON_FILES_GUIDE_ZH.md).
+
+Start the browser interface with the installed project environment:
+
+```powershell
+.\.venv\Scripts\python.exe -m streamlit run streamlit_app.py
+```
+
+Open `http://127.0.0.1:8501`. The UI uses the explicitly labelled 15 Oct 2026 snapshot and reference date; no current-date selector or live search is included. Keep Ollama and the Streamlit process running. See the [Stage 9 beginner guide](STAGE9_GUIDE_ZH.md).
 
 ## Implemented features
 
@@ -16,6 +24,7 @@ An educational Python + Ollama project for used-vehicle consultation in Malaysia
 - **Input grounding:** check explicit measurement units and budget currencies against the original message. Unsupported or conflicting readings trigger clarification.
 - **Negotiation / Trade-In:** hand-authored buyer/seller limits and asking-reference rules; explicit fees, loan settlement and path-specific replacement quotes; user-estimated time/effort and cash limits.
 - **Agent Loop:** typed conversation memory, source-grounded updates, a tool allowlist, checked observations, bounded retries/timeouts and inspectable facts/rules/tools/checks.
+- **Browser UI:** English chat and typed update forms over the same Controller, per-tab temporary memory, checked result panels and manual JSON evidence export.
 
 Ollama extracts fact patches and proposes tools through schema-constrained JSON requests; Python validates, executes, checks and renders verified results. This is a bounded hybrid controller, not a claim of verified native Ollama `tool_calls` support. Earlier native-protocol failures are retained in the development evidence.
 
@@ -107,10 +116,10 @@ Use `main.py --help` for all options. Select exactly one of `--text` and `--fixt
 ## Verification
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest -q test_profile test_matching test_scoring test_valuation test_input_grounding test_stage5_audit test_negotiation test_agent
+.\.venv\Scripts\python.exe -m unittest -q test_profile test_matching test_scoring test_valuation test_input_grounding test_stage5_audit test_negotiation test_agent test_streamlit_ui
 ```
 
-The current baseline has **134 passing test methods**, including 40 Agent methods with multiple subtests. Sixteen existing fixed-input tool scenarios were rechecked in `stages1-7-tool-recheck.json` and `stage7-recheck.json`. The final actual qwen3:4b Agent acceptance passed eight turns across four goals: seven model-driven turns plus `/reset`; see `stage8-live-results.json` and [Stage 8 results](STAGE8_RESULTS.md). Earlier failed development attempts are retained. These checks do not establish holdout extraction, market-price or negotiation-success accuracy. Live evaluation requires a running Ollama service; unit tests and manual tool scenarios do not.
+The current baseline has **152 passing test methods**, including 40 Agent methods and 18 UI/form/session methods with multiple subtests. Actual Streamlit AppTest covers reruns, submissions, all four result types and retained submissions with explicit Retry/Discard when another tab holds the model lock. Model replies are scripted and Python tools are real. Actual browser/Ollama evidence and verified manual downloads are listed in [Stage 9 results](STAGE9_RESULTS.md). Earlier Stage 8 live and fixed-input tool evidence is retained separately. These checks do not establish holdout extraction, market-price or negotiation-success accuracy. Live evaluation requires Ollama; offline tests do not. See the [remaining assessment and submission work](REMAINING_WORK_ZH.md).
 
 ## Repository guide
 
@@ -123,6 +132,7 @@ The current baseline has **134 passing test methods**, including 40 Agent method
 | `consultation_frames.py`, `negotiation.py`, `trade_in.py` | Explicit quotes, decision tree and cash comparison |
 | `agent_state.py`, `agent_grounding.py` | Typed memory, goal changes and grounded fact updates |
 | `agent_tools.py`, `agent_controller.py`, `agent_cli.py` | Tool registry, execution/check loop and multi-turn CLI |
+| `streamlit_app.py`, `form_inputs.py`, `ui_session.py` | English browser presentation, validated form adapter and per-tab state/export |
 | `data/`, `examples/` | Curated data, receipts and manual fixtures |
 | `test_*.py`, `evaluate_*.py`, `audit_input_cases.py` | Unit tests and model evaluations |
 | `STAGE*_RESULTS.md`, evaluation JSON files | Dated implementation evidence |
@@ -136,6 +146,8 @@ The current baseline has **134 passing test methods**, including 40 Agent method
 | [Stage 7 guide](STAGE7_GUIDE_ZH.md) | Negotiation, fee semantics, trade-in formulas and manual execution |
 | [Stages 1–7 audit](STAGES1_7_AUDIT_ZH.md) | Scope, repairs, asking-price evidence and remaining gaps |
 | [Stage 8 guide](STAGE8_GUIDE_ZH.md) | Multi-turn execution, memory, corrections, limits and traces |
+| [Stage 9 guide](STAGE9_GUIDE_ZH.md) | Browser startup, four tasks, forms, sources and manual downloads |
+| [Stage 9 decisions](docs/STAGE9_DECISIONS.md) | User-confirmed scope, date policy and integration boundaries |
 | [Accelerated plan](ACCELERATED_PLAN_ZH.md) | Current delivery schedule |
 | [Original proposal](docs/PROPOSAL_EN.md) | Historical design intent; current status above takes precedence |
 

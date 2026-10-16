@@ -1,0 +1,1865 @@
+{
+  "reviewed_on": "2026-10-16",
+  "method": "Actual browser English seller chat, real local Ollama extraction/planning, source-grounded metre conversion, actual valuation and manual browser download. Synthetic seller facts, frozen source-backed asking ads.",
+  "passed": true,
+  "export": {
+    "export_version": 1,
+    "exported_at": "2026-10-16T15:03:42.914157+08:00",
+    "snapshot_date": "2026-10-15",
+    "consultation_as_of": "2026-10-15",
+    "data_mode": "Saved snapshot demonstration; not live inventory",
+    "model": "qwen3:4b",
+    "state": {
+      "schema_version": 1,
+      "goal": "sell",
+      "buyer": {
+        "budget_myr": null,
+        "family_size": null,
+        "household_travels_together": null,
+        "required_seats": null,
+        "usage": [],
+        "fuel_priority": null,
+        "space_priority": null,
+        "preferred_brands": [],
+        "excluded_brands": [],
+        "clarification_notes": [],
+        "input_validation_notes": []
+      },
+      "seller": {
+        "brand": "Perodua",
+        "model": "Alza",
+        "variant": "1.5 SE",
+        "year": 2020,
+        "transmission": "Automatic",
+        "mileage_km": 50.0,
+        "condition": "fair",
+        "major_accident_reported": false,
+        "flood_damage_reported": false,
+        "clarification_notes": [],
+        "input_validation_notes": []
+      },
+      "negotiation": {
+        "currency": "MYR",
+        "role": null,
+        "vehicle": {
+          "brand": null,
+          "model": null,
+          "variant": null,
+          "year": null,
+          "transmission": null
+        },
+        "asking_price_myr": null,
+        "current_offer_myr": null,
+        "fees_myr": null,
+        "fees_confirmed_complete": null,
+        "buyer_total_budget_myr": null,
+        "seller_minimum_net_myr": null,
+        "loan_settlement_myr": null,
+        "clarification_notes": []
+      },
+      "trade_in": {
+        "currency": "MYR",
+        "current_vehicle": {
+          "brand": null,
+          "model": null,
+          "variant": null,
+          "year": null,
+          "transmission": null
+        },
+        "trade_in_replacement": {
+          "price_myr": null,
+          "fees_myr": null,
+          "fees_confirmed_complete": null
+        },
+        "private_sale_replacement": {
+          "price_myr": null,
+          "fees_myr": null,
+          "fees_confirmed_complete": null
+        },
+        "trade_in_quote": {
+          "price_myr": null,
+          "fees_myr": null,
+          "fees_confirmed_complete": null,
+          "estimated_completion_days": null,
+          "estimated_effort_hours": null
+        },
+        "private_sale_quote": {
+          "price_myr": null,
+          "fees_myr": null,
+          "fees_confirmed_complete": null,
+          "estimated_completion_days": null,
+          "estimated_effort_hours": null
+        },
+        "loan_settlement_myr": null,
+        "available_cash_myr": null,
+        "priority": null,
+        "clarification_notes": []
+      },
+      "revision": 1,
+      "turn": 1,
+      "provenance": {
+        "seller.brand": {
+          "turn": 1,
+          "evidence": "Perodua",
+          "source": "current user message"
+        },
+        "seller.model": {
+          "turn": 1,
+          "evidence": "Alza",
+          "source": "current user message"
+        },
+        "seller.variant": {
+          "turn": 1,
+          "evidence": "1.5 SE",
+          "source": "current user message"
+        },
+        "seller.year": {
+          "turn": 1,
+          "evidence": "2020",
+          "source": "current user message"
+        },
+        "seller.transmission": {
+          "turn": 1,
+          "evidence": "Automatic",
+          "source": "current user message"
+        },
+        "seller.mileage_km": {
+          "turn": 1,
+          "evidence": "50000 m",
+          "source": "current user message"
+        },
+        "seller.condition": {
+          "turn": 1,
+          "evidence": "Condition fair",
+          "source": "current user message"
+        },
+        "seller.major_accident_reported": {
+          "turn": 1,
+          "evidence": "No major accident",
+          "source": "current user message"
+        },
+        "seller.flood_damage_reported": {
+          "turn": 1,
+          "evidence": "No flood damage",
+          "source": "current user message"
+        }
+      },
+      "issues": {},
+      "selected_vehicle_id": null,
+      "negotiation_from_seller": false,
+      "trade_in_from_seller": false,
+      "ranked_vehicle_ids": [],
+      "pending_slots": [],
+      "trace": [
+        {
+          "turn": 1,
+          "category": "facts",
+          "action": "switch_goal",
+          "previous": null,
+          "goal": "sell"
+        },
+        {
+          "turn": 1,
+          "category": "rules",
+          "rule_id": "GOAL_EXPLICIT",
+          "reason": "The current message explicitly names the consultation task.",
+          "goal": "sell"
+        },
+        {
+          "turn": 1,
+          "category": "model",
+          "phase": "sense",
+          "attempt": 1,
+          "success": true,
+          "metrics": {
+            "prompt_eval_count": 773,
+            "eval_count": 326,
+            "total_duration": 33003697500,
+            "eval_duration": 18700522000
+          }
+        },
+        {
+          "turn": 1,
+          "category": "facts",
+          "action": "update",
+          "slot": "seller.brand",
+          "value": "Perodua",
+          "operation": "set",
+          "evidence": "Perodua"
+        },
+        {
+          "turn": 1,
+          "category": "facts",
+          "action": "update",
+          "slot": "seller.model",
+          "value": "Alza",
+          "operation": "set",
+          "evidence": "Alza"
+        },
+        {
+          "turn": 1,
+          "category": "facts",
+          "action": "update",
+          "slot": "seller.variant",
+          "value": "1.5 SE",
+          "operation": "set",
+          "evidence": "1.5 SE"
+        },
+        {
+          "turn": 1,
+          "category": "facts",
+          "action": "update",
+          "slot": "seller.year",
+          "value": 2020,
+          "operation": "set",
+          "evidence": "2020"
+        },
+        {
+          "turn": 1,
+          "category": "facts",
+          "action": "update",
+          "slot": "seller.transmission",
+          "value": "Automatic",
+          "operation": "set",
+          "evidence": "Automatic"
+        },
+        {
+          "turn": 1,
+          "category": "facts",
+          "action": "update",
+          "slot": "seller.mileage_km",
+          "value": 50.0,
+          "operation": "set",
+          "evidence": "50000 m"
+        },
+        {
+          "turn": 1,
+          "category": "facts",
+          "action": "update",
+          "slot": "seller.condition",
+          "value": "fair",
+          "operation": "set",
+          "evidence": "Condition fair"
+        },
+        {
+          "turn": 1,
+          "category": "facts",
+          "action": "update",
+          "slot": "seller.major_accident_reported",
+          "value": false,
+          "operation": "set",
+          "evidence": "No major accident"
+        },
+        {
+          "turn": 1,
+          "category": "facts",
+          "action": "update",
+          "slot": "seller.flood_damage_reported",
+          "value": false,
+          "operation": "set",
+          "evidence": "No flood damage"
+        },
+        {
+          "turn": 1,
+          "category": "model",
+          "phase": "plan",
+          "attempt": 1,
+          "success": true,
+          "metrics": {
+            "prompt_eval_count": 826,
+            "eval_count": 16,
+            "total_duration": 1888535000,
+            "eval_duration": 836035000
+          }
+        },
+        {
+          "turn": 1,
+          "category": "tools",
+          "name": "inspect_requirements",
+          "arguments": {},
+          "executed": true,
+          "observation": {
+            "status": "ready",
+            "missing_slots": [],
+            "questions": []
+          }
+        },
+        {
+          "turn": 1,
+          "category": "model",
+          "phase": "plan",
+          "attempt": 1,
+          "success": true,
+          "metrics": {
+            "prompt_eval_count": 914,
+            "eval_count": 17,
+            "total_duration": 1277379900,
+            "eval_duration": 877257000
+          }
+        },
+        {
+          "turn": 1,
+          "category": "tools",
+          "name": "estimate_vehicle_value",
+          "arguments": {},
+          "executed": true,
+          "observation": {
+            "status": "reference_only",
+            "seller_profile": {
+              "brand": "Perodua",
+              "model": "Alza",
+              "variant": "1.5 SE",
+              "year": 2020,
+              "transmission": "Automatic",
+              "mileage_km": 50.0,
+              "condition": "fair",
+              "major_accident_reported": false,
+              "flood_damage_reported": false,
+              "clarification_notes": [],
+              "input_validation_notes": []
+            },
+            "as_of": "2026-10-15",
+            "policy": {
+              "version": "valuation-v1-educational",
+              "minimum_comparables": 3,
+              "maximum_source_age_days": 90,
+              "mileage_rate_per_10000_km": 0.01,
+              "maximum_mileage_adjustment": 0.1,
+              "good_factor": 1.0,
+              "fair_factor": 0.95,
+              "poor_factor": 0.85
+            },
+            "comparables": [
+              {
+                "vehicle_id": "CL18923892",
+                "asking_price_myr": 35888.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                "source_updated_on": "2026-09-21",
+                "mileage_km": null,
+                "mileage_min_km": 65000,
+                "mileage_max_km": 70000,
+                "condition": null
+              },
+              {
+                "vehicle_id": "CL19122669",
+                "asking_price_myr": 45000.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669",
+                "source_updated_on": "2026-09-21",
+                "mileage_km": null,
+                "mileage_min_km": 100000,
+                "mileage_max_km": 105000,
+                "condition": null
+              },
+              {
+                "vehicle_id": "CL19418670",
+                "asking_price_myr": 44800.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670",
+                "source_updated_on": "2026-09-20",
+                "mileage_km": null,
+                "mileage_min_km": 120000,
+                "mileage_max_km": 125000,
+                "condition": null
+              }
+            ],
+            "excluded_records": [
+              {
+                "vehicle_id": "CL18751444",
+                "reasons": [
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update is outside the permitted valuation window."
+                ]
+              },
+              {
+                "vehicle_id": "CL18249652",
+                "reasons": [
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "CL18624149",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "CL18807978",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "CL18603852",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "CL18939959",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "transmission does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "CL18625566",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "transmission does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "CL18902191",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "CS_C606800",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "PT_LP63L6X1P7",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "PT_K4EDNMNYPG",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "PT_7PRLM3GLPK",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "CS_C6RA000",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "brand does not exactly match.",
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "CS_CBFS600",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "brand does not exactly match.",
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              }
+            ],
+            "fired_rules": [
+              {
+                "rule_id": "VAL_COMPARABLES",
+                "reason": "Same brand/model/variant/year/transmission, eligible real listings, known recent source dates, unique source/ID.",
+                "accepted_count": 3
+              },
+              {
+                "rule_id": "VAL_MEDIAN",
+                "reason": "Median asking price and observed min/max are calculated from the selected listings; no second age-depreciation deduction.",
+                "median_myr": 44800.0
+              },
+              {
+                "rule_id": "VAL_NO_CALIBRATION",
+                "reason": "No verified market mileage/condition factors. Default mode returns the unadjusted listing reference only."
+              }
+            ],
+            "clarification_questions": [],
+            "reference": {
+              "price_basis": "asking",
+              "comparable_count": 3,
+              "median_asking_price_myr": 44800.0,
+              "observed_asking_range_myr": [
+                35888.0,
+                45000.0
+              ],
+              "personalized_for_mileage_or_condition": false
+            },
+            "adjusted_scenario": null,
+            "limitations": [
+              "Listing asking-price reference, not a confirmed transaction price, guaranteed sale price or professional appraisal.",
+              "References are advertisement snapshots; distinct IDs do not prove VIN-distinct cars.",
+              "Independent comparable condition labels and calibrated adjustment coefficients are unavailable.",
+              "Price ranges are observed/assumption-based ranges, not statistical confidence intervals.",
+              "Comparable price spread exceeds 20% of the median; investigate differences rather than treating the median as precise."
+            ]
+          }
+        },
+        {
+          "turn": 1,
+          "category": "rules",
+          "tool": "estimate_vehicle_value",
+          "rule_id": "VAL_COMPARABLES",
+          "reason": "Same brand/model/variant/year/transmission, eligible real listings, known recent source dates, unique source/ID.",
+          "accepted_count": 3
+        },
+        {
+          "turn": 1,
+          "category": "rules",
+          "tool": "estimate_vehicle_value",
+          "rule_id": "VAL_MEDIAN",
+          "reason": "Median asking price and observed min/max are calculated from the selected listings; no second age-depreciation deduction.",
+          "median_myr": 44800.0
+        },
+        {
+          "turn": 1,
+          "category": "rules",
+          "tool": "estimate_vehicle_value",
+          "rule_id": "VAL_NO_CALIBRATION",
+          "reason": "No verified market mileage/condition factors. Default mode returns the unadjusted listing reference only."
+        },
+        {
+          "turn": 1,
+          "category": "model",
+          "phase": "plan",
+          "attempt": 1,
+          "success": true,
+          "metrics": {
+            "prompt_eval_count": 1148,
+            "eval_count": 16,
+            "total_duration": 1432185200,
+            "eval_duration": 846889000
+          }
+        },
+        {
+          "turn": 1,
+          "category": "checks",
+          "tool": "estimate_vehicle_value",
+          "name": "finite_json_result",
+          "passed": true
+        },
+        {
+          "turn": 1,
+          "category": "checks",
+          "tool": "estimate_vehicle_value",
+          "name": "default_is_unadjusted",
+          "passed": true
+        },
+        {
+          "turn": 1,
+          "category": "checks",
+          "tool": "estimate_vehicle_value",
+          "name": "minimum_comparables",
+          "passed": true
+        },
+        {
+          "turn": 1,
+          "category": "checks",
+          "tool": "estimate_vehicle_value",
+          "name": "unique_comparables",
+          "passed": true
+        },
+        {
+          "turn": 1,
+          "category": "checks",
+          "tool": "estimate_vehicle_value",
+          "name": "comparable_source_CL18923892",
+          "passed": true
+        },
+        {
+          "turn": 1,
+          "category": "checks",
+          "tool": "estimate_vehicle_value",
+          "name": "comparable_source_CL19122669",
+          "passed": true
+        },
+        {
+          "turn": 1,
+          "category": "checks",
+          "tool": "estimate_vehicle_value",
+          "name": "comparable_source_CL19418670",
+          "passed": true
+        },
+        {
+          "turn": 1,
+          "category": "checks",
+          "tool": "estimate_vehicle_value",
+          "name": "median_and_range",
+          "passed": true
+        },
+        {
+          "turn": 1,
+          "category": "tools",
+          "name": "check_result",
+          "arguments": {},
+          "executed": true,
+          "observation": {
+            "passed": true,
+            "checks": [
+              {
+                "name": "finite_json_result",
+                "passed": true
+              },
+              {
+                "name": "default_is_unadjusted",
+                "passed": true
+              },
+              {
+                "name": "minimum_comparables",
+                "passed": true
+              },
+              {
+                "name": "unique_comparables",
+                "passed": true
+              },
+              {
+                "name": "comparable_source_CL18923892",
+                "passed": true
+              },
+              {
+                "name": "comparable_source_CL19122669",
+                "passed": true
+              },
+              {
+                "name": "comparable_source_CL19418670",
+                "passed": true
+              },
+              {
+                "name": "median_and_range",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "turn": 1,
+          "category": "model",
+          "phase": "plan",
+          "attempt": 1,
+          "success": true,
+          "metrics": {
+            "prompt_eval_count": 1219,
+            "eval_count": 15,
+            "total_duration": 1255370200,
+            "eval_duration": 792837000
+          }
+        },
+        {
+          "turn": 1,
+          "category": "tools",
+          "name": "finish",
+          "arguments": {},
+          "executed": true,
+          "observation": {
+            "status": "complete",
+            "outcome": "reference_only"
+          }
+        }
+      ]
+    },
+    "conversation": [
+      {
+        "user": "I want to sell my Perodua Alza 1.5 SE, manufacturing year 2020, Automatic. The odometer is 50000 m. Condition fair. No major accident. No flood damage.",
+        "response": {
+          "status": "complete",
+          "goal": "sell",
+          "message": "The 3 eligible comparable listing snapshots have a median asking price of MYR 44,800.00 and observed range MYR 35,888.00–45,000.00. This unadjusted asking-price reference is not personalized for mileage/condition and does not establish a transaction price. Sources and exclusions are in the result details.",
+          "facts": {
+            "brand": "Perodua",
+            "model": "Alza",
+            "variant": "1.5 SE",
+            "year": 2020,
+            "transmission": "Automatic",
+            "mileage_km": 50.0,
+            "condition": "fair",
+            "major_accident_reported": false,
+            "flood_damage_reported": false
+          },
+          "result": {
+            "status": "reference_only",
+            "seller_profile": {
+              "brand": "Perodua",
+              "model": "Alza",
+              "variant": "1.5 SE",
+              "year": 2020,
+              "transmission": "Automatic",
+              "mileage_km": 50.0,
+              "condition": "fair",
+              "major_accident_reported": false,
+              "flood_damage_reported": false,
+              "clarification_notes": [],
+              "input_validation_notes": []
+            },
+            "as_of": "2026-10-15",
+            "policy": {
+              "version": "valuation-v1-educational",
+              "minimum_comparables": 3,
+              "maximum_source_age_days": 90,
+              "mileage_rate_per_10000_km": 0.01,
+              "maximum_mileage_adjustment": 0.1,
+              "good_factor": 1.0,
+              "fair_factor": 0.95,
+              "poor_factor": 0.85
+            },
+            "comparables": [
+              {
+                "vehicle_id": "CL18923892",
+                "asking_price_myr": 35888.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                "source_updated_on": "2026-09-21",
+                "mileage_km": null,
+                "mileage_min_km": 65000,
+                "mileage_max_km": 70000,
+                "condition": null
+              },
+              {
+                "vehicle_id": "CL19122669",
+                "asking_price_myr": 45000.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669",
+                "source_updated_on": "2026-09-21",
+                "mileage_km": null,
+                "mileage_min_km": 100000,
+                "mileage_max_km": 105000,
+                "condition": null
+              },
+              {
+                "vehicle_id": "CL19418670",
+                "asking_price_myr": 44800.0,
+                "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670",
+                "source_updated_on": "2026-09-20",
+                "mileage_km": null,
+                "mileage_min_km": 120000,
+                "mileage_max_km": 125000,
+                "condition": null
+              }
+            ],
+            "excluded_records": [
+              {
+                "vehicle_id": "CL18751444",
+                "reasons": [
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update is outside the permitted valuation window."
+                ]
+              },
+              {
+                "vehicle_id": "CL18249652",
+                "reasons": [
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "CL18624149",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "CL18807978",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "CL18603852",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "CL18939959",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "transmission does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "CL18625566",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "transmission does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "CL18902191",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "CS_C606800",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "PT_LP63L6X1P7",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "PT_K4EDNMNYPG",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "PT_7PRLM3GLPK",
+                "reasons": [
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                ]
+              },
+              {
+                "vehicle_id": "CS_C6RA000",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "brand does not exactly match.",
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              },
+              {
+                "vehicle_id": "CS_CBFS600",
+                "reasons": [
+                  "Not an eligible listed snapshot (sold, reserved or unknown).",
+                  "brand does not exactly match.",
+                  "model does not exactly match.",
+                  "variant does not exactly match.",
+                  "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                  "Source update date is unknown; freshness cannot be checked for valuation."
+                ]
+              }
+            ],
+            "fired_rules": [
+              {
+                "rule_id": "VAL_COMPARABLES",
+                "reason": "Same brand/model/variant/year/transmission, eligible real listings, known recent source dates, unique source/ID.",
+                "accepted_count": 3
+              },
+              {
+                "rule_id": "VAL_MEDIAN",
+                "reason": "Median asking price and observed min/max are calculated from the selected listings; no second age-depreciation deduction.",
+                "median_myr": 44800.0
+              },
+              {
+                "rule_id": "VAL_NO_CALIBRATION",
+                "reason": "No verified market mileage/condition factors. Default mode returns the unadjusted listing reference only."
+              }
+            ],
+            "clarification_questions": [],
+            "reference": {
+              "price_basis": "asking",
+              "comparable_count": 3,
+              "median_asking_price_myr": 44800.0,
+              "observed_asking_range_myr": [
+                35888.0,
+                45000.0
+              ],
+              "personalized_for_mileage_or_condition": false
+            },
+            "adjusted_scenario": null,
+            "limitations": [
+              "Listing asking-price reference, not a confirmed transaction price, guaranteed sale price or professional appraisal.",
+              "References are advertisement snapshots; distinct IDs do not prove VIN-distinct cars.",
+              "Independent comparable condition labels and calibrated adjustment coefficients are unavailable.",
+              "Price ranges are observed/assumption-based ranges, not statistical confidence intervals.",
+              "Comparable price spread exceeds 20% of the median; investigate differences rather than treating the median as precise."
+            ]
+          },
+          "rules": [
+            {
+              "turn": 1,
+              "category": "rules",
+              "rule_id": "GOAL_EXPLICIT",
+              "reason": "The current message explicitly names the consultation task.",
+              "goal": "sell"
+            },
+            {
+              "turn": 1,
+              "category": "rules",
+              "tool": "estimate_vehicle_value",
+              "rule_id": "VAL_COMPARABLES",
+              "reason": "Same brand/model/variant/year/transmission, eligible real listings, known recent source dates, unique source/ID.",
+              "accepted_count": 3
+            },
+            {
+              "turn": 1,
+              "category": "rules",
+              "tool": "estimate_vehicle_value",
+              "rule_id": "VAL_MEDIAN",
+              "reason": "Median asking price and observed min/max are calculated from the selected listings; no second age-depreciation deduction.",
+              "median_myr": 44800.0
+            },
+            {
+              "turn": 1,
+              "category": "rules",
+              "tool": "estimate_vehicle_value",
+              "rule_id": "VAL_NO_CALIBRATION",
+              "reason": "No verified market mileage/condition factors. Default mode returns the unadjusted listing reference only."
+            }
+          ],
+          "tools": [
+            {
+              "turn": 1,
+              "category": "tools",
+              "name": "inspect_requirements",
+              "arguments": {},
+              "executed": true,
+              "observation": {
+                "status": "ready",
+                "missing_slots": [],
+                "questions": []
+              }
+            },
+            {
+              "turn": 1,
+              "category": "tools",
+              "name": "estimate_vehicle_value",
+              "arguments": {},
+              "executed": true,
+              "observation": {
+                "status": "reference_only",
+                "seller_profile": {
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "variant": "1.5 SE",
+                  "year": 2020,
+                  "transmission": "Automatic",
+                  "mileage_km": 50.0,
+                  "condition": "fair",
+                  "major_accident_reported": false,
+                  "flood_damage_reported": false,
+                  "clarification_notes": [],
+                  "input_validation_notes": []
+                },
+                "as_of": "2026-10-15",
+                "policy": {
+                  "version": "valuation-v1-educational",
+                  "minimum_comparables": 3,
+                  "maximum_source_age_days": 90,
+                  "mileage_rate_per_10000_km": 0.01,
+                  "maximum_mileage_adjustment": 0.1,
+                  "good_factor": 1.0,
+                  "fair_factor": 0.95,
+                  "poor_factor": 0.85
+                },
+                "comparables": [
+                  {
+                    "vehicle_id": "CL18923892",
+                    "asking_price_myr": 35888.0,
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                    "source_updated_on": "2026-09-21",
+                    "mileage_km": null,
+                    "mileage_min_km": 65000,
+                    "mileage_max_km": 70000,
+                    "condition": null
+                  },
+                  {
+                    "vehicle_id": "CL19122669",
+                    "asking_price_myr": 45000.0,
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669",
+                    "source_updated_on": "2026-09-21",
+                    "mileage_km": null,
+                    "mileage_min_km": 100000,
+                    "mileage_max_km": 105000,
+                    "condition": null
+                  },
+                  {
+                    "vehicle_id": "CL19418670",
+                    "asking_price_myr": 44800.0,
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670",
+                    "source_updated_on": "2026-09-20",
+                    "mileage_km": null,
+                    "mileage_min_km": 120000,
+                    "mileage_max_km": 125000,
+                    "condition": null
+                  }
+                ],
+                "excluded_records": [
+                  {
+                    "vehicle_id": "CL18751444",
+                    "reasons": [
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update is outside the permitted valuation window."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18249652",
+                    "reasons": [
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18624149",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18807978",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18603852",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18939959",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "transmission does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18625566",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "transmission does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18902191",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CS_C606800",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "PT_LP63L6X1P7",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "PT_K4EDNMNYPG",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "PT_7PRLM3GLPK",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CS_C6RA000",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "brand does not exactly match.",
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CS_CBFS600",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "brand does not exactly match.",
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  }
+                ],
+                "fired_rules": [
+                  {
+                    "rule_id": "VAL_COMPARABLES",
+                    "reason": "Same brand/model/variant/year/transmission, eligible real listings, known recent source dates, unique source/ID.",
+                    "accepted_count": 3
+                  },
+                  {
+                    "rule_id": "VAL_MEDIAN",
+                    "reason": "Median asking price and observed min/max are calculated from the selected listings; no second age-depreciation deduction.",
+                    "median_myr": 44800.0
+                  },
+                  {
+                    "rule_id": "VAL_NO_CALIBRATION",
+                    "reason": "No verified market mileage/condition factors. Default mode returns the unadjusted listing reference only."
+                  }
+                ],
+                "clarification_questions": [],
+                "reference": {
+                  "price_basis": "asking",
+                  "comparable_count": 3,
+                  "median_asking_price_myr": 44800.0,
+                  "observed_asking_range_myr": [
+                    35888.0,
+                    45000.0
+                  ],
+                  "personalized_for_mileage_or_condition": false
+                },
+                "adjusted_scenario": null,
+                "limitations": [
+                  "Listing asking-price reference, not a confirmed transaction price, guaranteed sale price or professional appraisal.",
+                  "References are advertisement snapshots; distinct IDs do not prove VIN-distinct cars.",
+                  "Independent comparable condition labels and calibrated adjustment coefficients are unavailable.",
+                  "Price ranges are observed/assumption-based ranges, not statistical confidence intervals.",
+                  "Comparable price spread exceeds 20% of the median; investigate differences rather than treating the median as precise."
+                ]
+              }
+            },
+            {
+              "turn": 1,
+              "category": "tools",
+              "name": "check_result",
+              "arguments": {},
+              "executed": true,
+              "observation": {
+                "passed": true,
+                "checks": [
+                  {
+                    "name": "finite_json_result",
+                    "passed": true
+                  },
+                  {
+                    "name": "default_is_unadjusted",
+                    "passed": true
+                  },
+                  {
+                    "name": "minimum_comparables",
+                    "passed": true
+                  },
+                  {
+                    "name": "unique_comparables",
+                    "passed": true
+                  },
+                  {
+                    "name": "comparable_source_CL18923892",
+                    "passed": true
+                  },
+                  {
+                    "name": "comparable_source_CL19122669",
+                    "passed": true
+                  },
+                  {
+                    "name": "comparable_source_CL19418670",
+                    "passed": true
+                  },
+                  {
+                    "name": "median_and_range",
+                    "passed": true
+                  }
+                ]
+              }
+            },
+            {
+              "turn": 1,
+              "category": "tools",
+              "name": "finish",
+              "arguments": {},
+              "executed": true,
+              "observation": {
+                "status": "complete",
+                "outcome": "reference_only"
+              }
+            }
+          ],
+          "checks": [
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "finite_json_result",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "default_is_unadjusted",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "minimum_comparables",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "unique_comparables",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "comparable_source_CL18923892",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "comparable_source_CL19122669",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "comparable_source_CL19418670",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "median_and_range",
+              "passed": true
+            }
+          ],
+          "trace": [
+            {
+              "turn": 1,
+              "category": "facts",
+              "action": "switch_goal",
+              "previous": null,
+              "goal": "sell"
+            },
+            {
+              "turn": 1,
+              "category": "rules",
+              "rule_id": "GOAL_EXPLICIT",
+              "reason": "The current message explicitly names the consultation task.",
+              "goal": "sell"
+            },
+            {
+              "turn": 1,
+              "category": "model",
+              "phase": "sense",
+              "attempt": 1,
+              "success": true,
+              "metrics": {
+                "prompt_eval_count": 773,
+                "eval_count": 326,
+                "total_duration": 33003697500,
+                "eval_duration": 18700522000
+              }
+            },
+            {
+              "turn": 1,
+              "category": "facts",
+              "action": "update",
+              "slot": "seller.brand",
+              "value": "Perodua",
+              "operation": "set",
+              "evidence": "Perodua"
+            },
+            {
+              "turn": 1,
+              "category": "facts",
+              "action": "update",
+              "slot": "seller.model",
+              "value": "Alza",
+              "operation": "set",
+              "evidence": "Alza"
+            },
+            {
+              "turn": 1,
+              "category": "facts",
+              "action": "update",
+              "slot": "seller.variant",
+              "value": "1.5 SE",
+              "operation": "set",
+              "evidence": "1.5 SE"
+            },
+            {
+              "turn": 1,
+              "category": "facts",
+              "action": "update",
+              "slot": "seller.year",
+              "value": 2020,
+              "operation": "set",
+              "evidence": "2020"
+            },
+            {
+              "turn": 1,
+              "category": "facts",
+              "action": "update",
+              "slot": "seller.transmission",
+              "value": "Automatic",
+              "operation": "set",
+              "evidence": "Automatic"
+            },
+            {
+              "turn": 1,
+              "category": "facts",
+              "action": "update",
+              "slot": "seller.mileage_km",
+              "value": 50.0,
+              "operation": "set",
+              "evidence": "50000 m"
+            },
+            {
+              "turn": 1,
+              "category": "facts",
+              "action": "update",
+              "slot": "seller.condition",
+              "value": "fair",
+              "operation": "set",
+              "evidence": "Condition fair"
+            },
+            {
+              "turn": 1,
+              "category": "facts",
+              "action": "update",
+              "slot": "seller.major_accident_reported",
+              "value": false,
+              "operation": "set",
+              "evidence": "No major accident"
+            },
+            {
+              "turn": 1,
+              "category": "facts",
+              "action": "update",
+              "slot": "seller.flood_damage_reported",
+              "value": false,
+              "operation": "set",
+              "evidence": "No flood damage"
+            },
+            {
+              "turn": 1,
+              "category": "model",
+              "phase": "plan",
+              "attempt": 1,
+              "success": true,
+              "metrics": {
+                "prompt_eval_count": 826,
+                "eval_count": 16,
+                "total_duration": 1888535000,
+                "eval_duration": 836035000
+              }
+            },
+            {
+              "turn": 1,
+              "category": "tools",
+              "name": "inspect_requirements",
+              "arguments": {},
+              "executed": true,
+              "observation": {
+                "status": "ready",
+                "missing_slots": [],
+                "questions": []
+              }
+            },
+            {
+              "turn": 1,
+              "category": "model",
+              "phase": "plan",
+              "attempt": 1,
+              "success": true,
+              "metrics": {
+                "prompt_eval_count": 914,
+                "eval_count": 17,
+                "total_duration": 1277379900,
+                "eval_duration": 877257000
+              }
+            },
+            {
+              "turn": 1,
+              "category": "tools",
+              "name": "estimate_vehicle_value",
+              "arguments": {},
+              "executed": true,
+              "observation": {
+                "status": "reference_only",
+                "seller_profile": {
+                  "brand": "Perodua",
+                  "model": "Alza",
+                  "variant": "1.5 SE",
+                  "year": 2020,
+                  "transmission": "Automatic",
+                  "mileage_km": 50.0,
+                  "condition": "fair",
+                  "major_accident_reported": false,
+                  "flood_damage_reported": false,
+                  "clarification_notes": [],
+                  "input_validation_notes": []
+                },
+                "as_of": "2026-10-15",
+                "policy": {
+                  "version": "valuation-v1-educational",
+                  "minimum_comparables": 3,
+                  "maximum_source_age_days": 90,
+                  "mileage_rate_per_10000_km": 0.01,
+                  "maximum_mileage_adjustment": 0.1,
+                  "good_factor": 1.0,
+                  "fair_factor": 0.95,
+                  "poor_factor": 0.85
+                },
+                "comparables": [
+                  {
+                    "vehicle_id": "CL18923892",
+                    "asking_price_myr": 35888.0,
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv-warranty-free-super-good-condition-clean-interior-car-paint-glossy-engine-smooth/18923892",
+                    "source_updated_on": "2026-09-21",
+                    "mileage_km": null,
+                    "mileage_min_km": 65000,
+                    "mileage_max_km": 70000,
+                    "condition": null
+                  },
+                  {
+                    "vehicle_id": "CL19122669",
+                    "asking_price_myr": 45000.0,
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19122669",
+                    "source_updated_on": "2026-09-21",
+                    "mileage_km": null,
+                    "mileage_min_km": 100000,
+                    "mileage_max_km": 105000,
+                    "condition": null
+                  },
+                  {
+                    "vehicle_id": "CL19418670",
+                    "asking_price_myr": 44800.0,
+                    "source_reference": "https://www.carlist.my/used-cars/2020-perodua-alza-1-5-se-mpv/19418670",
+                    "source_updated_on": "2026-09-20",
+                    "mileage_km": null,
+                    "mileage_min_km": 120000,
+                    "mileage_max_km": 125000,
+                    "condition": null
+                  }
+                ],
+                "excluded_records": [
+                  {
+                    "vehicle_id": "CL18751444",
+                    "reasons": [
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update is outside the permitted valuation window."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18249652",
+                    "reasons": [
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18624149",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18807978",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18603852",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18939959",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "transmission does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18625566",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "transmission does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CL18902191",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CS_C606800",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "PT_LP63L6X1P7",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "PT_K4EDNMNYPG",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "PT_7PRLM3GLPK",
+                    "reasons": [
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CS_C6RA000",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "brand does not exactly match.",
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  },
+                  {
+                    "vehicle_id": "CS_CBFS600",
+                    "reasons": [
+                      "Not an eligible listed snapshot (sold, reserved or unknown).",
+                      "brand does not exactly match.",
+                      "model does not exactly match.",
+                      "variant does not exactly match.",
+                      "Manufacturing year differs; no unsupported depreciation adjustment is applied.",
+                      "Source update date is unknown; freshness cannot be checked for valuation."
+                    ]
+                  }
+                ],
+                "fired_rules": [
+                  {
+                    "rule_id": "VAL_COMPARABLES",
+                    "reason": "Same brand/model/variant/year/transmission, eligible real listings, known recent source dates, unique source/ID.",
+                    "accepted_count": 3
+                  },
+                  {
+                    "rule_id": "VAL_MEDIAN",
+                    "reason": "Median asking price and observed min/max are calculated from the selected listings; no second age-depreciation deduction.",
+                    "median_myr": 44800.0
+                  },
+                  {
+                    "rule_id": "VAL_NO_CALIBRATION",
+                    "reason": "No verified market mileage/condition factors. Default mode returns the unadjusted listing reference only."
+                  }
+                ],
+                "clarification_questions": [],
+                "reference": {
+                  "price_basis": "asking",
+                  "comparable_count": 3,
+                  "median_asking_price_myr": 44800.0,
+                  "observed_asking_range_myr": [
+                    35888.0,
+                    45000.0
+                  ],
+                  "personalized_for_mileage_or_condition": false
+                },
+                "adjusted_scenario": null,
+                "limitations": [
+                  "Listing asking-price reference, not a confirmed transaction price, guaranteed sale price or professional appraisal.",
+                  "References are advertisement snapshots; distinct IDs do not prove VIN-distinct cars.",
+                  "Independent comparable condition labels and calibrated adjustment coefficients are unavailable.",
+                  "Price ranges are observed/assumption-based ranges, not statistical confidence intervals.",
+                  "Comparable price spread exceeds 20% of the median; investigate differences rather than treating the median as precise."
+                ]
+              }
+            },
+            {
+              "turn": 1,
+              "category": "rules",
+              "tool": "estimate_vehicle_value",
+              "rule_id": "VAL_COMPARABLES",
+              "reason": "Same brand/model/variant/year/transmission, eligible real listings, known recent source dates, unique source/ID.",
+              "accepted_count": 3
+            },
+            {
+              "turn": 1,
+              "category": "rules",
+              "tool": "estimate_vehicle_value",
+              "rule_id": "VAL_MEDIAN",
+              "reason": "Median asking price and observed min/max are calculated from the selected listings; no second age-depreciation deduction.",
+              "median_myr": 44800.0
+            },
+            {
+              "turn": 1,
+              "category": "rules",
+              "tool": "estimate_vehicle_value",
+              "rule_id": "VAL_NO_CALIBRATION",
+              "reason": "No verified market mileage/condition factors. Default mode returns the unadjusted listing reference only."
+            },
+            {
+              "turn": 1,
+              "category": "model",
+              "phase": "plan",
+              "attempt": 1,
+              "success": true,
+              "metrics": {
+                "prompt_eval_count": 1148,
+                "eval_count": 16,
+                "total_duration": 1432185200,
+                "eval_duration": 846889000
+              }
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "finite_json_result",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "default_is_unadjusted",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "minimum_comparables",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "unique_comparables",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "comparable_source_CL18923892",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "comparable_source_CL19122669",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "comparable_source_CL19418670",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "checks",
+              "tool": "estimate_vehicle_value",
+              "name": "median_and_range",
+              "passed": true
+            },
+            {
+              "turn": 1,
+              "category": "tools",
+              "name": "check_result",
+              "arguments": {},
+              "executed": true,
+              "observation": {
+                "passed": true,
+                "checks": [
+                  {
+                    "name": "finite_json_result",
+                    "passed": true
+                  },
+                  {
+                    "name": "default_is_unadjusted",
+                    "passed": true
+                  },
+                  {
+                    "name": "minimum_comparables",
+                    "passed": true
+                  },
+                  {
+                    "name": "unique_comparables",
+                    "passed": true
+                  },
+                  {
+                    "name": "comparable_source_CL18923892",
+                    "passed": true
+                  },
+                  {
+                    "name": "comparable_source_CL19122669",
+                    "passed": true
+                  },
+                  {
+                    "name": "comparable_source_CL19418670",
+                    "passed": true
+                  },
+                  {
+                    "name": "median_and_range",
+                    "passed": true
+                  }
+                ]
+              }
+            },
+            {
+              "turn": 1,
+              "category": "model",
+              "phase": "plan",
+              "attempt": 1,
+              "success": true,
+              "metrics": {
+                "prompt_eval_count": 1219,
+                "eval_count": 15,
+                "total_duration": 1255370200,
+                "eval_duration": 792837000
+              }
+            },
+            {
+              "turn": 1,
+              "category": "tools",
+              "name": "finish",
+              "arguments": {},
+              "executed": true,
+              "observation": {
+                "status": "complete",
+                "outcome": "reference_only"
+              }
+            }
+          ],
+          "limits": {
+            "request_timeout_seconds": 90.0,
+            "turn_timeout_seconds": 240.0,
+            "model_retries": 1,
+            "maximum_tool_calls": 10,
+            "maximum_tool_errors": 2,
+            "maximum_input_characters": 6000
+          }
+        }
+      }
+    ],
+    "note": "Consultation evidence export; not an automatic restore/import file or a transaction record."
+  }
+}

@@ -305,7 +305,10 @@ class AgentController:
 
     # Handle one user message through control commands, grounded sense/plan requests and a
     # limited execute/check loop.
-    def handle(self, message):
+    def handle(self, message, *, form_patch=None):
+        # A browser form already has explicitly typed slots. Its application
+        # adapter may supply a TurnPatch, skipping only LLM language extraction.
+        # The same source grounding, memory rules, planning and tools still run.
         # Local control commands and input-size checks happen before contacting
         # the model. They must not be mistaken for ordinary extracted facts.
         if not isinstance(message, str) or not message.strip():
@@ -347,8 +350,14 @@ class AgentController:
             # JSON shape still does not prove that a proposed fact is true.
             sense_messages = [{'role': 'system', 'content': SENSE_PROMPT + '\nCurrent task scope: ' + str(hint) + '\nAllowed slots: ' + ', '.join(allowed)},
                               {'role': 'user', 'content': json.dumps({'previous_context': context_for(self.state, self.cars, missing), 'current_message': message}, ensure_ascii=False)}]
-            extraction = self._request(sense_messages, deadline, format=patch_schema)
-            patch = TurnPatch.model_validate_json(extraction['content'])
+            if form_patch is None:
+                extraction = self._request(sense_messages, deadline, format=patch_schema)
+                patch = TurnPatch.model_validate_json(extraction['content'])
+            else:
+                if not isinstance(form_patch, TurnPatch):
+                    raise ValueError('Structured form input must be a validated TurnPatch.')
+                patch = TurnPatch.model_validate(form_patch.model_dump())
+                self.state.event('input', source='explicit_form_fields', extraction_model_called=False)
             if explicit_goal(message):
                 patch.goal = None  # The explicit user goal already outranks a model guess.
             # GROUND + REMEMBER: check evidence/units and merge accepted facts.

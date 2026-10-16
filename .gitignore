@@ -8,6 +8,7 @@ __pycache__/
 !.env.example
 *.pem
 *.key
+.streamlit/secrets.toml
 # Test/type/lint outputs and editor preferences are local development files.
 .pytest_cache/
 .mypy_cache/

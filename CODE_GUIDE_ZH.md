@@ -2,6 +2,8 @@
 
 更新：2026-10-16。应用与代码注释使用英文，本文件用中文辅导。这里的comments是给人阅读的解释；commands是PowerShell执行的指令，两者不同。
 
+阶段9新增`streamlit_app.py`（浏览器显示／提交事件）、`form_inputs.py`（明确表单字段→经验证patch）、`ui_session.py`（每tab记忆／导出／防重复及共享推理锁）与`test_streamlit_ui.py`（UI回归）。新代码同样有英文说明；原34模块／275定义和comment-only-verification.json是加入UI之前的历史注释基线，不是新版本AST完全不变的声明。当前全套152项，见STAGE9_RESULTS.md。
+
 ## 1. 这次补充的内容
 
 34个Python文件均补充模块职责说明，275个类／函数均有用途注释，关键算法另有内部步骤解释，包括生产规则、单位换算、Weighted Scoring、估价、议价、Trade-In和Agent Loop。测试中的注释解释“期望什么行为”，而不是假装测试本身训练了模型。

@@ -1,5 +1,6 @@
 # Allowed direct dependency ranges for a new environment.
-# Pydantic validates Frames/JSON schemas; Ollama connects Python to the local model.
+# Pydantic validates Frames; Ollama connects the model; Streamlit provides the UI.
 # Use requirements-lock.txt instead to reproduce the recorded exact versions.
 pydantic>=2.10,<3
 ollama>=0.5,<1
+streamlit>=1.66,<1.67

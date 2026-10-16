@@ -1,5 +1,7 @@
 # Assignment 全流程与当前进度
 
+**阶段9最新进度（2026-10-16）：英文Streamlit UI基础版已完成，见STAGE9_GUIDE_ZH.md与STAGE9_RESULTS.md。152项离线回归通过，包含忙碌提交保留与明确重试／丢弃；真实浏览器完成买车聊天→表单→比较、Trade-In→来源／现金结果、手动导出。用户确认第一版固定15 Oct 2026快照，暂不加当天日期切换、实时搜索或市场校准；这些是不同的后续功能。当前下一步是扩大独立评估／组员复现与报告／视频，见REMAINING_WORK_ZH.md。以下旧阶段验收数量按其日期阅读。**
+
 **最新进度（2026-10-15）：阶段1–7已复核并修复当前教学范围的缺口，阶段8完整受约束Agent Loop已接入英文多轮输入、记忆／修改、动态业务工具请求、实际执行／结果检查与停止限制。运行agent_cli.py，见STAGE8_GUIDE_ZH.md。134项单元测试、16个既有工具场景复核、最终8轮真实模型验收（含reset）通过；不是holdout准确率。下一步阶段9英文UI，以及更广系统评估、报告和视频。**
 
 **阶段5/6历史验收记录（2026-10-15）：真实数据/Scoring与Valuation基础版复核通过，见STAGE5_STAGE6_REVIEW_ZH.md；当时67项回归与10个场景通过，现已继续完成阶段7/8。GitHub Private仓库已建立，阶段5–8的交付版本以Git提交记录为准。目标10/23核心可录制、10/24开始集中录制，以ACCELERATED_PLAN_ZH.md为准。**
@@ -10,7 +12,7 @@
 
 目标：买家用自然语言说明生活方式和预算，系统筛选并解释适合的候选车辆；卖家提供车辆资料，系统计算有依据的参考价值；双方可查询议价和 Trade-In 取舍。只做 consultation，不代用户成交。
 
-当前流程：英文CLI → Agent Controller ↔ Ollama LLM；模型通过Schema-constrained JSON提出fact patch和tool request，Controller验证后实际调用matching / valuation / negotiation / trade-in tools；工具读取Frames、车辆资料与规则，返回可验证结果；Controller独立检查后继续追问或结束，并从已检查结果生成英文金额与ID说明。Streamlit将接入相同Controller，目前尚未制作。
+当前流程：英文Streamlit UI／CLI → Agent Controller ↔ Ollama LLM；聊天由模型提出fact patch，明确表单字段由typed adapter提出patch；两者共用grounding／记忆规则，模型通过Schema-constrained JSON请求tools，Python实际执行matching／valuation／negotiation／trade-in及独立checks。UI仅显示经检查的当前结果，不自行估价。
 
 Ollama 是模型运行服务；qwen3:4b 是预训练模型；Python 程序负责业务工具和执行；Frames 是结构化知识表示；Agent Controller 负责目标、状态、工具选择、反馈和停止。Conversation memory 不会自动训练或更新模型。
 
@@ -29,9 +31,10 @@ Ollama 是模型运行服务；qwen3:4b 是预训练模型；Python 程序负责
 | 估价工具 | SellerVehicleFrame、同条件近期comparables、reference_only、明确标注的教学调整 |
 | 议价/Trade-In | 手写Decision Tree、预算/净底价、完整费用、贷款结清、独立replacement package、时间/投入；人工JSON与Agent英文输入；可关联旧车asking context |
 | Agent Loop | typed memory、追问回答／修改、任务切换、工具参数与结果检查、timeout／有限重试／停止、facts/rules/tools/checks |
-| 测试 | 当前134项unit tests；16个既有工具场景复核；最终8轮真实模型Agent验收（含reset）；失败开发记录保留 |
+| 英文UI | 聊天／四类入口／辅助表单／候选比较／reference与现金明细／来源与trace；每tab临时记忆和手动导出 |
+| 测试 | 当前152项unit tests，含18项UI／表单／session；另有原tool复核、阶段8 live与阶段9实际浏览器证据 |
 
-当前保留8条虚构车辆records，并另有17条真实来源快照。`--match`是硬筛选后price/ID展示，`--rank`是Weighted Scoring。真实数据为asking price，不能保证库存或成交价；仅一个exact identity组满足当前估价minimum3政策。估价未校准里程/车况因子。`main.py`保留单次工具命令，`agent_cli.py`已能连续接收回答与修改。下文1–8是工作模块目录，不是用户阶段编号；前五项已完成当前基础范围，UI、扩大评估与最终交付材料仍待制作。
+当前保留8条虚构车辆records和17条真实来源快照。asking price不能保证库存或成交价；仅一个exact identity组满足当前估价minimum3政策。估价默认未校准里程／车况；UI明确显示未调整。main.py保留单次命令，agent_cli.py为多轮CLI，streamlit_app.py为浏览器入口。下文1–8是工作模块目录，不是用户阶段编号；前六项已完成当前基础范围，扩大评估与最终材料仍待制作。
 
 ## 后续阶段及验收
 
@@ -69,9 +72,9 @@ Ollama 是模型运行服务；qwen3:4b 是预训练模型；Python 程序负责
 
 ### 6. Streamlit UI
 
-英文聊天、Buy/Sell/Negotiation 入口、补充资料输入、Top 3 对比、价格调整表、Trade-In 计算明细、数据来源和解释。浏览器访问本地 Python 服务；Ollama 也仍在本机运行。
+阶段9基础版已完成英文聊天、Buy／Sell／Negotiation／Trade-In入口、补充资料表单、Top3对比、reference与未调整说明、现金明细、来源和解释。浏览器访问本地服务；Ollama仍在本机运行。表单只跳过重复语言提取，保留同一Controller的grounding／记忆／实际模型planning／tools／checks。
 
-验收：普通用户不必每次输入 PowerShell 命令；与工具计算结果一致。界面本身不能代替 Agent 逻辑。
+已验证普通用户能在浏览器连续操作，PowerShell主要用于启动；显示与实际tool结果一致。每tab独立记忆，手动导出，无自动存档／恢复。后续仍需组员跨电脑复现与独立holdout；界面本身不等于市场正确性。
 
 ### 7. Evaluation 与修复
 
@@ -90,7 +93,7 @@ Optional Regression、formal Fuzzy Logic、Vision 仅在核心稳定且有时间
 ## 软件检查（2026-10-15）
 
 - 确认：Python、VS Code（C:/Program Files/Microsoft VS Code）、Ollama 程序；项目依赖 Pydantic 2.14.1、Ollama SDK 0.6.3；项目 Python 可 import sqlite3（3.50.4）。qwen3:4b 先前已下载并实际通过测试。
-- Streamlit 尚未安装：界面阶段安装到 .venv，不是换 Python，也不是购买服务。
+- 2026-10-16已将Streamlit 1.66.0安装到现有.venv，pip check通过，requirements-lock已更新；不需换Python或购买服务。
 - pytest 尚未安装，但现有测试用 Python unittest 已足够，只有需要时才添加。
 - Git命令来自Codex bundled runtime。vehicle-agent已初始化Git并建立Private仓库：https://github.com/ryanlim9004-commits/vehicle-sales-purchase-agent 。阶段5–8交付版本以Git提交记录为准；GitHub不是运行应用的必要条件。
 - 报告/幻灯片/录屏使用组员已有工具，尚未核实安装情况，不强制某品牌软件。

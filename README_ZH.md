@@ -1,5 +1,7 @@
 # 第 1 课：把买车需求转换为 BuyerProfileFrame
 
+最新（2026-10-16）：阶段9英文Streamlit界面完成基础版，运行`.\.venv\Scripts\python.exe -m streamlit run streamlit_app.py`，浏览器打开http://127.0.0.1:8501。见[阶段9运行教学](STAGE9_GUIDE_ZH.md)、[验证记录](STAGE9_RESULTS.md)。152项离线回归通过，真实浏览器买车多轮／Trade-In及导出已验证；模型忙碌时保留提交供Retry／Discard。第一版固定15 Oct 2026快照，无当天日期切换／实时搜索；里程／车况校准暂缓。后续见[剩余交付清单](REMAINING_WORK_ZH.md)。下文保留历史课次，不代表当前缺少UI。
+
 2026-10-16学习入口：34个Python文件、275个类／函数已补英文解释，并在关键规则、公式及Agent步骤加入注释。阅读[全项目代码指南](CODE_GUIDE_ZH.md)、[PowerShell命令解释](COMMANDS_ZH.md)、[JSON资料解释](docs/JSON_FILES_GUIDE_ZH.md)。本轮只补comments和说明，AST／配置／既有JSON未改变，134项回归再次通过。
 
 最新（2026-10-15）：阶段1–7复核与修复、阶段8多轮Agent Loop基础版已完成。运行`agent_cli.py --as-of 2026-10-15`，支持英文追问回答、修改条件、任务切换、实际工具执行与结果检查。见[阶段8运行教学](STAGE8_GUIDE_ZH.md)、[阶段1–7核对](STAGES1_7_AUDIT_ZH.md)及[验证记录](STAGE8_RESULTS.md)。134项单元测试、16个既有工具场景复核、最终8轮真实模型验收（含一次reset）通过；不是总体准确率或市场验证。下一步英文UI与更广评估、报告和视频。
