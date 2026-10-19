@@ -9,6 +9,7 @@ from pydantic import ValidationError
 from agent_state import SLOTS, set_slot, switch_goal
 from input_grounding import MONEY, NUMBER, number_value, budget_from_text, mileage_from_text, ground_seller, clause_before, clause_after
 from seller_profile import SellerVehicleFrame
+from input_grounding import ground_reference_priority, explicit_buyer_usages
 
 
 QUOTE_MONEY_SLOTS = {f'trade_in.{scope}.{field}' for scope in ('trade_in_replacement', 'private_sale_replacement', 'trade_in_quote', 'private_sale_quote') for field in ('price_myr', 'fees_myr')}
@@ -84,7 +85,7 @@ def grounded_value(update, message, state):
             value = value.casefold() == 'true'
         if slot.endswith('.year') and re.fullmatch(r'\d{4}', value):
             value = int(value)
-        if slot.endswith(('fuel_priority', 'space_priority', '.condition', '.role', '.priority')):
+        if slot.endswith(('fuel_priority', 'space_priority', 'safety_priority', 'comfort_priority', 'reliability_priority', '.condition', '.role', '.priority')):
             value = value.casefold()
     if value is None:
         if not re.search(r"\b(unknown|not sure|unsure|clear|remove|forget|don't know|do not know|no preference)\b", evidence, re.I):
@@ -92,6 +93,8 @@ def grounded_value(update, message, state):
         return None
     position = message.casefold().find(evidence.casefold())
     scoped = clause_before(message, position) + evidence + clause_after(message, position + len(evidence))
+    if slot in ('buyer.safety_priority', 'buyer.comfort_priority', 'buyer.reliability_priority'):
+        return ground_reference_priority(evidence, slot.split('.')[1], value, pending=state.pending_slots == [slot])
     if slot.endswith('_myr') and re.search(r'\b(monthly|per month|instalments?|installments?)\b|/\s*(?:mo|month)\b', scoped, re.I):
         raise ValueError('Please provide the total applicable cash amount in MYR; a monthly instalment is not the required lump sum.')
     if slot == 'buyer.budget_myr':
@@ -246,6 +249,13 @@ def apply_patch(state, patch, message):
             if slot.startswith('buyer.'):
                 state.ranked_vehicle_ids = []
                 state.selected_vehicle_id = None
+    if state.goal == 'buy' and not state.buyer.usage and 'buyer.usage' not in state.issues:
+        for label, phrase in explicit_buyer_usages(message):
+            set_slot(state, 'buyer.usage', [label], 'add')
+            state.provenance['buyer.usage'] = {'turn': state.turn, 'evidence': phrase, 'source': 'current user message; explicit usage recovery'}
+            state.event('rules', rule_id='BUY_USAGE_SOURCE', reason='Recover an explicit affirmative usage phrase omitted by extraction.', evidence=phrase, derived_fact={'buyer.usage': label})
+            state.ranked_vehicle_ids = []
+            state.selected_vehicle_id = None
     if state.goal == original_goal and state.goal in ('negotiate', 'trade_in'):
         # Old-vehicle quotes depend on identity. Preserve only amounts that
         # were explicitly refreshed in this same turn, plus user budget limits.

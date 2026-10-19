@@ -1,5 +1,7 @@
 # PowerShell运行命令解释
 
+**2026-10-17最新命令以V2_GUIDE_ZH.md为准。现有环境不用新装软件。`main.py --rank`默认使用v2模糊／资料评分；加`--ranking-policy v1`可复现旧基线。当前完整测试为184项，须包含`test_streamlit_ui test_v2 test_price_regression`。`price_regression.py`默认只检查数据关口，不会训练或启用市场模型。**
+
 更新：2026-10-16。应用输入使用英文。现有电脑已装好Python、项目venv、Ollama和qwen3:4b，本轮不需要重新安装。
 
 最新：Streamlit 1.66.0现已安装。浏览器界面启动命令为`.\.venv\Scripts\python.exe -m streamlit run streamlit_app.py`，然后打开http://127.0.0.1:8501。页面不提供日期切换；以下CLI的--as-of仍保留用于独立工具复现。详细见STAGE9_GUIDE_ZH.md；最新全套测试在下方原命令末尾加`test_streamlit_ui`，共150项。

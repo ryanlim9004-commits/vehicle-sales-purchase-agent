@@ -7,6 +7,7 @@ from uuid import uuid4
 import streamlit as st
 from form_inputs import GOALS, fields_for, current_value, prepare_form
 from ui_session import UISession, display_money, source_url, verified_result, inference_lock
+from vehicle_evidence import load_catalogue, evidence_for_vehicle
 
 
 # Store explicit submissions for one run, rather than run on every widget edit.
@@ -23,6 +24,53 @@ def render_source(label, url):
     safe = source_url(url)
     if safe:
         st.link_button(label, safe)
+
+
+def render_vehicle_evidence(evidence):
+    # Keep report context and attributed opinions beside, not hidden behind, scores.
+    st.caption('Evidence reviewed: ' + evidence['evidence_reviewed_on'] + ' · saved research, not live verification')
+    st.json({'applicability': evidence['scope'], 'limits': evidence['limits']}, expanded=False)
+    for name in ('safety', 'comfort', 'reliability'):
+        item = evidence[name]
+        value = item['normalized_value']
+        st.markdown('**' + name.title() + '**: ' + ('Unknown' if value is None else f"{100*value:.1f}/100 supported points; {100*item['data_coverage']:.1f}% evidence coverage"))
+        st.caption(item['label'])
+        if item.get('unknown_reason'):
+            st.caption(item['unknown_reason'])
+        st.caption(item['policy'])
+        if name == 'safety':
+            st.write(item['features'])
+            report = item['report']
+            if report:
+                st.caption(f"Protocol: {report['protocol']} · tested/reference variant: {report['tested_variant']} · stars: {report['stars'] if report['stars'] is not None else 'Not assigned'}")
+                render_source('Safety source', report['source']['url'])
+                for limitation in report['limits']:
+                    st.caption(limitation)
+        elif item['disagreements']:
+            st.caption('Opposing review opinions: ' + ', '.join(item['disagreements']))
+    for review in evidence['reviews']:
+        st.markdown('**' + review['source']['author'] + ' · ' + (review['source']['published_on'] or review['source']['published_month'] or 'Date unknown') + '**')
+        st.write(review['summary'])
+        st.caption('Context: ' + review['context'] + ' · source family: ' + review['source']['family'])
+        for limitation in review['limits']:
+            st.caption(limitation)
+        render_source('Read attributed review', review['source']['url'])
+
+
+def render_research_catalogue():
+    # Research browsing never adds stock, selects a vehicle or calls a model.
+    catalogue = load_catalogue()
+    st.subheader('Vehicle research catalogue')
+    st.info('Research profiles are not available stock or purchase recommendations. Prices, fees and availability are unknown here. Use the consultation to match saved advertisements against your budget.')
+    st.caption(catalogue.notice)
+    profiles = {p.profile_id: p for p in catalogue.profiles}
+    chosen = st.selectbox('Research profile', list(profiles), format_func=lambda key: f"{profiles[key].brand} {profiles[key].model} · {profiles[key].years} · {', '.join(profiles[key].variants)}", key='research_profile')
+    p = profiles[chosen]
+    identity = dict(brand=p.brand, model=p.model, year=p.years[0], variant=p.variants[0], transmission=p.transmissions[0])
+    st.caption('Price: Unknown · Fees: Unknown · Availability: Unknown · Evidence check date: ' + catalogue.reviewed_on.isoformat())
+    if not p.automatic_matching:
+        st.warning('Research context only: the saved year does not resolve all model changes. Automatic advertisement matching is disabled for this profile.')
+    render_vehicle_evidence(evidence_for_vehicle(identity, as_of=catalogue.reviewed_on, catalogue=catalogue, research_profile_id=p.profile_id))
 
 
 # Keep table rows simple and preserve unknowns explicitly instead of NaN/zero guesses.
@@ -44,14 +92,16 @@ def render_buy(result):
                 # would truncate the amount and hide important price digits.
                 st.caption('Asking price')
                 st.markdown('**' + display_money(car['price_myr']) + '**')
-                st.write(f"{car['seats']} seats · score {row['score']:.3f}/100")
+                st.write(f"{car['seats']} seats · supported score {row['score']:.3f}/100")
                 st.caption(f"Weighted feature coverage: {row['weighted_data_coverage_percent']:.1f}%")
+                st.caption(f"Bound including unknown features: {row['score']:.3f}–{row['score_upper_bound']:.3f}; not a confidence interval")
                 render_source('View saved listing source', car['source_reference'])
         comparison = []
         for row in rows:
             v = row['vehicle']
             comparison.append({'ID': v['vehicle_id'], 'Vehicle': f"{v['year']} {v['brand']} {v['model']} {v.get('variant') or ''}",
-                               'Asking price': display_money(v['price_myr']), 'Seats': v['seats'], 'Score': row['score'],
+                               'Asking price': display_money(v['price_myr']), 'Seats': v['seats'], 'Supported score': row['score'],
+                               'Upper bound': row['score_upper_bound'], 'Weighted coverage (%)': row['weighted_data_coverage_percent'],
                                'Fuel (km/L claim)': v.get('fuel_km_per_l'), 'Fuel basis': v.get('fuel_basis'),
                                'Boot (L)': v.get('boot_litres'), 'Boot configuration': v.get('boot_configuration'),
                                'Length (mm)': v.get('length_mm'), 'Observed on': v['observed_on']})
@@ -63,6 +113,13 @@ def render_buy(result):
                 st.dataframe([{'Feature': name, **component} for name, component in row['score_breakdown'].items()], hide_index=True, width='stretch')
                 st.caption('Unknown: ' + (', '.join(row['missing_scoring_features']) or 'None'))
                 st.caption(row['ranking_explanation'])
+        if result.get('ranking_policy'):
+            st.caption('Ranking policy: ' + result['ranking_policy'] + ' · evidence as-of: ' + result['evidence_as_of'])
+            with st.expander('Fuzzy rules, safety and attributed review evidence'):
+                for row in rows:
+                    st.markdown('**' + row['vehicle']['vehicle_id'] + '**')
+                    st.json(row['fuzzy_trace'], expanded=False)
+                    render_vehicle_evidence(row['vehicle_evidence'])
     for note in result.get('scoring_notes', []):
         st.caption(note)
     with st.expander('Hard constraints and rejected records'):
@@ -83,7 +140,7 @@ def render_value(result):
         right.caption('Observed asking range')
         right.markdown('**' + display_money(low) + ' – ' + display_money(high) + '**')
         st.caption(f"{reference['comparable_count']} eligible comparable snapshots; not verified transaction prices.")
-        st.info('No mileage/condition adjustment applied. Market-calibrated adjustments are deferred.')
+        st.info('No mileage/condition adjustment applied. Market-calibrated condition/damage penalties are outside the agreed v2 scope.')
         st.dataframe([{'Step': 'Comparable asking median', 'Amount / treatment': display_money(reference['median_asking_price_myr'])},
                       {'Step': 'Mileage adjustment', 'Amount / treatment': 'Not applied; not market-calibrated'},
                       {'Step': 'Condition adjustment', 'Amount / treatment': 'Not applied; not market-calibrated'}], hide_index=True, width='stretch')
@@ -206,6 +263,7 @@ def main():
         st.markdown('**Saved snapshot demo**')
         st.caption('Data snapshot: 15 Oct 2026\n\nReference checks: 15 Oct 2026\n\nNot live inventory. No live web search.')
         st.caption('Current-date checks and live search are separate deferred features.')
+        st.caption('V2 safety/review research checked: 16 Oct 2026. Research dates do not refresh the saved price snapshot.')
         if st.button('New consultation / Reset', disabled=executing, width='stretch'):
             ui.reset()
             st.session_state.pop('pending_turn', None)
@@ -241,7 +299,9 @@ def main():
             st.session_state.pop('blocked_turn')
             ui.generation += 1  # Clear the discarded form's widget values too.
             st.rerun()
-    chat, results, evidence = st.tabs(['Consultation', 'Results & comparison', 'Evidence & checks'])
+    chat, results, evidence, research = st.tabs(['Consultation', 'Results & comparison', 'Evidence & checks', 'Vehicle research'])
+    with research:
+        render_research_catalogue()
     with chat:
         st.subheader(GOALS[goal] + ' consultation')
         if not ui.history:

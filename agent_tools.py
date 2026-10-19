@@ -13,7 +13,8 @@ from buyer_profile import reason_about_profile
 from seller_profile import SellerVehicleFrame
 from consultation_frames import NegotiationFrame
 from matching import filter_vehicles
-from scoring import rank_vehicles
+from lifestyle_v2 import rank_vehicles_v2
+from fuzzy_lifestyle import POLICY_VERSION
 from valuation import estimate_vehicle_value, key, money
 from negotiation import advise_negotiation
 from trade_in import compare_trade_in
@@ -138,6 +139,13 @@ def verify_observation(tool, result, state, cars, as_of):
             check('clarification_has_questions', bool(result.get('clarification_questions') or result.get('buyer_reasoning', {}).get('clarification_questions')))
             return checks
         if tool == 'rank_vehicles':
+            # Rebuild from original facts, catalogue and dataset, never the
+            # observation's self-reported memberships, sources or weights.
+            canonical = rank_vehicles_v2(state.buyer, filter_vehicles(state.buyer, cars), as_of=as_of)
+            check('current_ranking_policy', result.get('ranking_policy') == POLICY_VERSION)
+            for field in ('scoring_weights', 'raw_scoring_weights', 'scoring_anchors', 'evidence_as_of', 'evidence_reviewed_on', 'top_vehicle_ids'):
+                check('canonical_' + field, result.get(field) == canonical[field])
+            by_id = {r['vehicle']['vehicle_id']: r for r in canonical['matches']}
             facts = reason_about_profile(state.buyer)['derived_facts']
             expected = {r['vehicle']['vehicle_id'] for r in filter_vehicles(state.buyer, cars)['matches']}
             actual = [r['vehicle']['vehicle_id'] for r in result['matches']]
@@ -150,6 +158,8 @@ def verify_observation(tool, result, state, cars, as_of):
                 check('dataset_identity_' + v['vehicle_id'], source_rows[v['vehicle_id']] == v)
                 check('hard_constraints_' + v['vehicle_id'], v['price_myr'] <= facts['budget_myr'] and v['seats'] >= facts['minimum_vehicle_seats'] and v['brand'].strip().casefold() not in {b.strip().casefold() for b in state.buyer.excluded_brands})
                 check('score_reconciles_' + v['vehicle_id'], abs(row['score'] - sum(c['weighted_points'] for c in row['score_breakdown'].values())) <= 0.00051)
+                for field in ('score_breakdown', 'fuzzy_trace', 'vehicle_evidence', 'score', 'score_upper_bound', 'weighted_data_coverage_percent', 'missing_scoring_features', 'rank'):
+                    check('evidence_' + field + '_' + v['vehicle_id'], row.get(field) == by_id[v['vehicle_id']][field])
             check('score_order', result['matches'] == sorted(result['matches'], key=lambda r: (-r['score'], -r['weighted_data_coverage_percent'], r['vehicle']['price_myr'], r['vehicle']['vehicle_id'])))
         elif tool == 'estimate_vehicle_value':
             if status == 'inspection_required':
@@ -323,7 +333,7 @@ class ToolRuntime:
         if name != expected:
             raise ToolError('The selected business tool does not match the active consultation goal.')
         if name == 'rank_vehicles':
-            result = rank_vehicles(self.state.buyer, filter_vehicles(self.state.buyer, self.cars))
+            result = rank_vehicles_v2(self.state.buyer, filter_vehicles(self.state.buyer, self.cars), as_of=self.as_of)
         elif name == 'estimate_vehicle_value':
             result = estimate_vehicle_value(self.state.seller, self.cars, as_of=self.as_of)
         elif name == 'advise_negotiation':

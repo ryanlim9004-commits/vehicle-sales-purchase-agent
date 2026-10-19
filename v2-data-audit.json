@@ -1,0 +1,307 @@
+{
+  "audited_on": "2026-10-17",
+  "research_reviewed_on": "2026-10-16",
+  "price_snapshot_date": "2026-10-15",
+  "price_rows": 17,
+  "availability_counts": {
+    "listed_snapshot": 11,
+    "sold": 5,
+    "reserved": 1
+  },
+  "price_type_counts": {
+    "asking": 17
+  },
+  "research_profile_count": 7,
+  "research_model_count": 6,
+  "listing_evidence_coverage": [
+    {
+      "vehicle_id": "CL18923892",
+      "availability": "listed_snapshot",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CL19122669",
+      "availability": "listed_snapshot",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CL19418670",
+      "availability": "listed_snapshot",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CL18751444",
+      "availability": "listed_snapshot",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CL18249652",
+      "availability": "listed_snapshot",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CL18624149",
+      "availability": "sold",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CL18807978",
+      "availability": "sold",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CL18603852",
+      "availability": "sold",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CL18939959",
+      "availability": "listed_snapshot",
+      "evidence_profile_id": "MYVI_FACELIFT_2022_H",
+      "reference_available": {
+        "safety": true,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CL18625566",
+      "availability": "listed_snapshot",
+      "evidence_profile_id": "MYVI_FACELIFT_2022_AV",
+      "reference_available": {
+        "safety": true,
+        "comfort": true,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CL18902191",
+      "availability": "sold",
+      "evidence_profile_id": "MYVI_FACELIFT_2022_AV",
+      "reference_available": {
+        "safety": true,
+        "comfort": true,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CS_C606800",
+      "availability": "listed_snapshot",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "PT_LP63L6X1P7",
+      "availability": "listed_snapshot",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "PT_K4EDNMNYPG",
+      "availability": "listed_snapshot",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "PT_7PRLM3GLPK",
+      "availability": "listed_snapshot",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CS_C6RA000",
+      "availability": "sold",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    },
+    {
+      "vehicle_id": "CS_CBFS600",
+      "availability": "reserved",
+      "evidence_profile_id": null,
+      "reference_available": {
+        "safety": false,
+        "comfort": false,
+        "reliability": false
+      }
+    }
+  ],
+  "research_profiles": [
+    {
+      "profile_id": "ALZA_D27A_2022_AV",
+      "years": [
+        2022
+      ],
+      "variants": [
+        "1.5 AV"
+      ],
+      "automatic_matching": true,
+      "review_count": 1,
+      "safety_present": true,
+      "numeric_comfort_reference": null,
+      "numeric_reliability_reference": null
+    },
+    {
+      "profile_id": "MYVI_FACELIFT_2022_AV",
+      "years": [
+        2022
+      ],
+      "variants": [
+        "1.5 AV"
+      ],
+      "automatic_matching": true,
+      "review_count": 2,
+      "safety_present": true,
+      "numeric_comfort_reference": 0.3125,
+      "numeric_reliability_reference": null
+    },
+    {
+      "profile_id": "MYVI_FACELIFT_2022_H",
+      "years": [
+        2022
+      ],
+      "variants": [
+        "1.5 H"
+      ],
+      "automatic_matching": true,
+      "review_count": 0,
+      "safety_present": true,
+      "numeric_comfort_reference": null,
+      "numeric_reliability_reference": null
+    },
+    {
+      "profile_id": "VIOS_AC100_2023_G",
+      "years": [
+        2023
+      ],
+      "variants": [
+        "1.5 G"
+      ],
+      "automatic_matching": true,
+      "review_count": 1,
+      "safety_present": true,
+      "numeric_comfort_reference": null,
+      "numeric_reliability_reference": null
+    },
+    {
+      "profile_id": "PERSONA_FACELIFT_2021_PREMIUM",
+      "years": [
+        2021
+      ],
+      "variants": [
+        "1.6 Premium"
+      ],
+      "automatic_matching": false,
+      "review_count": 1,
+      "safety_present": false,
+      "numeric_comfort_reference": null,
+      "numeric_reliability_reference": null
+    },
+    {
+      "profile_id": "IRIZ_FACELIFT_2019_STANDARD_MT",
+      "years": [
+        2019
+      ],
+      "variants": [
+        "1.3 Standard"
+      ],
+      "automatic_matching": true,
+      "review_count": 1,
+      "safety_present": false,
+      "numeric_comfort_reference": null,
+      "numeric_reliability_reference": null
+    },
+    {
+      "profile_id": "X50_2020_STANDARD",
+      "years": [
+        2020
+      ],
+      "variants": [
+        "1.5 Standard"
+      ],
+      "automatic_matching": true,
+      "review_count": 0,
+      "safety_present": true,
+      "numeric_comfort_reference": null,
+      "numeric_reliability_reference": null
+    }
+  ],
+  "regression": {
+    "active": false,
+    "usable_training_rows": 0,
+    "issues": [
+      "Dataset use conditions/permission have not been documented and verified.",
+      "Fewer than 100 independently deduplicated vehicles; count is a course policy floor, not statistical assurance.",
+      "Need at least two exact identities, each with 15 unique cars, before a stratified group holdout."
+    ]
+  },
+  "sha256": {
+    "data/vehicles_real.json": "87fdd93730d22499a8fcdacee1e76c684d82e9c1c295d30f7ad0a9852110c0f1",
+    "data/model_evidence_v2.json": "eebc1918231d69891a3423c26ff8043438ec5461697ad2a1546517575733bde5",
+    "data/regression_manifest.json": "750364697ba30d1d92c0f49509932f9256f6cf75ebaf5ed5200001f028b4aaed"
+  },
+  "limits": [
+    "Research profiles do not expand purchasable stock or price-comparable coverage.",
+    "Published sources and saved snapshots are not live inventory, observed transaction prices or verified failure statistics.",
+    "Current numeric review coverage is not independent relevance validation."
+  ]
+}

@@ -26,6 +26,9 @@ usage labels: city_commute, family_travel, long_distance. Keep all stated usages
 Save fuel / low fuel consumption -> fuel_priority high. Unstated priority stays null.
 Explicitly wanting a spacious boot / lots of luggage room -> space_priority high.
 Space means luggage capacity, not cabin width. Unstated space priority stays null.
+Optional safety_priority, comfort_priority and reliability_priority are high/medium/low only
+when explicitly named. Important safety, wanting a comfortable or reliable car means high for
+that named preference. Never infer these from household size or driving use alone.
 Separate preferred_brands from excluded_brands. Do not turn 'not Toyota' into a preference.
 If a budget range is explicit, use its upper bound. For contradictory amounts, unsupported
 currencies, monthly-only budgets, or ambiguous requirements, keep uncertain slots null and
@@ -55,12 +58,13 @@ def main():
     parser.add_argument('--model', default='qwen3:4b')
     parser.add_argument('--match', action='store_true', help='Filter the vehicle dataset after extracting requirements')
     parser.add_argument('--rank', action='store_true', help='Filter first, then apply explainable lifestyle scoring; defaults to the real listing snapshot')
+    parser.add_argument('--ranking-policy', choices=('v2', 'v1'), default='v2', help='v2 formal fuzzy/evidence ranking; v1 preserved baseline (with --rank)')
     parser.add_argument('--value', action='store_true', help='Extract seller facts and calculate a traceable asking-price reference')
     parser.add_argument('--negotiate', action='store_true', help='Apply the hand-authored buyer/seller negotiation tree to a manual JSON fixture')
     parser.add_argument('--trade-in', action='store_true', help='Compare trade-in and private-sale cash differences from explicit manual quotes')
     parser.add_argument('--valuation-seller', type=Path, help='With --negotiate or --trade-in, link an actual valuation-tool observation by vehicle identity/date')
     parser.add_argument('--illustrative-adjustments', action='store_true', help='With --value, opt in to uncalibrated educational mileage/condition adjustments')
-    parser.add_argument('--as-of', default=None, help='Date YYYY-MM-DD for --value or --negotiate; defaults to today in Malaysia')
+    parser.add_argument('--as-of', default=None, help='Evidence date YYYY-MM-DD: --rank defaults to frozen 2026-10-15; financial tools default to today in Malaysia')
     parser.add_argument('--vehicles', type=Path, default=None, help='Override the vehicle dataset; --match defaults to fixtures, --rank to real snapshots')
     args = parser.parse_args()
     # Reject ambiguous action/input combinations before opening data or running
@@ -71,8 +75,8 @@ def main():
         parser.error('Choose at most one action: --match, --rank, --value, --negotiate or --trade-in')
     if args.illustrative_adjustments and not args.value:
         parser.error('--illustrative-adjustments requires --value')
-    if args.as_of and not (args.value or args.negotiate or (args.trade_in and args.valuation_seller)):
-        parser.error('--as-of requires --value, --negotiate, or --trade-in with --valuation-seller')
+    if args.as_of and not (args.rank or args.value or args.negotiate or (args.trade_in and args.valuation_seller)):
+        parser.error('--as-of requires --rank, --value, --negotiate, or --trade-in with --valuation-seller')
     if args.valuation_seller and not (args.negotiate or args.trade_in):
         parser.error('--valuation-seller requires --negotiate or --trade-in')
     if (args.negotiate or args.trade_in) and args.text:
@@ -127,8 +131,13 @@ def main():
             path = args.vehicles or Path(__file__).resolve().parent / 'data' / ('vehicles_real.json' if args.rank else 'vehicles_demo.json')
             result = filter_vehicles(profile, load_vehicles(path))
             if args.rank:
-                from scoring import rank_vehicles
-                result = rank_vehicles(profile, result)
+                if args.ranking_policy == 'v1':
+                    from scoring import rank_vehicles
+                    result = rank_vehicles(profile, result)
+                else:
+                    from datetime import date
+                    from lifestyle_v2 import rank_vehicles_v2
+                    result = rank_vehicles_v2(profile, result, as_of=date.fromisoformat(args.as_of or '2026-10-15'))
         elif not (args.value or args.negotiate or args.trade_in):
             result = reason_about_profile(profile)
         print(json.dumps(result, ensure_ascii=False, indent=2))

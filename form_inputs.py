@@ -36,6 +36,9 @@ def fields_for(goal):
                 FormField('buyer.usage', 'Driving use (comma separated)', 'usage'),
                 FormField('buyer.fuel_priority', 'Fuel-economy priority', 'choice', ('high', 'medium', 'low')),
                 FormField('buyer.space_priority', 'Luggage-space priority', 'choice', ('high', 'medium', 'low')),
+                FormField('buyer.safety_priority', 'Safety-equipment priority', 'choice', ('high', 'medium', 'low')),
+                FormField('buyer.comfort_priority', 'Review-based comfort priority', 'choice', ('high', 'medium', 'low')),
+                FormField('buyer.reliability_priority', 'Ownership-opinion reliability priority', 'choice', ('high', 'medium', 'low')),
                 FormField('buyer.preferred_brands', 'Preferred brands (comma separated)', 'brands'),
                 FormField('buyer.excluded_brands', 'Excluded brands (comma separated)', 'brands')]
     prefix = 'seller' if goal == 'sell' else 'negotiation.vehicle' if goal == 'negotiate' else 'trade_in.current_vehicle'

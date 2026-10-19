@@ -21,6 +21,10 @@ class BuyerProfileFrame(BaseModel):
     usage: list[Literal['city_commute', 'family_travel', 'long_distance']] = Field(default_factory=list)
     fuel_priority: Literal['high', 'medium', 'low'] | None = None
     space_priority: Literal['high', 'medium', 'low'] | None = None
+    # These optional priorities activate evidence references, not guarantees.
+    safety_priority: Literal['high', 'medium', 'low'] | None = None
+    comfort_priority: Literal['high', 'medium', 'low'] | None = None
+    reliability_priority: Literal['high', 'medium', 'low'] | None = None
     preferred_brands: list[str] = Field(default_factory=list)
     excluded_brands: list[str] = Field(default_factory=list)
     clarification_notes: list[str] = Field(default_factory=list)

@@ -1,0 +1,42 @@
+Browser tab: 2, Title: "Vehicle Consultation Agent", URL: "http://127.0.0.1:8501/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 60, 63-64, 67-69, 72-74, 77, 79-82
++					86 text Research context only: the saved year does not resolve all model changes. Automatic advertisement matching is disabled for this profile.
++					87 text Evidence reviewed: 2026-10-16 · saved research, not live verification
++					88 container
++						89 text {
++						90 text ... }
++						91 text Safety : Unknown
++					92 text Exact-scope safety equipment is incomplete or unavailable.
++					93 container
++						94 text {
++						95 container
++							96 text " esc "
++						97 text :
++						98 text NULL
++						99 container
++							100 text " aeb "
++						101 text :
++						102 text NULL
++						103 container
++							104 text " curtain_airbags "
++						105 text :
++						106 text NULL
++						107 text }
++					108 container
++						109 text Comfort : Unknown
+~					65 text Review-based comfort reference
+~					66 text Insufficient applicable independent review evidence.
++					110 text review-coding-v2.0: negative=0, mixed=0.5, positive=1; family means first; fixed four-aspect comfort denominator; at least two independent source families and two comfort aspects; unknown widens the bound
++					111 container
++						112 text Reliability : Unknown
+~					70 text Ownership-opinion reference; not a failure rate
+~					71 text Insufficient applicable independent review evidence.
++					113 text ownership-coding-v2.0: negative=0, mixed=0.5, positive=1; family means first; at least two independent source families with explicit ownership periods; not a failure rate
++					114 text Ferdinand · 2021-04-14
+~					75 text The reviewer discussed useful rear space, highway noise and seating that could become uncomfortable on a drive exceeding three hours.
+~					76 text Context: short_drive · source family: carlist_editorial
++					115 text One attributed impression; not a measured three-hour endurance trial.
+~					78 text Transmission noise or sluggish response does not establish a mechanical failure rate.
++					116 link Description: Read attributed review, Value: carlist.my/news/review-proton-persona-bang-for-buck-for-the-most-part-82478/82478/
+The focused UI element is 56 combo box (collapsed, settable) Description: Research profile, Value: Proton Persona · [2021] · 1.6 Premium, ID: react-aria4914339035-:r58:, Secondary Actions: Expand

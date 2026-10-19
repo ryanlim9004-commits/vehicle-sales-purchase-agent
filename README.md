@@ -2,7 +2,9 @@
 
 An educational Python + Ollama project for used-vehicle consultation in Malaysia. Application prompts, inputs and outputs use English; accompanying Chinese lessons explain the implementation for beginners.
 
-**Status, 16 October 2026:** the Stage 1–8 consultation backend and Stage 9 English Streamlit UI are implemented. `streamlit_app.py` provides chat, supplementary forms, checked comparisons/calculations, source evidence and manual exports. `agent_cli.py` remains the multi-turn CLI; `main.py` remains the explicit-action CLI. Independent holdout evaluation, broader data coverage and final assignment materials remain pending.
+**Status, 17 October 2026:** V2 formal Sugeno fuzzy ranking, optional safety/comfort/reliability priorities and scoped reference research are connected to the existing Agent and English Streamlit UI. See [V2 Chinese guide](V2_GUIDE_ZH.md), [acceptance and remaining gaps](V2_RESULTS.md) and [source audit](docs/V2_SOURCE_AUDIT.md). There are 7 research profiles for 6 model names, distinct from the unchanged 17 asking-price advertisements. Reliability values remain Unknown because evidence is insufficient. Ridge training/evaluation preparation exists, but no Malaysian price model has been trained or enabled. Independent evaluation, usable price-data expansion, cross-computer reproduction and final assignment materials remain pending.
+
+V2 is the default for Agent/UI and `main.py --rank`. Use `--ranking-policy v1` for the preserved weighted baseline; historical ranking evaluation files describe v1. The research tab never adds stock or makes budget-eligibility claims. Prices remain the 15 Oct snapshot; reference research was checked 16 Oct, not live inventory.
 
 **Learning notes:** the historical annotation-only revision covered 34 Python modules and 275 class/function definitions, preserving their ASTs and passing the then-current 134 tests. Stage 9 adds functional code with English explanations; the old `comment-only-verification.json` is historical evidence, not a claim that the UI revision leaves behavior unchanged. Start with the [Chinese code guide](CODE_GUIDE_ZH.md), [command reference](COMMANDS_ZH.md) and [JSON reference](docs/JSON_FILES_GUIDE_ZH.md).
 
@@ -116,10 +118,10 @@ Use `main.py --help` for all options. Select exactly one of `--text` and `--fixt
 ## Verification
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest -q test_profile test_matching test_scoring test_valuation test_input_grounding test_stage5_audit test_negotiation test_agent test_streamlit_ui
+.\.venv\Scripts\python.exe -m unittest -q test_profile test_matching test_scoring test_valuation test_input_grounding test_stage5_audit test_negotiation test_agent test_streamlit_ui test_v2 test_price_regression
 ```
 
-The current baseline has **152 passing test methods**, including 40 Agent methods and 18 UI/form/session methods with multiple subtests. Actual Streamlit AppTest covers reruns, submissions, all four result types and retained submissions with explicit Retry/Discard when another tab holds the model lock. Model replies are scripted and Python tools are real. Actual browser/Ollama evidence and verified manual downloads are listed in [Stage 9 results](STAGE9_RESULTS.md). Earlier Stage 8 live and fixed-input tool evidence is retained separately. These checks do not establish holdout extraction, market-price or negotiation-success accuracy. Live evaluation requires Ollama; offline tests do not. See the [remaining assessment and submission work](REMAINING_WORK_ZH.md).
+The current suite has **184 passing tests**: 152 existing methods plus 32 V2 checks. Streamlit AppTest covers reruns, forms, all four result types and retained submissions with explicit Retry/Discard. Model replies are scripted and Python tools are real. Two final actual Ollama V2 turns passed; initial failures and their fixes are retained in [V2 results](V2_RESULTS.md). Earlier browser/Ollama manual-download evidence in [Stage 9 results](STAGE9_RESULTS.md) remains historical. These checks do not establish independent extraction/relevance, market-price or deal-success accuracy. Live evaluation requires Ollama; offline tests do not.
 
 ## Repository guide
 
@@ -128,6 +130,8 @@ The current baseline has **152 passing test methods**, including 40 Agent method
 | `main.py`, `buyer_profile.py`, `seller_profile.py` | CLI and structured extraction |
 | `input_grounding.py` | Source-text unit/currency checks |
 | `vehicle_frame.py`, `matching.py`, `scoring.py` | Vehicle knowledge representation, filtering and ranking |
+| `fuzzy_lifestyle.py`, `lifestyle_v2.py`, `vehicle_evidence.py` | V2 Sugeno rules, ranking and scoped safety/review references |
+| `price_regression.py`, `audit_v2.py` | Gated inactive Ridge experiment and reproducible data-coverage audit |
 | `valuation.py` | Comparable selection, reference calculation and explanation |
 | `consultation_frames.py`, `negotiation.py`, `trade_in.py` | Explicit quotes, decision tree and cash comparison |
 | `agent_state.py`, `agent_grounding.py` | Typed memory, goal changes and grounded fact updates |
@@ -137,6 +141,7 @@ The current baseline has **152 passing test methods**, including 40 Agent method
 | `test_*.py`, `evaluate_*.py`, `audit_input_cases.py` | Unit tests and model evaluations |
 | `STAGE*_RESULTS.md`, evaluation JSON files | Dated implementation evidence |
 | [Chinese lessons](README_ZH.md) | Beginner learning entry point |
+| [V2 guide](V2_GUIDE_ZH.md), [V2 results](V2_RESULTS.md) | Current scope, formulas, commands, actual verification and remaining data gates |
 | [Code reading guide](CODE_GUIDE_ZH.md) | Python concepts, file responsibilities, algorithms and test interpretation |
 | [Command reference](COMMANDS_ZH.md) | PowerShell commands, CLI flags, prerequisites and output files |
 | [JSON reference](docs/JSON_FILES_GUIDE_ZH.md) | Dataset, fixture, evaluation and session field explanations |

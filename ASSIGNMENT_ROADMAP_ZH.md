@@ -1,5 +1,7 @@
 # Assignment 全流程与当前进度
 
+**2.0最新状态（2026-10-17）：当前优先阅读V2_GUIDE_ZH.md和V2_RESULTS.md。本批完成Formal Fuzzy Logic、安全与评论参考的来源／年款校验、英文聊天／表单／UI整合；184项离线测试与最终2轮真实Ollama验收通过。研究目录6车型7档案，挂牌库存仍17笔；真实可靠性数值与回归市场模型均未完成。Regression保留目标，但数据足够后才训练。历史趋势／品牌折旧曲线、车况／损伤校准、实际成交率提升证明与全部Vision已由用户取消。以下按日期保留早期阶段记录，不能用旧表覆盖本条最新范围。**
+
 **阶段9最新进度（2026-10-16）：英文Streamlit UI基础版已完成，见STAGE9_GUIDE_ZH.md与STAGE9_RESULTS.md。152项离线回归通过，包含忙碌提交保留与明确重试／丢弃；真实浏览器完成买车聊天→表单→比较、Trade-In→来源／现金结果、手动导出。用户确认第一版固定15 Oct 2026快照，暂不加当天日期切换、实时搜索或市场校准；这些是不同的后续功能。当前下一步是扩大独立评估／组员复现与报告／视频，见REMAINING_WORK_ZH.md。以下旧阶段验收数量按其日期阅读。**
 
 **最新进度（2026-10-15）：阶段1–7已复核并修复当前教学范围的缺口，阶段8完整受约束Agent Loop已接入英文多轮输入、记忆／修改、动态业务工具请求、实际执行／结果检查与停止限制。运行agent_cli.py，见STAGE8_GUIDE_ZH.md。134项单元测试、16个既有工具场景复核、最终8轮真实模型验收（含reset）通过；不是holdout准确率。下一步阶段9英文UI，以及更广系统评估、报告和视频。**
@@ -32,7 +34,7 @@ Ollama 是模型运行服务；qwen3:4b 是预训练模型；Python 程序负责
 | 议价/Trade-In | 手写Decision Tree、预算/净底价、完整费用、贷款结清、独立replacement package、时间/投入；人工JSON与Agent英文输入；可关联旧车asking context |
 | Agent Loop | typed memory、追问回答／修改、任务切换、工具参数与结果检查、timeout／有限重试／停止、facts/rules/tools/checks |
 | 英文UI | 聊天／四类入口／辅助表单／候选比较／reference与现金明细／来源与trace；每tab临时记忆和手动导出 |
-| 测试 | 当前152项unit tests，含18项UI／表单／session；另有原tool复核、阶段8 live与阶段9实际浏览器证据 |
+| 测试 | 当前184项unit tests；最终2轮真实Ollama V2验收；历史阶段8／9证据独立保留 |
 
 当前保留8条虚构车辆records和17条真实来源快照。asking price不能保证库存或成交价；仅一个exact identity组满足当前估价minimum3政策。估价默认未校准里程／车况；UI明确显示未调整。main.py保留单次命令，agent_cli.py为多轮CLI，streamlit_app.py为浏览器入口。下文1–8是工作模块目录，不是用户阶段编号；前六项已完成当前基础范围，扩大评估与最终材料仍待制作。
 
@@ -50,7 +52,7 @@ Ollama 是模型运行服务；qwen3:4b 是预训练模型；Python 程序负责
 
 先做已实现的硬筛选，再将 soft preferences 转为公开权重，对通过者评分。定义 feature normalization、unknown handling、ties、权重和为 1。省油偏好影响 fuel weight；家庭出游可影响 space weight，但只能使用有数据支持的指标。
 
-验收：改变偏好能合理改变排序；无论得分多高都不能突破硬约束；显示各 score component 和不足。评分是设计者的 transparent heuristic，不是训练出的 ML，也不是 formal Fuzzy Logic。
+验收：偏好变化可以影响排序，但不可突破硬约束。v1仍是transparent heuristic；v2已加入formal zero-order Sugeno Fuzzy Logic及公开的外层权重，详见V2_GUIDE_ZH.md。两者都尚未经过独立推荐相关性评估。
 
 ### 3. Rule-Based Valuation
 
@@ -88,7 +90,7 @@ NLU测slots；matching测hard constraints和relevance；valuation测规则正确
 
 交付还包括 operational system、video、final demonstration、每人 presentation/Q&A、Individual Contribution justification、Workload Matrix。APA/格式/Turnitin 等按已保存 official guide 执行，不自行新增 word limit 或视频时长。rubric 总权重为 system30/report30/video10/presentation10/Q&A10/contribution10，report 章节标注歧义保留于项目背景。
 
-Optional Regression、formal Fuzzy Logic、Vision 仅在核心稳定且有时间/数据时考虑，当前不是待装必需项。
+2.0已加入小型formal Fuzzy Logic；Regression训练流程已准备，但合适价格资料未取得，尚未训练／启用。Vision已取消。现有环境无需新增软件；未来若更换实现，先更新依赖与复现记录。
 
 ## 软件检查（2026-10-15）
 

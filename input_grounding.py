@@ -212,6 +212,40 @@ def ground_seller(text, profile):
 
 # Ground total budget and household travel, conservatively recover explicit seats/use, and keep
 # unrelated known facts.
+def explicit_buyer_usages(text):
+    # Recover only narrow, affirmative source phrases when a small LLM omits
+    # the usage slot. Keep the exact phrase for the facts/rules evidence trace.
+    recovered = []
+    for label, pattern in [('city_commute', r'\bcity commut(?:e|ing)\b'),
+                           ('family_travel', r'\bfamily (?:travel|trips?)\b'),
+                           ('long_distance', r'\blong[- ]distance (?:driv(?:e|ing)|travel)\b')]:
+        for match in re.finditer(pattern, text, re.I):
+            if not re.search(r"\b(not|no|don't|do not|without|remove|forget|avoid)\b", clause_before(text, match.start()), re.I):
+                recovered.append((label, match.group()))
+                break
+    return recovered
+
+
+def ground_reference_priority(evidence, field, value, *, pending=False):
+    # A generic "high" cannot silently create an unrelated preference.
+    patterns = {'safety_priority': r'\b(safety|safe|safer)\b',
+                'comfort_priority': r'\b(comfort|comfortable|comfy)\b',
+                'reliability_priority': r'\b(reliability|reliable|dependable)\b'}
+    if value not in ('high', 'medium', 'low'):
+        raise ValueError('State high, medium or low for this priority.')
+    text = evidence.casefold()
+    if not pending and not re.search(patterns[field], text):
+        raise ValueError('Please name the safety, comfort or reliability preference explicitly.')
+    levels = re.findall(r'\b(high|medium|low)\b', text)
+    if value != 'low' and re.search(r'\b(not|no|unimportant|avoid|without)\b', text):
+        raise ValueError('A negated priority needs clarification; it is not a positive preference.')
+    if levels and set(levels) != {value}:
+        raise ValueError('The stated priority and extracted value conflict; please clarify it separately.')
+    if not levels and (value != 'high' or not re.search(r'\b(important|priority|prioriti[sz]e|want|need|prefer|comfortable|reliable|safe|safer|dependable)\b', text) or re.search(r"\b(not|no|unimportant|avoid|without)\b", text)):
+        raise ValueError('Please state high, medium or low for this named priority.')
+    return value
+
+
 def ground_buyer(text, profile):
     data=profile.model_dump()
     if re.search(r"\b(not everyone|not all|won't all|will not all)\b.{0,50}\b(travel|ride|together)\b", text, re.I):
@@ -221,6 +255,18 @@ def ground_buyer(text, profile):
     amount,evidence,issue=budget_from_text(text)
     data['budget_myr']=amount
     questions=list(profile.clarification_notes)
+    for field in ('safety_priority', 'comfort_priority', 'reliability_priority'):
+        if data[field] is not None:
+            try:
+                # Single-turn extraction cannot use another sentence's level.
+                pattern = {'safety_priority': r'\b(safety|safe|safer)\b', 'comfort_priority': r'\b(comfort|comfortable|comfy)\b', 'reliability_priority': r'\b(reliability|reliable|dependable)\b'}[field]
+                candidates = [c for c in re.split(r'[,;.!?\n]', text) if re.search(pattern, c, re.I)]
+                if not candidates:
+                    raise ValueError('An unstated evidence preference was omitted.')
+                ground_reference_priority(candidates[-1], field, data[field])
+            except ValueError as error:
+                data[field] = None
+                questions.append(str(error))
     if issue:
         questions.append(issue)
     else:
@@ -240,11 +286,9 @@ def ground_buyer(text, profile):
             data['required_seats']=counts[0]
             evidence.append('Recovered an explicit seat-count requirement from the original message.')
     if not data['usage']:
-        for label,pattern in [('city_commute',r'\bcity commut(?:e|ing)\b'),('family_travel',r'\bfamily travel\b'),('long_distance',r'\blong[- ]distance (?:driv(?:e|ing)|travel)\b')]:
-            match=re.search(pattern,text,re.I)
-            if match and not re.search(r"\b(not|no|don't|do not|without)\b",clause_before(text,match.start()),re.I):
-                data['usage'].append(label)
-                evidence.append(f'Recovered explicit usage phrase: {label}.')
+        for label, phrase in explicit_buyer_usages(text):
+            data['usage'].append(label)
+            evidence.append(f'Recovered explicit usage phrase: {phrase}.')
     data['clarification_notes']=list(dict.fromkeys(questions))
     data['input_validation_notes']=evidence
     return type(profile).model_validate(data)

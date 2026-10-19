@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "status": "awaiting independently authored cases",
+  "instruction": "Fill before viewing algorithm outputs. Do not invent authors or scores. Keep this set separate from development cases.",
+  "cases": [],
+  "required_case_fields": ["case_id", "author", "authored_on", "goal", "english_input", "expected_hard_constraints", "acceptable_outcome_and_reason", "source_basis", "frozen_before_outputs"],
+  "required_judgement_fields": ["case_id", "reviewer", "blind_result_label", "constraint_errors", "relevance_0_to_2", "explanation_grounded", "unknowns_disclosed", "notes"]
+}
