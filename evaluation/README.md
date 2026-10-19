@@ -1,5 +1,9 @@
 # Independent evaluation handoff
 
+Start with [the full Windows setup/test guide](../TEAM_GUIDE_ZH.md),
+[the member record template](../TEAM_TEST_RECORD_TEMPLATE_ZH.md) and
+[independent-case instructions in Chinese](INDEPENDENT_CASES_GUIDE_ZH.md).
+
 No independently authored teammate cases have been confirmed in this repository.
 The empty template is preparation, not submitted evidence or a contribution log.
 

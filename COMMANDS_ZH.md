@@ -1,5 +1,7 @@
 # PowerShell运行命令解释
 
+**2026-10-19组员交接入口：TEAM_GUIDE_ZH.md。首次下载者先建立自己的`.venv`、安装lock和模型；之后用`team_check.py --ollama`检查、`run_team_tests.py --tester YOUR_NAME`运行全部离线测试，最后以Streamlit启动`streamlit_app.py`。真实模型脚本`evaluate_v2_live.py`默认保存新的时间戳报告，不覆盖历史JSON。**
+
 **2026-10-17最新命令以V2_GUIDE_ZH.md为准。现有环境不用新装软件。`main.py --rank`默认使用v2模糊／资料评分；加`--ranking-policy v1`可复现旧基线。当前完整测试为184项，须包含`test_streamlit_ui test_v2 test_price_regression`。`price_regression.py`默认只检查数据关口，不会训练或启用市场模型。**
 
 更新：2026-10-16。应用输入使用英文。现有电脑已装好Python、项目venv、Ollama和qwen3:4b，本轮不需要重新安装。

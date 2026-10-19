@@ -1,5 +1,7 @@
 # 第 1 课：把买车需求转换为 BuyerProfileFrame
 
+**组员首次安装／启动／测试（2026-10-19）：请先看[GitHub到实际测试手把手指南](TEAM_GUIDE_ZH.md)，启动入口是`streamlit_app.py`，用指南中的Streamlit命令运行。另有[测试记录表](TEAM_TEST_RECORD_TEMPLATE_ZH.md)、[独立案例说明](evaluation/INDEPENDENT_CASES_GUIDE_ZH.md)和[交接验收现况](TEAM_HANDOFF_RESULTS.md)。**
+
 **2.0更新（2026-10-17）：先阅读[V2制作与运行指南](V2_GUIDE_ZH.md)和[验收现况](V2_RESULTS.md)。当前184项离线测试通过；最终2轮真实Ollama输入与一次最终浏览器表单验收通过。默认买车排名已接入Formal Fuzzy Logic和适用的安全／评论资料，价格库存仍17笔；回归尚未训练，真实可靠性资料尚不足。本机无需安装新软件。下文是保留的历史课次。**
 
 最新（2026-10-16）：阶段9英文Streamlit界面完成基础版，运行`.\.venv\Scripts\python.exe -m streamlit run streamlit_app.py`，浏览器打开http://127.0.0.1:8501。见[阶段9运行教学](STAGE9_GUIDE_ZH.md)、[验证记录](STAGE9_RESULTS.md)。152项离线回归通过，真实浏览器买车多轮／Trade-In及导出已验证；模型忙碌时保留提交供Retry／Discard。第一版固定15 Oct 2026快照，无当天日期切换／实时搜索；里程／车况校准暂缓。后续见[剩余交付清单](REMAINING_WORK_ZH.md)。下文保留历史课次，不代表当前缺少UI。

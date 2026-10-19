@@ -1,0 +1,270 @@
+{
+  "checked_on": "2026-10-19",
+  "scope": "Same Ryan Windows computer; isolated dependency environment and staged-repository export. Not teammate, cross-computer or independent market/relevance acceptance.",
+  "environment": {
+    "python": "3.13.15",
+    "platform": "Windows",
+    "architecture": "AMD64",
+    "locked_package_count": 42,
+    "installation": "Fresh venv without system-site-packages; exact lock installed from public PyPI, with local pip cache permitted. Original project venv unchanged.",
+    "pip_check": "No broken requirements found.",
+    "ollama": {
+      "server_version": "0.40.5",
+      "required_model": "qwen3:4b",
+      "model_present": true,
+      "model_digest": "359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7"
+    }
+  },
+  "source": {
+    "git_commit": null,
+    "tracked_changes": null,
+    "code_and_data_sha256": "53e5452adfba88aac64fef0058836b788551d6edb4d5d617f09f7fcd455072fb",
+    "file_sha256": {
+      ".streamlit/config.toml": "decea453c9e5e7e36e3a876b653a84c6f33790ae3ee5d94968d66c4f2a23ed1f",
+      "agent_cli.py": "5e7dadeb02856388d93840618bf96118c25f644c30ecd0a82ee05c813391cfca",
+      "agent_controller.py": "6fd7baa2062e76337deb8330a240b79c4a2f74020b71e95751f0d9be8df8a3d1",
+      "agent_grounding.py": "427c35246f0ba7e27bdb9aa3f0468d668a2a74e306fc7efd24b6f2ce3a17bac7",
+      "agent_state.py": "acb8dbebc531a0f6161866f498c3411fb42865ea98eb1cba36d28fde304f5bd7",
+      "agent_tools.py": "ce228efeebb8ece59e63601cc9aa59bb62ecdc9b59f7f0ba5ecb1fc48dbaa757",
+      "audit_input_cases.py": "a88c76ee7aedce234ba01aa75101f13d0e3234ae207e3350f6943b90406ef471",
+      "audit_v2.py": "ad945b87270a47f9b65e17cd9477545665eee9549a648a79f1eaec23095b5dc1",
+      "buyer_profile.py": "ed095f3ee69ab15562587081254fddd7c0db0aa922ecb257bf915cddaff171b1",
+      "check_data_quality.py": "56c67718c3de2c7e2f627d64bb06292c339c67c385e0720427c65569be6a34e1",
+      "consultation_frames.py": "2870c91e5f377e0826d9bd4dcbdbe063b8701e08ab12eb16d023da71aced9b49",
+      "data/model_evidence_v2.json": "eebc1918231d69891a3423c26ff8043438ec5461697ad2a1546517575733bde5",
+      "data/regression_manifest.json": "750364697ba30d1d92c0f49509932f9256f6cf75ebaf5ed5200001f028b4aaed",
+      "data/vehicles_real.json": "83e2bfa2f7fae9d8a73390af470d16b9d3f936efcec1803c3c945ce9621ab491",
+      "evaluate_agent.py": "eb2be58171f35d1d9aab2214de4674b83db9641d04f303153660af5c504e6fcc",
+      "evaluate_extraction.py": "9ecdae2e328f6c079ee4518e2e0bead7e510ca9780de0e0e076ea694a5acf89e",
+      "evaluate_input_fix.py": "34b42c5f19ca556796fad3b394f14ab65683f5d8a4f386c0cbea088f6dde35df",
+      "evaluate_negotiation.py": "636da86de0ed2cb5f92d490cd5113a8158b99e4d82a2e641e36a6fba1fc7301b",
+      "evaluate_ranking.py": "87fd27f56775a180fc32fba399b1e9d5b0bb72c85972400757edf0bb7737665e",
+      "evaluate_stage5_stage6.py": "d16cfaee3514b9b35faee8c0336084eb512f13ca4e68494fa56f5dec834f0351",
+      "evaluate_v2_live.py": "827eb6d4a016bc27728e5a68642181933475af5c22a6254320cdf02059cb1ca1",
+      "evaluate_valuation.py": "f535b6e1275e065e39f14d0e0087f5c5d28a6584d7355c14949d4a86d5052075",
+      "form_inputs.py": "cbf07ab608d61e49a6fa3b9b5629fd0e029d14240080cd5c6299c970c0a43e8b",
+      "fuzzy_lifestyle.py": "5165c1860f76053d59f3c858bbdbe29249e2061f5b51ab4144aca73683c6904d",
+      "input_grounding.py": "657a6d6887de24d3442e9014120f9b76bd55c985f83a92ece41e122b6658cc4a",
+      "lifestyle_v2.py": "5d9a615108e11d02b2481a3c541ddfff6377bfd525e88de7148b1f0c39be17b7",
+      "main.py": "ddb611a03271b0942f56611ccc65b0a610a953a0ab9c8c49afe3c5780fa48298",
+      "matching.py": "8e2b05f89592575006a21108688c99cfd2228360b2214966876bb49c0b6e6bf1",
+      "negotiation.py": "89522de3043448b4671e2fd1c040a54a6cf1cfda8d5f1856eb6c6a7afed49a51",
+      "price_regression.py": "65e75dfff168519411c9bb56178d9e69855ec2dcbf800dd7c8c9fc9a335ed6b2",
+      "requirements-lock.txt": "e55e4e13c13ad59bf89c2efeb2e3fc7102348857cc56b87f84cdc572d25d373b",
+      "run_team_tests.py": "ce4674372e3887ce2e2d789e5fb3145f2993c7fcca1e0af3f82fa3730cfd6820",
+      "scoring.py": "426945ffe3dbb0958729a545f850ee3f3496c5fde5c1703fa9dd12d42e38ec53",
+      "seller_profile.py": "9d0f3d0db9de50d44c53bf02f723cc99a1c205c22bfd11102897a0945050346b",
+      "streamlit_app.py": "b1902cd8295f1001eb6ae91801b5852413cdb01b9cf1ecd58b5c2476f086ce62",
+      "team_check.py": "91d411d70c3843fa22bd6ad46733fe106eb6356f26d38bf0269d4ae6d58ae05e",
+      "test_agent.py": "73c9b84212b80d0f1953349dcfc7aa41f5f926e3c4e1dc72dec812b5894192f9",
+      "test_input_grounding.py": "2d6165f248eb17fc3423ed8f362760b6c66eedd76237832268e1b1b7924a4bba",
+      "test_matching.py": "b2f2a62cfdf8d946a193b4b8a69cc5fb5e602dd81bef0c8b1bb4bd362771b190",
+      "test_negotiation.py": "c6c0bd729af0edaf5c675f46cd7abb9c3ed013b6233fc820e98f64107258d657",
+      "test_price_regression.py": "962eb305b4b32453c720e21a4035bbef4ac6ff4ca64273ce85aca18bdc3fb763",
+      "test_profile.py": "5d736fbd103a3fa61ff8d8bcb84cd1ccf0331f1c212a4e035034eed9d4546291",
+      "test_scoring.py": "38b36aec4d5e88ded62ba54e5c359e89a6ce0b49695191908bba9a993d7b080b",
+      "test_stage5_audit.py": "cbf76f16365a809a9e2a4d26c2a3d93353e1a0cf0fbf77fdd64d5daecc2e569a",
+      "test_streamlit_ui.py": "eeb6b251ded1c02399a36b6cf6bb5a29ec85f91784c1cb26efed342c43c8ec4c",
+      "test_team_tools.py": "c03a1b6f52205f715e906742132614be2a041a512411e3ce394236118f2070b9",
+      "test_v2.py": "63e386d5a14bdf7869b0d5fbc3de36369fbe85527e6f6dd0a6d1ebbd24f7779c",
+      "test_valuation.py": "d20ce9567c8eade873ec9a5f092b2ba30d1cf2c6d99901ed381892e81e1e2645",
+      "trade_in.py": "77ab45fbee9b438af132e36dfd978d56a4c8336c3df303b48b711b35c3fb9eb2",
+      "ui_session.py": "b2f6c4aeee1d88b29448263ccfbc145a2407dcaec5a7b4c347f45b0df40dab3c",
+      "valuation.py": "6f526cbecfda584d29937d5330d411b749ef445fe69028f7c4eeccb0f717de58",
+      "vehicle_evidence.py": "4e16d2b48024f6a9cb4eb73bdc3ff65d26d0a1566b363fbb44ffb0d576cd16e2",
+      "vehicle_frame.py": "36a8fda9111ab3d13d5ece09f4cc9e1ab733d7ce3e2d8e2a2a292e186642554a"
+    }
+  },
+  "working_tree_comparison": {
+    "same_text_after_crlf_normalization": true,
+    "working_tree_raw_sha256": "041fc29b307d0e7fa810d174140214b8e35ffcee72fae8a48210ffc4f172d77d",
+    "note": "Exact byte hashes differ for some pre-existing Windows CRLF files versus the Git index LF export. All fingerprinted source/data text matches after CRLF-to-LF normalization. No runtime source changed after the isolated test."
+  },
+  "setup_checks": [
+    {
+      "name": "python_3_13",
+      "status": "pass",
+      "detail": "Use regular CPython 3.13; actual: 3.13.15"
+    },
+    {
+      "name": "64_bit_python",
+      "status": "pass",
+      "detail": "The handoff installation was verified on Windows x64."
+    },
+    {
+      "name": "locked_packages",
+      "status": "pass",
+      "detail": "Exact package versions match the lock."
+    },
+    {
+      "name": "dependency_imports",
+      "status": "pass",
+      "detail": "Import checks do not call Ollama or start Streamlit."
+    },
+    {
+      "name": "data_schema",
+      "status": "pass",
+      "detail": "Saved sources validate. Insufficient regression evidence is a documented feature limit, not an installation failure."
+    },
+    {
+      "name": "local_ui_address",
+      "status": "pass",
+      "detail": "Streamlit should bind to 127.0.0.1."
+    },
+    {
+      "name": "ollama_service_and_model",
+      "status": "pass",
+      "detail": "Required local model: qwen3:4b. Available."
+    }
+  ],
+  "saved_data": {
+    "price_rows": 17,
+    "research_profiles": 7,
+    "snapshot_date": "2026-10-15",
+    "research_reviewed_on": "2026-10-16",
+    "regression_data_issues": [
+      "Dataset use conditions/permission have not been documented and verified.",
+      "Fewer than 100 independently deduplicated vehicles; count is a course policy floor, not statistical assurance.",
+      "Need at least two exact identities, each with 15 unique cars, before a stratified group holdout."
+    ],
+    "regression_active_in_agent": false
+  },
+  "offline": {
+    "ran_at": "2026-10-19T15:24:13.327728+08:00",
+    "tester": "local-isolated-handoff",
+    "scope": "Offline engineering regression; model replies scripted; no independent relevance or market-accuracy claim.",
+    "tests_run": 195,
+    "passed": true,
+    "elapsed_seconds": 16.34,
+    "failures": [],
+    "errors": [],
+    "skipped": []
+  },
+  "real_ollama": {
+    "run_on": "2026-10-19T15:24:25.475677+08:00",
+    "model": "qwen3:4b",
+    "tester": "local-isolated-handoff",
+    "expected_turns": 2,
+    "scope": "Two real Ollama CLI turns using actual tools/checks. Development acceptance; not market accuracy, independent relevance or browser-export proof.",
+    "completed_turns": 2,
+    "passed": true,
+    "turns": [
+      {
+        "turn": 1,
+        "input": "I want to buy a car. My vehicle-price budget is RM60000. I need 5 seats for city commuting. Safety priority is high. Comfort priority is medium. Reliability priority is high. Fuel priority is high.",
+        "checks": {
+          "complete": true,
+          "safety_priority": true,
+          "comfort_priority": true,
+          "reliability_priority": true,
+          "tool_checks": true,
+          "policy": true
+        },
+        "passed": true,
+        "elapsed_seconds": 50.75
+      },
+      {
+        "turn": 2,
+        "input": "Change my vehicle-price budget to RM55000. Luggage-space priority is high. Exclude Toyota.",
+        "checks": {
+          "complete": true,
+          "safety_priority": true,
+          "comfort_priority": true,
+          "reliability_priority": true,
+          "tool_checks": true,
+          "policy": true,
+          "budget_correction": true,
+          "space_priority": true,
+          "exclusion": true,
+          "nine_fuzzy_rules_for_supported_inputs": true,
+          "no_rules_invented_for_unknown_inputs": true
+        },
+        "passed": true,
+        "elapsed_seconds": 28.35
+      }
+    ]
+  },
+  "tool_smoke": {
+    "scope": "Local handoff verification; synthetic fixture quotes, not independent cases.",
+    "checks": [
+      {
+        "name": "rank",
+        "arguments": [
+          "main.py",
+          "--fixture",
+          "examples/city_buyer.json",
+          "--rank"
+        ],
+        "passed": true
+      },
+      {
+        "name": "value",
+        "arguments": [
+          "main.py",
+          "--fixture",
+          "examples/seller_alza.json",
+          "--value",
+          "--as-of",
+          "2026-10-15"
+        ],
+        "passed": true
+      },
+      {
+        "name": "negotiate",
+        "arguments": [
+          "main.py",
+          "--fixture",
+          "examples/negotiation_buyer.json",
+          "--negotiate",
+          "--valuation-seller",
+          "examples/seller_alza.json",
+          "--as-of",
+          "2026-10-15"
+        ],
+        "passed": true
+      },
+      {
+        "name": "trade_in",
+        "arguments": [
+          "main.py",
+          "--fixture",
+          "examples/trade_in.json",
+          "--trade-in"
+        ],
+        "passed": true
+      },
+      {
+        "name": "regression_gate",
+        "arguments": [
+          "price_regression.py"
+        ],
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "browser": {
+    "passed": true,
+    "port": 8503,
+    "scope": "Initial English consultation UI and read-only Vehicle research checked in an actual browser using the fresh environment and repository export.",
+    "screenshot": "docs/team-handoff-ui.jpg",
+    "not_repeated": [
+      "Four full manual business flows",
+      "Browser file download verification"
+    ]
+  },
+  "raw_report_sha256": {
+    "setup.json": "cfe059e4ab81dfc3aa5cd83549368871ff1e668f940e5ccc41081587373a7e3b",
+    "offline.json": "0cd4bf8b2008d255eea7f6556d48a81bf49fe5f2890e572cac2930d220c4447b",
+    "live.json": "ebefe32457408730f9a7d402092beb9ad663e2cb62b0a6b5c5e134d70cd768c0",
+    "tool-smoke.json": "0190270eadf8671da114ca12d2866c9d07d706d1d38c9f0927af41c11852e72f"
+  },
+  "raw_report_storage": "Local ignored team_results in the verification export; no raw model trace is uploaded by this summary. Historical committed results are unchanged.",
+  "remaining": [
+    "More usable Malaysian row-level price data and exact-variant source coverage",
+    "Train, evaluate and integrate real price regression after the data gate passes",
+    "Sufficient applicable ownership reviews for numeric reliability references",
+    "Actual peer-authored independent cases, relevance assessment, manual financial review and cross-computer reproduction",
+    "Final report, video, presentation/Q&A, contribution records and submission checks"
+  ]
+}

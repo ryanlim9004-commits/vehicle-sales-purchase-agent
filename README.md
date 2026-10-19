@@ -2,6 +2,18 @@
 
 An educational Python + Ollama project for used-vehicle consultation in Malaysia. Application prompts, inputs and outputs use English; accompanying Chinese lessons explain the implementation for beginners.
 
+**New teammates: start with the [step-by-step Windows setup and test guide](TEAM_GUIDE_ZH.md).** It covers GitHub access/clone, Python/Ollama installation, the exact browser entry point, four consultation scenarios, local reports and troubleshooting. Use the [test record template](TEAM_TEST_RECORD_TEMPLATE_ZH.md) and [independent-case instructions](evaluation/INDEPENDENT_CASES_GUIDE_ZH.md). [Handoff verification and remaining work](TEAM_HANDOFF_RESULTS.md) separates local installation checks from actual teammate reproduction.
+
+After the first-time installation in that guide, the main commands are:
+
+```powershell
+.\.venv\Scripts\python.exe team_check.py --ollama
+.\.venv\Scripts\python.exe run_team_tests.py --tester YOUR_NAME
+.\.venv\Scripts\python.exe -m streamlit run streamlit_app.py
+```
+
+The app entry point is `streamlit_app.py`, launched with Streamlit. Local reports now default to timestamped files under ignored `team_results/`; `evaluate_v2_live.py --tester YOUR_NAME` preserves the committed historical results. These scripts do not automatically upload or notify anyone.
+
 **Status, 17 October 2026:** V2 formal Sugeno fuzzy ranking, optional safety/comfort/reliability priorities and scoped reference research are connected to the existing Agent and English Streamlit UI. See [V2 Chinese guide](V2_GUIDE_ZH.md), [acceptance and remaining gaps](V2_RESULTS.md) and [source audit](docs/V2_SOURCE_AUDIT.md). There are 7 research profiles for 6 model names, distinct from the unchanged 17 asking-price advertisements. Reliability values remain Unknown because evidence is insufficient. Ridge training/evaluation preparation exists, but no Malaysian price model has been trained or enabled. Independent evaluation, usable price-data expansion, cross-computer reproduction and final assignment materials remain pending.
 
 V2 is the default for Agent/UI and `main.py --rank`. Use `--ranking-policy v1` for the preserved weighted baseline; historical ranking evaluation files describe v1. The research tab never adds stock or makes budget-eligibility claims. Prices remain the 15 Oct snapshot; reference research was checked 16 Oct, not live inventory.
@@ -118,10 +130,10 @@ Use `main.py --help` for all options. Select exactly one of `--text` and `--fixt
 ## Verification
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest -q test_profile test_matching test_scoring test_valuation test_input_grounding test_stage5_audit test_negotiation test_agent test_streamlit_ui test_v2 test_price_regression
+.\.venv\Scripts\python.exe run_team_tests.py --tester YOUR_NAME
 ```
 
-The current suite has **184 passing tests**: 152 existing methods plus 32 V2 checks. Streamlit AppTest covers reruns, forms, all four result types and retained submissions with explicit Retry/Discard. Model replies are scripted and Python tools are real. Two final actual Ollama V2 turns passed; initial failures and their fixes are retained in [V2 results](V2_RESULTS.md). Earlier browser/Ollama manual-download evidence in [Stage 9 results](STAGE9_RESULTS.md) remains historical. These checks do not establish independent extraction/relevance, market-price or deal-success accuracy. Live evaluation requires Ollama; offline tests do not.
+On 19 Oct, **195 offline tests passed** in a fresh virtual environment using a staged-repository export: the earlier 184 tests plus 11 setup/report-preservation boundary tests. Two actual Ollama CLI turns and five tool-command checks also passed. See [handoff results and limitations](TEAM_HANDOFF_RESULTS.md) and the [machine-readable record](docs/handoff-20261019.json). This is an isolated installation on Ryan's computer, not teammate or cross-computer acceptance. Streamlit AppTest covers reruns, forms, all four result types and retained submissions with explicit Retry/Discard. Its model replies are scripted and Python tools are real. Earlier actual Ollama V2 turns and their failure/fix history remain in [V2 results](V2_RESULTS.md). These checks do not establish independent extraction/relevance, market-price or deal-success accuracy. Live evaluation requires Ollama; offline tests do not.
 
 ## Repository guide
 

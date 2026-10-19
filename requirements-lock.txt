@@ -1,5 +1,5 @@
 # Exact versions after installing the Stage 9 Streamlit UI.
-# Direct dependencies: pydantic, ollama and streamlit; remaining packages support them.
+# Direct dependencies: pydantic, ollama, streamlit and numpy; remaining packages support them.
 # Install into the project venv with: python -m pip install -r requirements-lock.txt
 altair==6.3.0
 annotated-types==0.8.0
