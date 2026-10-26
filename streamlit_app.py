@@ -5,7 +5,7 @@ Only explicit submit events run a turn. Browsing/rendering never calls a model.
 """
 from uuid import uuid4
 import streamlit as st
-from form_inputs import GOALS, fields_for, current_value, prepare_form
+from form_inputs import GOALS, USAGES, fields_for, current_value, prepare_form
 from ui_session import UISession, display_money, source_url, verified_result, inference_lock
 from vehicle_evidence import load_catalogue, evidence_for_vehicle
 
@@ -211,7 +211,7 @@ def render_trade(result):
 def render_form(ui, goal, busy):
     with st.expander('Add or update details with a form', expanded=not ui.history):
         st.caption('Blank = keep confirmed facts. Enter Unknown to clear a value. Enter 0 only for a confirmed zero; prices must be positive.')
-        st.caption('Driving use: City commuting, Family travel, Long-distance driving. Brand lists replace the previous list.')
+        st.caption('Driving use: selected uses replace confirmed uses. Empty keeps them; Unknown alone clears them. Brand lists replace the previous list.')
         with st.form(f'details_{goal}_{ui.generation}'):
             entries, previous_group = {}, None
             columns = None
@@ -225,7 +225,10 @@ def render_form(ui, goal, busy):
                 help_text = 'Confirmed: ' + str(current if current is not None else 'Unknown') + '. Blank keeps this fact.'
                 key = f'field_{goal}_{ui.generation}_{field.path}'
                 with columns[index % 2]:
-                    if field.kind in ('choice', 'boolean'):
+                    if field.kind == 'usage':
+                        selected = st.multiselect(field.label, [*USAGES, 'Unknown'], key=key, help=help_text, disabled=busy)
+                        entries[field.path] = ', '.join(selected)
+                    elif field.kind in ('choice', 'boolean'):
                         options = ['', 'Yes', 'No', 'Unknown'] if field.kind == 'boolean' else ['', *field.choices, 'Unknown']
                         entries[field.path] = st.selectbox(field.label, options, key=key, help=help_text, disabled=busy,
                                                           format_func=lambda value: 'Keep / not provided' if value == '' else value)
@@ -282,6 +285,10 @@ def main():
         active = {'buy': ui.controller.state.buyer, 'sell': ui.controller.state.seller,
                   'negotiate': ui.controller.state.negotiation, 'trade_in': ui.controller.state.trade_in}.get(ui.controller.state.goal)
         st.json(active.model_dump() if active else {}, expanded=False)
+        if ui.controller.state.goal == 'buy':
+            pending_usage = ui.controller.state.provenance.get('buyer.usage_pending')
+            if pending_usage:
+                st.caption('Use described: ' + pending_usage['evidence'] + ' (category awaiting clarification).')
     st.title('Vehicle Sales & Purchase Consultation')
     st.write('Find suitable vehicles, review asking-price evidence and compare negotiation or trade-in choices.')
     st.caption('Local Ollama + Python · Saved-source consultation · A consultation result does not execute a transaction.')

@@ -40,6 +40,13 @@ currency needs clarification. Keep evidence with its original currency and dista
 Manufacturing year differs from registration year. auto -> Automatic; only explicit D-CVT -> D-CVT.
 usage is a list of city_commute / family_travel / long_distance. fuel_priority and space_priority
 are high/medium/low; save fuel means high fuel priority, spacious boot means high space priority.
+For buyer.usage, commute/commuting means city_commute; family trips means family_travel;
+long distance travel/driving or road trips means long_distance. Extract new stated uses even
+when the previous context has another use. Bare travel is ambiguous; do not guess its category.
+An answer such as "family travel, maximum purchase rm20000" supplies family_travel and a
+MYR20000 budget even if the previous turn had a usage question. "comfortable" expresses
+high comfort priority. "safe fuel" is ambiguous between save fuel and safety; omit both
+fuel and safety updates until clarified, rather than guessing a correction to the wording.
 buyer.safety_priority, buyer.comfort_priority and buyer.reliability_priority are optional high/medium/low.
 Extract only explicitly named preferences. "Safety is important" means high safety; wanting a reliable
 car means high reliability. Comfort/reliability are attributed review references, never guarantees.

@@ -9,7 +9,8 @@ from pydantic import ValidationError
 from agent_state import SLOTS, set_slot, switch_goal
 from input_grounding import MONEY, NUMBER, number_value, budget_from_text, mileage_from_text, ground_seller, clause_before, clause_after
 from seller_profile import SellerVehicleFrame
-from input_grounding import ground_reference_priority, explicit_buyer_usages
+from input_grounding import ground_reference_priority, explicit_buyer_usages, explicit_priority_clear
+from buyer_usage import ground_usage_update, usage_replacement_requested, ambiguous_buyer_travel
 
 
 QUOTE_MONEY_SLOTS = {f'trade_in.{scope}.{field}' for scope in ('trade_in_replacement', 'private_sale_replacement', 'trade_in_quote', 'private_sale_quote') for field in ('price_myr', 'fees_myr')}
@@ -87,8 +88,12 @@ def grounded_value(update, message, state):
             value = int(value)
         if slot.endswith(('fuel_priority', 'space_priority', 'safety_priority', 'comfort_priority', 'reliability_priority', '.condition', '.role', '.priority')):
             value = value.casefold()
+    # A named absence of preference owns its meaning even when the model emits
+    # an invalid enum such as "no preference" instead of JSON null.
+    if explicit_priority_clear(evidence, slot):
+        return None
     if value is None:
-        if not re.search(r"\b(unknown|not sure|unsure|clear|remove|forget|don't know|do not know|no preference)\b", evidence, re.I):
+        if not re.search(r"\b(unknown|not sure|unsure|clear|remove|forget|don't know|do not know|no preference)\b", evidence, re.I) and not explicit_priority_clear(evidence, slot):
             raise ValueError('Missing values cannot erase a previous fact without an explicit correction or unknown statement.')
         return None
     position = message.casefold().find(evidence.casefold())
@@ -170,18 +175,7 @@ def grounded_value(update, message, state):
         if not isinstance(value, list) or any(v.casefold() not in evidence.casefold() for v in value):
             raise ValueError('Each brand must be explicitly stated.')
     if slot == 'buyer.usage':
-        aliases = {'city_commute': r'\bcity commut(?:e|ing)\b', 'family_travel': r'\bfamily (?:travel|trips?)\b',
-                   'long_distance': r'\blong[- ]distance (?:driv(?:e|ing)|travel)\b'}
-        supplied = [value] if isinstance(value, str) else value
-        if not isinstance(supplied, list):
-            raise ValueError('Please state city commuting, family travel or long-distance driving.')
-        # Normalize a scalar to the required list without adding a new fact.
-        if all(item in aliases for item in supplied):
-            return supplied
-        recovered = [label for label, expression in aliases.items() if re.search(expression, evidence, re.I)]
-        if recovered and not re.search(r"\b(not|don't|do not|without)\b", evidence, re.I):
-            return recovered
-        raise ValueError('Please clarify the stated driving usage.')
+        return ground_usage_update(value, evidence, update.operation, state.buyer.usage)
     return value
 
 
@@ -201,10 +195,16 @@ def apply_patch(state, patch, message):
             state.issues.pop('goal', None)
     elif state.goal is not None:
         state.issues.pop('goal', None)
+    ambiguous_fuel = state.goal == 'buy' and re.search(r'\bsafe\s+fuel\b', message, re.I)
+    accepted_priority_updates = set()
     prefixes = {'buy': ('buyer.',), 'sell': ('seller.',), 'negotiate': ('negotiation.',), 'trade_in': ('trade_in.',)}
     for update in patch.updates:
         slot = update.slot
-        if update.value is None and not (update.evidence.casefold() in message.casefold() and re.search(r"\b(unknown|not sure|unsure|clear|remove|forget|don't know|do not know|no preference)\b", update.evidence, re.I)):
+        if ambiguous_fuel and slot in ('buyer.fuel_priority', 'buyer.safety_priority'):
+            state.event('facts', action='defer_ambiguous_fuel_safety', slot=slot,
+                        reason="'safe fuel' does not establish either preference; ask what the user means.")
+            continue
+        if update.value is None and not (update.evidence.casefold() in message.casefold() and (re.search(r"\b(unknown|not sure|unsure|clear|remove|forget|don't know|do not know|no preference)\b", update.evidence, re.I) or explicit_priority_clear(update.evidence, slot))):
             state.event('facts', action='ignored_unstated_null', slot=slot)
             continue
         if slot not in SLOTS or not slot.startswith(prefixes.get(state.goal, ())):
@@ -224,6 +224,10 @@ def apply_patch(state, patch, message):
             continue
         try:
             value = grounded_value(update, message, state)
+            if slot == 'buyer.usage' and value == [] and update.value != []:
+                state.event('facts', action='ignored_prior_usage_context', slot=slot,
+                            reason='Copied prior uses have no current source evidence; confirmed memory is kept.')
+                continue
             operation = update.operation
             # An additional stated preference must not silently delete the
             # existing list. Full replacement requires an explicit cue.
@@ -231,6 +235,10 @@ def apply_patch(state, patch, message):
                 operation = 'add'
             set_slot(state, slot, value, operation)
             state.issues.pop(slot, None)
+            if slot in ('buyer.fuel_priority', 'buyer.safety_priority'):
+                accepted_priority_updates.add(slot)
+            if slot == 'buyer.usage':
+                state.provenance.pop('buyer.usage_pending', None)
             state.issues.pop('unsupported_fact', None)
             state.provenance[slot] = {'turn': state.turn, 'evidence': update.evidence, 'source': 'current user message'}
             state.event('facts', action='update', slot=slot, value=value, operation=operation, evidence=update.evidence)
@@ -241,7 +249,11 @@ def apply_patch(state, patch, message):
             # A failed correction invalidates the old field instead of letting
             # an obsolete amount silently drive a new recommendation.
             try:
-                set_slot(state, slot, [] if isinstance(SLOTS[slot], list) else None)
+                # A bad model proposal is not an instruction to erase uses the
+                # customer already confirmed. Current source words below can
+                # resolve the question even when model extraction fails.
+                if slot != 'buyer.usage':
+                    set_slot(state, slot, [] if isinstance(SLOTS[slot], list) else None)
             except (ValueError, ValidationError):
                 pass
             state.issues[slot] = str(error).split('\n')[0]
@@ -249,13 +261,67 @@ def apply_patch(state, patch, message):
             if slot.startswith('buyer.'):
                 state.ranked_vehicle_ids = []
                 state.selected_vehicle_id = None
-    if state.goal == 'buy' and not state.buyer.usage and 'buyer.usage' not in state.issues:
-        for label, phrase in explicit_buyer_usages(message):
-            set_slot(state, 'buyer.usage', [label], 'add')
+    if state.goal == 'buy':
+        # Explicit named clearing also works when the model omits the slot.
+        # It cannot clear another priority: "no safety preference" names safety.
+        for name in ('fuel', 'space', 'safety', 'comfort', 'reliability'):
+            slot = 'buyer.' + name + '_priority'
+            if explicit_priority_clear(message, slot):
+                set_slot(state, slot, None)
+                state.issues.pop(slot, None)
+                if slot in ('buyer.fuel_priority', 'buyer.safety_priority'):
+                    accepted_priority_updates.add(slot)
+                state.provenance[slot] = {'turn': state.turn, 'evidence': message,
+                                          'source': 'explicit named no-preference rule'}
+                state.event('rules', rule_id='BUY_CLEAR_PRIORITY', reason='The current message explicitly states no preference for this named priority.',
+                            evidence=message, derived_fact={slot: None})
+                state.ranked_vehicle_ids = []
+                state.selected_vehicle_id = None
+        # Recover omitted additions even when another use is already remembered.
+        # Explicit replacement wording still replaces rather than appending.
+        uses = explicit_buyer_usages(message)
+        replacement = usage_replacement_requested(message)
+        recovered = [label for label, _ in uses]
+        desired = recovered if replacement else list(dict.fromkeys(state.buyer.usage + recovered))
+        unresolved = 'buyer.usage' in state.issues
+        if uses and (desired != state.buyer.usage or unresolved):
+            set_slot(state, 'buyer.usage', desired)
+            state.issues.pop('buyer.usage', None)
+            state.provenance.pop('buyer.usage_pending', None)
+            phrase = message
             state.provenance['buyer.usage'] = {'turn': state.turn, 'evidence': phrase, 'source': 'current user message; explicit usage recovery'}
-            state.event('rules', rule_id='BUY_USAGE_SOURCE', reason='Recover an explicit affirmative usage phrase omitted by extraction.', evidence=phrase, derived_fact={'buyer.usage': label})
+            state.event('rules', rule_id='BUY_USAGE_SOURCE', reason='Accept current source-supported uses and resolve prior usage questions; preserve other confirmed uses unless replacement is explicit.', evidence=phrase, derived_fact={'buyer.usage': desired})
             state.ranked_vehicle_ids = []
             state.selected_vehicle_id = None
+        elif not uses and (phrase := ambiguous_buyer_travel(message)):
+            state.issues['buyer.usage'] = 'You mentioned travel. Is this family travel, city commuting, or long-distance driving?'
+            state.provenance['buyer.usage_pending'] = {'turn': state.turn, 'evidence': phrase,
+                                                       'source': 'current user message; category awaiting clarification'}
+        if uses:
+            # Also remove pending wording when the model already installed
+            # exactly these facts and there is no value change to recover.
+            state.provenance.pop('buyer.usage_pending', None)
+        if ambiguous_fuel:
+            state.issues['buyer.fuel_safety_wording'] = "By 'safe fuel', do you mean fuel economy ('save fuel'), vehicle safety, or both? Please state the preference explicitly, or say it is unknown."
+            state.provenance['buyer.fuel_safety_wording'] = {'turn': state.turn, 'evidence': ambiguous_fuel.group(),
+                                                            'source': 'current user message; meaning awaiting clarification'}
+        elif 'buyer.fuel_safety_wording' in state.issues:
+            # Resolve this wording question only from a new explicit answer.
+            # The usual source validation still owns the actual slot values.
+            answer = message.strip().casefold().rstrip('.!')
+            single_question = state.pending_slots == ['buyer.fuel_safety_wording']
+            if single_question and answer in ('both', 'both please', 'both are important'):
+                for slot in ('buyer.fuel_priority', 'buyer.safety_priority'):
+                    set_slot(state, slot, 'high')
+                    state.issues.pop(slot, None)
+                    state.provenance[slot] = {'turn': state.turn, 'evidence': message,
+                                              'source': 'direct answer to the sole pending fuel-economy / safety choice'}
+                state.event('rules', rule_id='BUY_FUEL_SAFETY_ANSWER', reason='Both refers to the sole pending fuel-economy and safety choice.',
+                            evidence=message, derived_fact={'buyer.fuel_priority': 'high', 'buyer.safety_priority': 'high'})
+            if (single_question and answer in ('both', 'both please', 'both are important', 'unknown', 'not sure')
+                    or accepted_priority_updates and re.search(r'\b(?:save fuel|fuel[- ]economy|fuel[- ]efficient|fuel priority|safety preference|safety priority|vehicle safety|safety[- ]equipment)\b', message, re.I)):
+                state.issues.pop('buyer.fuel_safety_wording', None)
+                state.provenance.pop('buyer.fuel_safety_wording', None)
     if state.goal == original_goal and state.goal in ('negotiate', 'trade_in'):
         # Old-vehicle quotes depend on identity. Preserve only amounts that
         # were explicitly refreshed in this same turn, plus user budget limits.

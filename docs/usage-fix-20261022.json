@@ -1,0 +1,128 @@
+{
+  "checked_on": "2026-10-22",
+  "scope": "Local development regression; not teammate/independent relevance or market calibration.",
+  "source": {
+    "git_commit": "656d17489ac6eb707b9c5b5e5686bf613fd51992",
+    "tracked_changes": true,
+    "code_and_data_sha256": "d30cbe20a455469406d27e06d46851a7d815f9db38fadb019f510329bdd3a905",
+    "file_sha256": {
+      ".streamlit/config.toml": "decea453c9e5e7e36e3a876b653a84c6f33790ae3ee5d94968d66c4f2a23ed1f",
+      "agent_cli.py": "c0daefddcb8a2f9b64998fc525e21f5e35e8b81219d971c9db917abccdb09e57",
+      "agent_controller.py": "e6c82bf74823c1115a62e976da35436f4313cf345923caafb8109dde1fcc1ab0",
+      "agent_grounding.py": "0e3631697946dd93a11cf06a68afbfc6d81d010f068cef4ee5afb299778823c4",
+      "agent_state.py": "508837fb5f9d0b2de3385afa079bb37b736f65585b229b7ac22d234d4bc2291b",
+      "agent_tools.py": "6acb467a09685a21566858001af637d2c5ff8c1df4b2c2059262b24728147c83",
+      "audit_input_cases.py": "c571856ded739ac342a2042fc4108c5ade04289c1a620dad0bf7ae963f95f0c0",
+      "audit_v2.py": "ad945b87270a47f9b65e17cd9477545665eee9549a648a79f1eaec23095b5dc1",
+      "buyer_profile.py": "5f5d95408bf85610abac5994ace3db68b150ad4126cbd83a8e71b22f027a8aa1",
+      "buyer_usage.py": "0d888410954777c3372751ff73e077ea29c6ec969b6f892cae55aae22b2866fb",
+      "check_data_quality.py": "8d7ae4710b74598c035465c419df5e751beebbd8a4548c78e6a9709b5033e7f6",
+      "consultation_frames.py": "0377f02dc5e646ae3d96f7167215c0be351694f35fc4a8ccccacde9b10a9731f",
+      "data/model_evidence_v2.json": "eebc1918231d69891a3423c26ff8043438ec5461697ad2a1546517575733bde5",
+      "data/regression_manifest.json": "750364697ba30d1d92c0f49509932f9256f6cf75ebaf5ed5200001f028b4aaed",
+      "data/vehicles_real.json": "87fdd93730d22499a8fcdacee1e76c684d82e9c1c295d30f7ad0a9852110c0f1",
+      "evaluate_agent.py": "80f416f854421a4b3720d3de8901509345d257df9a6b548f168142d4ec7a2360",
+      "evaluate_extraction.py": "b89b951c4b7d4bd837b8107e391b74c917cb22a8f3eec5bf981e1e8235488ef5",
+      "evaluate_input_fix.py": "87ad15861999de02a5d7802569ef9059e1212cfd1c84c2c9a529ecbee42cfa89",
+      "evaluate_negotiation.py": "9af31b1fad3b525122e5646987369aa36604e7f440662bae896f0779266c091b",
+      "evaluate_ranking.py": "0af46a442adf5543eca083056cbdae7372841784077ad063a077fd93f74bec40",
+      "evaluate_stage5_stage6.py": "1da574f430cfb04d7aae94b7659d78220928092206c3ec6edd6a0f99e1d807d7",
+      "evaluate_v2_live.py": "827eb6d4a016bc27728e5a68642181933475af5c22a6254320cdf02059cb1ca1",
+      "evaluate_valuation.py": "3ab2f083f7031c7f5ecffee1ffa733b91dbff25b4d9f5114e336bde4e6d7b565",
+      "form_inputs.py": "b53cf9d1db6b81197003c6787fa9bfad5a52f70841f46f0834d6cad8fd8ee651",
+      "fuzzy_lifestyle.py": "5165c1860f76053d59f3c858bbdbe29249e2061f5b51ab4144aca73683c6904d",
+      "input_grounding.py": "302c5b2eca23ad37e042c77e51008ccc38185d198876debe3ec35b87fb5bb789",
+      "lifestyle_v2.py": "5d9a615108e11d02b2481a3c541ddfff6377bfd525e88de7148b1f0c39be17b7",
+      "main.py": "251611e87c7a60b60582304c3decdf4566223c5633449aa53a07062beb195e92",
+      "matching.py": "fedaccb45f2d1f48b3717c7e2e0993facb55b4dbc37a012a607c24abe7fa46dc",
+      "negotiation.py": "0f808b161eeb12cc8c819f0bff2eaf271e46c66fda35dea214488b03e578f35f",
+      "price_regression.py": "65e75dfff168519411c9bb56178d9e69855ec2dcbf800dd7c8c9fc9a335ed6b2",
+      "requirements-lock.txt": "e55e4e13c13ad59bf89c2efeb2e3fc7102348857cc56b87f84cdc572d25d373b",
+      "run_team_tests.py": "ce4674372e3887ce2e2d789e5fb3145f2993c7fcca1e0af3f82fa3730cfd6820",
+      "scoring.py": "073989498d838346539ca1a39ea3f9212d88ce96305510dfbeffc10b22de477c",
+      "seller_profile.py": "24335545ab51c7aa828992b0bab47b70b1fce6efe01eeccdbbcac7a4440271f9",
+      "streamlit_app.py": "7abcca7fd58b0388e4118b63520f07e4daec5ec3085e3029afab9f4d4b0d4de7",
+      "team_check.py": "91d411d70c3843fa22bd6ad46733fe106eb6356f26d38bf0269d4ae6d58ae05e",
+      "test_agent.py": "771a324ae76d11b00a4ba3ee906d193ab69bfd3f8aea5ceb28cc2d9d0317e4ad",
+      "test_buyer_usage.py": "8628ca402fff039e0a7c84f67776622b94933d0eeb8476f165f67254bddbec8b",
+      "test_input_grounding.py": "36f204c27b930d8fd4b833861c491d62e4fc1dee0126b26a4455fda270f30b59",
+      "test_matching.py": "dc1629c704fc762bef6759c7a4c5d80148d9da4ace1d1d9bf83dd97265ec5889",
+      "test_negotiation.py": "bf4d58ad639b03319b1f2c8190d0345e287fc78d3c00f24e9b862da4b14a4626",
+      "test_price_regression.py": "962eb305b4b32453c720e21a4035bbef4ac6ff4ca64273ce85aca18bdc3fb763",
+      "test_profile.py": "98d312bd3f221406fd4ac427e0b3adbf7bd767ff8d8ee8b54d7c96fb08d81659",
+      "test_scoring.py": "2112972f4c4a1203e9df07e248d17a22c8dfadd5d896b0141fec2934e227952a",
+      "test_stage5_audit.py": "75779c178d17f117a51db3065c57c89ac6f58de2b2f353f906b033d1e2cdd482",
+      "test_streamlit_ui.py": "1b97012af759d089dd3e56c5fdda9c930af676dccf2e8f02bea5aceb951fa97c",
+      "test_team_tools.py": "c03a1b6f52205f715e906742132614be2a041a512411e3ce394236118f2070b9",
+      "test_v2.py": "63e386d5a14bdf7869b0d5fbc3de36369fbe85527e6f6dd0a6d1ebbd24f7779c",
+      "test_valuation.py": "432792ff4b2dbe56b62a5f0836ce8830f0740967713b1bfb2304b46d7cb4f348",
+      "trade_in.py": "6cbbba27af771a5dcd9bba4e0c29a1615c28b3b98dd1e35925dfd4abe45eee80",
+      "ui_session.py": "b2f6c4aeee1d88b29448263ccfbc145a2407dcaec5a7b4c347f45b0df40dab3c",
+      "valuation.py": "58283f1258e9058fe46faaee005f596fb0143fb9859dd1fea231ad42f61e5c63",
+      "vehicle_evidence.py": "4e16d2b48024f6a9cb4eb73bdc3ff65d26d0a1566b363fbb44ffb0d576cd16e2",
+      "vehicle_frame.py": "9f5b6b9fbd5896b8ebeb4b3d44df139914ac1f7b8cdc1ce5c19cf14b4c3e2015"
+    }
+  },
+  "offline": {
+    "ran_at": "2026-10-22T10:59:45.854223+08:00",
+    "tester": "local-usage-fix",
+    "scope": "Offline engineering regression; model replies scripted; no independent relevance or market-accuracy claim.",
+    "tests_run": 213,
+    "passed": true,
+    "elapsed_seconds": 21.183,
+    "failures": [],
+    "errors": [],
+    "skipped": []
+  },
+  "actual_ollama": {
+    "model": "qwen3:4b",
+    "passed": true,
+    "turns": [
+      {
+        "input": "i want a long distance travel",
+        "checks": {
+          "complete": true,
+          "usage": true,
+          "budget_kept": true,
+          "fuel_kept": true,
+          "checked_tools": true
+        },
+        "passed": true,
+        "seconds": 31.03
+      },
+      {
+        "input": "I want to buy a car.\nReplace Driving use with Family travel, Long-distance driving.",
+        "checks": {
+          "complete": true,
+          "usage": true,
+          "budget_kept": true,
+          "fuel_kept": true,
+          "checked_tools": true
+        },
+        "passed": true,
+        "seconds": 21.51
+      }
+    ]
+  },
+  "browser": {
+    "passed": true,
+    "scope": "One actual form submission with RM60000 / five seats and both city/long-distance selections; complete response and both enum values visible in expanded confirmed facts.",
+    "screenshot": "docs/usage-fix-ui-20261022.jpg",
+    "download_verified": false
+  },
+  "development_failures": [
+    "First temporary live harness missed a Windows multiprocessing main guard; preserved failed/incomplete report is not an Agent pass.",
+    "Next actual model copied an old usage together with the new one; first turn rejected as needing clarification. Source grounding now ignores known duplicates and validates only supported new uses.",
+    "Initial alias test overconstrained list order; changed to compare membership because usage order is not part of the contract."
+  ],
+  "raw_reports_sha256": {
+    "usage-fix-20261022-final-offline.json": "2d8f2f673273b03c327ed1642d7070c1f7cac95572f541ae0e22a35402435abd",
+    "usage-fix-20261022-final-live.json": "225816187c2902ddaa0554d3fdc5be36c24d3af23534334159f811b4e9b6e408"
+  },
+  "data_changes": {
+    "active_inventory_changed": false,
+    "regression_enabled": false,
+    "kaggle_candidate": "docs/kaggle-candidate-quality-20261022.json"
+  },
+  "git_delivery": "Local working changes; no commit/push performed for this fix."
+}

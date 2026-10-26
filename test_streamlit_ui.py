@@ -205,8 +205,9 @@ class StreamlitAppTests(unittest.TestCase):
     def test_buy_form_submit_results_and_reset(self):
         ui = session('inspect_requirements', 'rank_vehicles', 'check_result', 'finish')
         app = self.mount(ui)
-        for path, value in {'buyer.budget_myr': '60000', 'buyer.family_size': '6', 'buyer.usage': 'City commuting'}.items():
+        for path, value in {'buyer.budget_myr': '60000', 'buyer.family_size': '6'}.items():
             app.text_input(key='field_buy_0_' + path).set_value(value)
+        app.multiselect(key='field_buy_0_buyer.usage').set_value(['City commuting'])
         next(button for button in app.button if button.label == 'Submit details to Agent').click().run()
         self.assertFalse(app.exception)
         self.assertEqual(ui.last_response['status'], 'complete')

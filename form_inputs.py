@@ -7,11 +7,11 @@ from dataclasses import dataclass
 from decimal import Decimal
 import re
 from agent_state import SessionState, SlotUpdate, TurnPatch, set_slot, switch_goal
+from buyer_usage import USAGES, parse_usage_list
 
 GOALS = {'buy': 'Buy', 'sell': 'Sell', 'negotiate': 'Negotiation', 'trade_in': 'Trade-In'}
 INTENTS = {'buy': 'I want to buy a car.', 'sell': 'I want to sell my car.',
            'negotiate': 'I want to negotiate.', 'trade_in': 'I want to compare trade-in with private sale.'}
-USAGES = {'City commuting': 'city_commute', 'Family travel': 'family_travel', 'Long-distance driving': 'long_distance'}
 
 
 @dataclass(frozen=True)
@@ -33,7 +33,7 @@ def fields_for(goal):
                 FormField('buyer.family_size', 'Household size (people)', 'integer'),
                 FormField('buyer.household_travels_together', 'Will all household members travel together?', 'boolean'),
                 FormField('buyer.required_seats', 'Minimum seats required', 'integer'),
-                FormField('buyer.usage', 'Driving use (comma separated)', 'usage'),
+                FormField('buyer.usage', 'Driving use', 'usage'),
                 FormField('buyer.fuel_priority', 'Fuel-economy priority', 'choice', ('high', 'medium', 'low')),
                 FormField('buyer.space_priority', 'Luggage-space priority', 'choice', ('high', 'medium', 'low')),
                 FormField('buyer.safety_priority', 'Safety-equipment priority', 'choice', ('high', 'medium', 'low')),
@@ -167,8 +167,7 @@ def prepare_form(goal, entries, state=None, *, mileage_unit='km'):
             elif field.kind in ('brands', 'usage'):
                 value = list(dict.fromkeys(part.strip() for part in text.split(',') if part.strip()))
                 if field.kind == 'usage':
-                    aliases = {key.casefold(): value for key, value in USAGES.items()} | {value: value for value in USAGES.values()}
-                    value = [aliases[item.casefold()] for item in value]
+                    value = parse_usage_list(text)
             else:
                 if len(text) > 120 or any(c in text for c in '\n\r;'):
                     raise ValueError('Enter a short single-line identity value.')

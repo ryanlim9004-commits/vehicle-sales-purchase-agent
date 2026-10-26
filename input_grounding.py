@@ -9,6 +9,7 @@ Unsupported or conflicting expressions are clarified rather than guessed.
 # Return unknown plus a question when evidence is missing, conflicting or unsupported.
 import re
 from decimal import Decimal
+from buyer_usage import explicit_buyer_usages
 
 # Regex named groups preserve the written number together with its unit or
 # currency. Decimal conversion happens only after the surrounding role is checked.
@@ -212,18 +213,12 @@ def ground_seller(text, profile):
 
 # Ground total budget and household travel, conservatively recover explicit seats/use, and keep
 # unrelated known facts.
-def explicit_buyer_usages(text):
-    # Recover only narrow, affirmative source phrases when a small LLM omits
-    # the usage slot. Keep the exact phrase for the facts/rules evidence trace.
-    recovered = []
-    for label, pattern in [('city_commute', r'\bcity commut(?:e|ing)\b'),
-                           ('family_travel', r'\bfamily (?:travel|trips?)\b'),
-                           ('long_distance', r'\blong[- ]distance (?:driv(?:e|ing)|travel)\b')]:
-        for match in re.finditer(pattern, text, re.I):
-            if not re.search(r"\b(not|no|don't|do not|without|remove|forget|avoid)\b", clause_before(text, match.start()), re.I):
-                recovered.append((label, match.group()))
-                break
-    return recovered
+def explicit_priority_clear(evidence, slot):
+    """Recognize a named no-preference answer without clearing another slot."""
+    names = {'buyer.fuel_priority': 'fuel', 'buyer.space_priority': '(?:space|luggage)',
+             'buyer.safety_priority': 'safety', 'buyer.comfort_priority': 'comfort',
+             'buyer.reliability_priority': 'reliability'}
+    return slot in names and bool(re.search(r'\bno\s+' + names[slot] + r'\s+preference\b', evidence, re.I))
 
 
 def ground_reference_priority(evidence, field, value, *, pending=False):
@@ -285,8 +280,8 @@ def ground_buyer(text, profile):
         if len(set(counts))==1:
             data['required_seats']=counts[0]
             evidence.append('Recovered an explicit seat-count requirement from the original message.')
-    if not data['usage']:
-        for label, phrase in explicit_buyer_usages(text):
+    for label, phrase in explicit_buyer_usages(text):
+        if label not in data['usage']:
             data['usage'].append(label)
             evidence.append(f'Recovered explicit usage phrase: {phrase}.')
     data['clarification_notes']=list(dict.fromkeys(questions))

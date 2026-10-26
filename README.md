@@ -2,6 +2,10 @@
 
 An educational Python + Ollama project for used-vehicle consultation in Malaysia. Application prompts, inputs and outputs use English; accompanying Chinese lessons explain the implementation for beginners.
 
+**26 Oct update:** [Buy follow-up clarification fix](BUY_FOLLOWUP_FIX_20261026_ZH.md) resolves stale driving-use questions, preserves stated travel wording, clarifies ambiguous "safe fuel" and handles named no-preference answers in chat and forms. All 232 offline tests and the final three-turn actual Ollama replay passed; actual browser conversation evidence and earlier failures are retained separately. [Malaysia dataset integration plan](DATA_IMPORT_PLAN_ZH.md) explains the existing JSON storage and proposed historical candidate pipeline; no SQL Server installation is needed. Historical Kaggle rows are not activated stock or approved regression training data. Verification records identify the development source before its subsequent Git delivery.
+
+**22 Oct development record:** [Driving-use memory and form fix](USAGE_FIX_20261022_ZH.md): 213 offline checks and two actual Ollama checks passed. Driving use is now a multiselect. [Kaggle candidate review](docs/KAGGLE_RESEARCH_20261022.md) rejects the supplied synthetic dataset and records a quarantined historical Malaysian alternative; active stock and regression approval are unchanged. These are historical checks; the 26 Oct record describes the later fix.
+
 **New teammates: start with the [step-by-step Windows setup and test guide](TEAM_GUIDE_ZH.md).** It covers GitHub access/clone, Python/Ollama installation, the exact browser entry point, four consultation scenarios, local reports and troubleshooting. Use the [test record template](TEAM_TEST_RECORD_TEMPLATE_ZH.md) and [independent-case instructions](evaluation/INDEPENDENT_CASES_GUIDE_ZH.md). [Handoff verification and remaining work](TEAM_HANDOFF_RESULTS.md) separates local installation checks from actual teammate reproduction.
 
 After the first-time installation in that guide, the main commands are:

@@ -1,6 +1,6 @@
 # 组员从 GitHub 到实际测试：手把手指南
 
-更新：2026-10-19。适用：Windows 10 22H2／Windows 11、普通64-bit Python 3.13、PowerShell。本次先验证 Windows x64；其他系统的实际结果需要另外记录。
+更新：2026-10-26。适用：Windows 10 22H2／Windows 11、普通64-bit Python 3.13、PowerShell。本次先验证 Windows x64；其他系统的实际结果需要另外记录。最新重复追问修复见[说明](BUY_FOLLOWUP_FIX_20261026_ZH.md)，数据接入方式见[说明](DATA_IMPORT_PLAN_ZH.md)；本机改动是否已推送以实际Git版本为准。
 
 **组员先看本文件。网页启动入口是 `streamlit_app.py`。** GitHub 保存代码；每个人下载到自己的电脑，启动自己的 Ollama 和网页服务，再用浏览器测试。Ryan 电脑上的 `127.0.0.1` 地址在另一台电脑上不会连接到 Ryan。
 
@@ -172,7 +172,7 @@ ollama serve
 
 把 `YOUR_NAME` 换成实际测试者名称。这个指令自动找出全部 `test_*.py`，不需要自己逐个打开。离线测试不用Ollama；其中Agent／UI测试使用预设模型回复，但Python业务工具实际执行。
 
-成功标准：末尾显示 `OK`，报告中 `passed` 为 `true`，`failures` 和 `errors` 都为空。当前交接版预期195项（原184项加11项交接工具测试）；日后新增测试可能改变数量，必须同时记录commit。
+成功标准：末尾显示 `OK`，报告中 `passed` 为 `true`，`failures` 和 `errors` 都为空。26Oct本机修复版预期232项（19Oct交接版195项、22Oct的18项用途测试及26Oct的19项追问测试）；日后新增测试可能改变数量，必须同时记录commit和本机是否修改过代码。
 
 最后会打印 `Offline report: ...`，例如 `team_results\offline-日期时间.json`。把实际路径记下来。若出现FAIL或ERROR，保留报告和终端输出，不修改预期值来凑通过。
 
@@ -198,6 +198,7 @@ http://127.0.0.1:8501
 |---|---|
 | Sidebar → Consultation area | 选择Buy、Sell、Negotiation、Trade-In；提交资料才执行咨询 |
 | Consultation | 输入英文；也可以打开 `Add or update details with a form` 补资料 |
+| 表单 → Driving use | 多选City commuting／Family travel／Long-distance driving。非空选择替换旧用途；留空保留，Unknown单独清空，无需输入逗号 |
 | Results & comparison | 查看当前经过工具检查的候选／计算结果 |
 | Evidence & checks | 查看Facts、Rules、实际Tools和Checks；保留通过及失败记录 |
 | Vehicle research | 浏览有来源的研究资料；价格、费用、库存未知，不会因此变成可购买候选 |
@@ -238,6 +239,18 @@ Change my vehicle-price budget to RM55000. Luggage-space priority is high. Exclu
 核对：预算已改，其他偏好保留；候选价格不超过55000，座位至少5，不含Toyota；Results显示分数、资料覆盖和未知项。展开Fuzzy rules，可查看资料足够时的九条规则、权重和来源。缺必要输入时不编造中等值。可靠性目前应为Unknown。
 
 5. 辅助表单也要检查一次：只把Budget改为50000，其他字段留空／Keep，点击Submit details to Agent。Confirmed facts中未修改的条件应保留；实际工具和Checks仍应有记录。
+
+6. 另开一个新咨询，逐句发送以下三行，检查26Oct修复的重复追问：
+
+```text
+I want to buy a car. i want a car with 4 seat, for travel use, comfortable, safe fuel
+family travel, maximum purchase rm20000
+I mean save fuel: fuel economy is important. I have no safety preference.
+```
+
+第一句的 `travel` 没有说明是哪类用途，应显示待确认的原词，并询问用途与预算；`safe fuel` 可能指 `save fuel`（省油）或安全，应该询问。第二句应保存 `family_travel` 和20000，不应再次询问用途。第三句后应保留至少4座／舒适／省油，不凭空加安全偏好；现有快照没有符合RM20000的车，应显示 `no_matches`，不能提高预算。至少4座也允许5座或7座，不要求汽车恰好4座。
+
+若刚更新了Python模块，先手动导出要保留的会话，在启动网页的PowerShell窗口按 `Ctrl+C`，再重新运行本指南的Streamlit启动命令；随后刷新网页并开始新咨询。仅刷新浏览器可能仍使用旧进程里已导入的代码。
 
 ### B. 卖车与里程单位
 

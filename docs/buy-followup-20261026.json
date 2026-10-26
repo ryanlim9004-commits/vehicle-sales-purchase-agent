@@ -1,0 +1,399 @@
+{
+  "verified_at": "2026-10-26T12:19:49.696136+08:00",
+  "scope": "Local Buy bug-fix verification; not independent recommendation evaluation or market accuracy.",
+  "source": {
+    "git_commit": "656d17489ac6eb707b9c5b5e5686bf613fd51992",
+    "tracked_changes": true,
+    "code_and_data_sha256": "100acf03117b4ccc35c29a1252225da3e1b627d2497e0005bd35dec0ffe79c01",
+    "file_sha256": {
+      ".streamlit/config.toml": "decea453c9e5e7e36e3a876b653a84c6f33790ae3ee5d94968d66c4f2a23ed1f",
+      "agent_cli.py": "c0daefddcb8a2f9b64998fc525e21f5e35e8b81219d971c9db917abccdb09e57",
+      "agent_controller.py": "cfee9c47150b672160e34c2c83e5ecc34f9b87e06e6845e595b654c1e746463e",
+      "agent_grounding.py": "9c1544f13491ab1b05183ea1d639c23d64f24ab69311fe7533be790e98b96ec7",
+      "agent_state.py": "508837fb5f9d0b2de3385afa079bb37b736f65585b229b7ac22d234d4bc2291b",
+      "agent_tools.py": "6acb467a09685a21566858001af637d2c5ff8c1df4b2c2059262b24728147c83",
+      "audit_input_cases.py": "c571856ded739ac342a2042fc4108c5ade04289c1a620dad0bf7ae963f95f0c0",
+      "audit_v2.py": "ad945b87270a47f9b65e17cd9477545665eee9549a648a79f1eaec23095b5dc1",
+      "buyer_profile.py": "5f5d95408bf85610abac5994ace3db68b150ad4126cbd83a8e71b22f027a8aa1",
+      "buyer_usage.py": "873c4a30f3480646bd2deb57f006767a36e6742376c4058c8dce776133535d58",
+      "check_data_quality.py": "8d7ae4710b74598c035465c419df5e751beebbd8a4548c78e6a9709b5033e7f6",
+      "consultation_frames.py": "0377f02dc5e646ae3d96f7167215c0be351694f35fc4a8ccccacde9b10a9731f",
+      "data/model_evidence_v2.json": "eebc1918231d69891a3423c26ff8043438ec5461697ad2a1546517575733bde5",
+      "data/regression_manifest.json": "750364697ba30d1d92c0f49509932f9256f6cf75ebaf5ed5200001f028b4aaed",
+      "data/vehicles_real.json": "87fdd93730d22499a8fcdacee1e76c684d82e9c1c295d30f7ad0a9852110c0f1",
+      "evaluate_agent.py": "80f416f854421a4b3720d3de8901509345d257df9a6b548f168142d4ec7a2360",
+      "evaluate_extraction.py": "b89b951c4b7d4bd837b8107e391b74c917cb22a8f3eec5bf981e1e8235488ef5",
+      "evaluate_input_fix.py": "87ad15861999de02a5d7802569ef9059e1212cfd1c84c2c9a529ecbee42cfa89",
+      "evaluate_negotiation.py": "9af31b1fad3b525122e5646987369aa36604e7f440662bae896f0779266c091b",
+      "evaluate_ranking.py": "0af46a442adf5543eca083056cbdae7372841784077ad063a077fd93f74bec40",
+      "evaluate_stage5_stage6.py": "1da574f430cfb04d7aae94b7659d78220928092206c3ec6edd6a0f99e1d807d7",
+      "evaluate_v2_live.py": "827eb6d4a016bc27728e5a68642181933475af5c22a6254320cdf02059cb1ca1",
+      "evaluate_valuation.py": "3ab2f083f7031c7f5ecffee1ffa733b91dbff25b4d9f5114e336bde4e6d7b565",
+      "form_inputs.py": "b53cf9d1db6b81197003c6787fa9bfad5a52f70841f46f0834d6cad8fd8ee651",
+      "fuzzy_lifestyle.py": "5165c1860f76053d59f3c858bbdbe29249e2061f5b51ab4144aca73683c6904d",
+      "input_grounding.py": "c90c4142f50d6a7472e58ca413124df8c2a7ad69f99c0920e8088f731c3ce8e9",
+      "lifestyle_v2.py": "5d9a615108e11d02b2481a3c541ddfff6377bfd525e88de7148b1f0c39be17b7",
+      "main.py": "251611e87c7a60b60582304c3decdf4566223c5633449aa53a07062beb195e92",
+      "matching.py": "fedaccb45f2d1f48b3717c7e2e0993facb55b4dbc37a012a607c24abe7fa46dc",
+      "negotiation.py": "0f808b161eeb12cc8c819f0bff2eaf271e46c66fda35dea214488b03e578f35f",
+      "price_regression.py": "65e75dfff168519411c9bb56178d9e69855ec2dcbf800dd7c8c9fc9a335ed6b2",
+      "requirements-lock.txt": "e55e4e13c13ad59bf89c2efeb2e3fc7102348857cc56b87f84cdc572d25d373b",
+      "run_team_tests.py": "ce4674372e3887ce2e2d789e5fb3145f2993c7fcca1e0af3f82fa3730cfd6820",
+      "scoring.py": "073989498d838346539ca1a39ea3f9212d88ce96305510dfbeffc10b22de477c",
+      "seller_profile.py": "24335545ab51c7aa828992b0bab47b70b1fce6efe01eeccdbbcac7a4440271f9",
+      "streamlit_app.py": "2462fd17af3563cd0ebae8231be0dc5df7b441cb9f981d4d5d52c5c3b52eb30d",
+      "team_check.py": "91d411d70c3843fa22bd6ad46733fe106eb6356f26d38bf0269d4ae6d58ae05e",
+      "test_agent.py": "771a324ae76d11b00a4ba3ee906d193ab69bfd3f8aea5ceb28cc2d9d0317e4ad",
+      "test_buy_followup.py": "3ebd06ae9226a3a29874d9c31ee7eb23ee6e99422706e3960a3d71f3706a319d",
+      "test_buyer_usage.py": "8628ca402fff039e0a7c84f67776622b94933d0eeb8476f165f67254bddbec8b",
+      "test_input_grounding.py": "36f204c27b930d8fd4b833861c491d62e4fc1dee0126b26a4455fda270f30b59",
+      "test_matching.py": "dc1629c704fc762bef6759c7a4c5d80148d9da4ace1d1d9bf83dd97265ec5889",
+      "test_negotiation.py": "bf4d58ad639b03319b1f2c8190d0345e287fc78d3c00f24e9b862da4b14a4626",
+      "test_price_regression.py": "962eb305b4b32453c720e21a4035bbef4ac6ff4ca64273ce85aca18bdc3fb763",
+      "test_profile.py": "98d312bd3f221406fd4ac427e0b3adbf7bd767ff8d8ee8b54d7c96fb08d81659",
+      "test_scoring.py": "2112972f4c4a1203e9df07e248d17a22c8dfadd5d896b0141fec2934e227952a",
+      "test_stage5_audit.py": "75779c178d17f117a51db3065c57c89ac6f58de2b2f353f906b033d1e2cdd482",
+      "test_streamlit_ui.py": "1b97012af759d089dd3e56c5fdda9c930af676dccf2e8f02bea5aceb951fa97c",
+      "test_team_tools.py": "c03a1b6f52205f715e906742132614be2a041a512411e3ce394236118f2070b9",
+      "test_v2.py": "63e386d5a14bdf7869b0d5fbc3de36369fbe85527e6f6dd0a6d1ebbd24f7779c",
+      "test_valuation.py": "432792ff4b2dbe56b62a5f0836ce8830f0740967713b1bfb2304b46d7cb4f348",
+      "trade_in.py": "6cbbba27af771a5dcd9bba4e0c29a1615c28b3b98dd1e35925dfd4abe45eee80",
+      "ui_session.py": "b2f6c4aeee1d88b29448263ccfbc145a2407dcaec5a7b4c347f45b0df40dab3c",
+      "valuation.py": "58283f1258e9058fe46faaee005f596fb0143fb9859dd1fea231ad42f61e5c63",
+      "vehicle_evidence.py": "4e16d2b48024f6a9cb4eb73bdc3ff65d26d0a1566b363fbb44ffb0d576cd16e2",
+      "vehicle_frame.py": "9f5b6b9fbd5896b8ebeb4b3d44df139914ac1f7b8cdc1ce5c19cf14b4c3e2015"
+    }
+  },
+  "offline": {
+    "path": "team_results/buy-followup-20261026-final-offline-v3.json",
+    "sha256": "6e43d455b82c68003c0b45d51e9fb6d4135c94ab9bccbe7e946d2d66da03f697",
+    "tests_run": 232,
+    "passed": true,
+    "elapsed_seconds": 20.805
+  },
+  "actual_ollama_serial": {
+    "path": "team_results/buy-followup-20261026-after-v4-final.json",
+    "sha256": "e5c6c103e2190f6b731b183b2bcc988c238c955bcdda0cddd5109ae040d7ea24",
+    "checked_at": "2026-10-26T12:18:18.739925+08:00",
+    "passed": true,
+    "turns": [
+      {
+        "input": "I want to buy a car. i want a car with 4 seat, for travel use, comfortable, safe fuel",
+        "seconds": 27.51,
+        "status": "needs_clarification",
+        "buyer": {
+          "budget_myr": null,
+          "family_size": null,
+          "household_travels_together": null,
+          "required_seats": 4,
+          "usage": [],
+          "fuel_priority": null,
+          "space_priority": null,
+          "safety_priority": null,
+          "comfort_priority": "high",
+          "reliability_priority": null,
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": [],
+          "input_validation_notes": []
+        },
+        "pending": [
+          "buyer.usage",
+          "buyer.fuel_safety_wording",
+          "buyer.budget_myr"
+        ],
+        "issues": {
+          "buyer.usage": "You mentioned travel. Is this family travel, city commuting, or long-distance driving?",
+          "buyer.fuel_safety_wording": "By 'safe fuel', do you mean fuel economy ('save fuel'), vehicle safety, or both? Please state the preference explicitly, or say it is unknown."
+        }
+      },
+      {
+        "input": "family travel, maximum purchase rm20000",
+        "seconds": 20.99,
+        "status": "needs_clarification",
+        "buyer": {
+          "budget_myr": 20000.0,
+          "family_size": null,
+          "household_travels_together": null,
+          "required_seats": 4,
+          "usage": [
+            "family_travel"
+          ],
+          "fuel_priority": null,
+          "space_priority": null,
+          "safety_priority": null,
+          "comfort_priority": "high",
+          "reliability_priority": null,
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": [],
+          "input_validation_notes": []
+        },
+        "pending": [
+          "buyer.fuel_safety_wording"
+        ],
+        "issues": {
+          "buyer.fuel_safety_wording": "By 'safe fuel', do you mean fuel economy ('save fuel'), vehicle safety, or both? Please state the preference explicitly, or say it is unknown."
+        }
+      },
+      {
+        "input": "I mean save fuel: fuel economy is important. I have no safety preference.",
+        "seconds": 30.31,
+        "status": "complete",
+        "buyer": {
+          "budget_myr": 20000.0,
+          "family_size": null,
+          "household_travels_together": null,
+          "required_seats": 4,
+          "usage": [
+            "family_travel"
+          ],
+          "fuel_priority": "high",
+          "space_priority": null,
+          "safety_priority": null,
+          "comfort_priority": "high",
+          "reliability_priority": null,
+          "preferred_brands": [],
+          "excluded_brands": [],
+          "clarification_notes": [],
+          "input_validation_notes": []
+        },
+        "pending": [],
+        "issues": {}
+      }
+    ],
+    "result_status": "no_matches",
+    "constraints": {
+      "maximum_price_myr": 20000.0,
+      "minimum_seats": 4,
+      "excluded_brands": []
+    },
+    "checks": [
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "finite_json_result",
+        "passed": true
+      },
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "current_ranking_policy",
+        "passed": true
+      },
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "canonical_scoring_weights",
+        "passed": true
+      },
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "canonical_raw_scoring_weights",
+        "passed": true
+      },
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "canonical_scoring_anchors",
+        "passed": true
+      },
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "canonical_evidence_as_of",
+        "passed": true
+      },
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "canonical_evidence_reviewed_on",
+        "passed": true
+      },
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "canonical_top_vehicle_ids",
+        "passed": true
+      },
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "all_eligible_ids_once",
+        "passed": true
+      },
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "status_agrees_with_matches",
+        "passed": true
+      },
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "weights_sum_to_one",
+        "passed": true
+      },
+      {
+        "turn": 3,
+        "category": "checks",
+        "tool": "rank_vehicles",
+        "name": "score_order",
+        "passed": true
+      }
+    ]
+  },
+  "browser": {
+    "actual_ollama": true,
+    "turns_checked": 3,
+    "code_and_data_sha256": "b52f8faaf130def8d82d90a0c3887d8fb6f4fa0e3bb395e338cd916f28d92192",
+    "subsequent_change": "Added validated form-priority wording resolution; final offline suite covers both channels. Chat UI was not rerun after this small form-clarification change.",
+    "second_answer_stops_usage_question": true,
+    "third_turn_completes_no_matches": true,
+    "receipts": [
+      {
+        "path": "team_results/buy-followup-ui-20261026-turn2.txt",
+        "sha256": "fe9b84ee033696a69390042bfc5cb6144b1cd8e3e0bcf9437bc456d6d371a912"
+      },
+      {
+        "path": "team_results/buy-followup-ui-20261026-turn3.txt",
+        "sha256": "2c8cb94ad749bad9498ed2077f590a660639122aea103e21fbc38aa806731fcf"
+      },
+      {
+        "path": "docs/buy-followup-ui-20261026.png",
+        "sha256": "f1923ade36cc6521f54fc6b79da8ab405f065c667e4d36faa16f3b3d2a92258c"
+      }
+    ],
+    "export_download_retested": false
+  },
+  "earlier_runs_preserved": [
+    {
+      "path": "team_results/buy-followup-20261022-before.json",
+      "sha256": "5bafd59ab40aad1efdd1abb07ac2faa4b62ba8148f191519242185ef5504eb38",
+      "checked_at": "2026-10-22T15:01:34.472046+08:00",
+      "turns": [
+        {
+          "seconds": 34.47,
+          "status": "needs_clarification",
+          "issues": {
+            "buyer.usage": "The proposed driving use does not match the stated words. Choose City commuting, Family travel or Long-distance driving; more than one is allowed."
+          }
+        },
+        {
+          "seconds": 17.54,
+          "status": "needs_clarification",
+          "issues": {
+            "buyer.usage": "The proposed driving use does not match the stated words. Choose City commuting, Family travel or Long-distance driving; more than one is allowed."
+          }
+        }
+      ]
+    },
+    {
+      "path": "team_results/buy-followup-20261026-after.json",
+      "sha256": "f3b932d6d715877d35b0fa1da84f02405e18464ca458b54b8f3cc5c4003e9a36",
+      "checked_at": "2026-10-26T11:23:48.329709+08:00",
+      "turns": [
+        {
+          "seconds": 54.65,
+          "status": "needs_clarification",
+          "issues": {
+            "buyer.usage": "You mentioned travel. Is this family travel, city commuting, or long-distance driving?",
+            "buyer.fuel_safety_wording": "By 'safe fuel', do you mean fuel economy ('save fuel'), vehicle safety, or both? Please state the preference explicitly, or say it is unknown."
+          }
+        },
+        {
+          "seconds": 23.62,
+          "status": "needs_clarification",
+          "issues": {
+            "buyer.fuel_safety_wording": "By 'safe fuel', do you mean fuel economy ('save fuel'), vehicle safety, or both? Please state the preference explicitly, or say it is unknown."
+          }
+        },
+        {
+          "seconds": 25.1,
+          "status": "needs_clarification",
+          "issues": {
+            "buyer.safety_priority": "State high, medium or low for this priority."
+          }
+        }
+      ]
+    },
+    {
+      "path": "team_results/buy-followup-20261026-after-v2.json",
+      "sha256": "732314f62545273f70a9e35779ad490497f684f3fa24fb4d05783cdfae601464",
+      "checked_at": "2026-10-26T11:27:38.448214+08:00",
+      "turns": [
+        {
+          "seconds": 25.34,
+          "status": "needs_clarification",
+          "issues": {
+            "buyer.usage": "You mentioned travel. Is this family travel, city commuting, or long-distance driving?",
+            "buyer.fuel_safety_wording": "By 'safe fuel', do you mean fuel economy ('save fuel'), vehicle safety, or both? Please state the preference explicitly, or say it is unknown."
+          }
+        },
+        {
+          "seconds": 2470.05,
+          "status": "timeout",
+          "issues": {
+            "buyer.fuel_safety_wording": "By 'safe fuel', do you mean fuel economy ('save fuel'), vehicle safety, or both? Please state the preference explicitly, or say it is unknown."
+          }
+        },
+        {
+          "seconds": 64.23,
+          "status": "complete",
+          "issues": {}
+        }
+      ]
+    },
+    {
+      "path": "team_results/buy-followup-20261026-after-v3-serial.json",
+      "sha256": "f5164837bb149be8f383ad35b9a3a83938c7eb85ed6cd04f8719e11340661011",
+      "checked_at": "2026-10-26T12:13:59.560528+08:00",
+      "turns": [
+        {
+          "seconds": 25.18,
+          "status": "needs_clarification",
+          "issues": {
+            "buyer.usage": "You mentioned travel. Is this family travel, city commuting, or long-distance driving?",
+            "buyer.fuel_safety_wording": "By 'safe fuel', do you mean fuel economy ('save fuel'), vehicle safety, or both? Please state the preference explicitly, or say it is unknown."
+          }
+        },
+        {
+          "seconds": 20.08,
+          "status": "needs_clarification",
+          "issues": {
+            "buyer.fuel_safety_wording": "By 'safe fuel', do you mean fuel economy ('save fuel'), vehicle safety, or both? Please state the preference explicitly, or say it is unknown."
+          }
+        },
+        {
+          "seconds": 29.35,
+          "status": "complete",
+          "issues": {}
+        }
+      ]
+    }
+  ],
+  "data": {
+    "snapshots": 17,
+    "listed": 11,
+    "minimum_saved_listed_asking_price_myr": 35888,
+    "snapshot_date": "2026-10-15",
+    "kaggle_activated": false,
+    "approved_regression_training_rows": 0
+  },
+  "git": {
+    "committed_this_task": false,
+    "pushed_this_task": false
+  }
+}
