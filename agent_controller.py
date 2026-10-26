@@ -7,6 +7,7 @@ import json
 import time
 import multiprocessing
 import re
+from threading import Event
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from pydantic import Field, ValidationError
@@ -40,6 +41,9 @@ currency needs clarification. Keep evidence with its original currency and dista
 Manufacturing year differs from registration year. auto -> Automatic; only explicit D-CVT -> D-CVT.
 usage is a list of city_commute / family_travel / long_distance. fuel_priority and space_priority
 are high/medium/low; save fuel means high fuel priority, spacious boot means high space priority.
+RM1 million, RM1million and MYR1000k mean a 1000000 MYR budget. Preserve the full
+amount and currency as evidence. A large customer budget is not limited by saved listing prices.
+If currency or amount wording is unsupported, ask for RM60000 or RM1 million rather than guessing.
 For buyer.usage, commute/commuting means city_commute; family trips means family_travel;
 long distance travel/driving or road trips means long_distance. Extract new stated uses even
 when the previous context has another use. Bare travel is ambiguous; do not guess its category.
@@ -96,6 +100,10 @@ class ProtocolError(ValueError):
     pass
 
 
+class ConsultationCancelled(Exception):
+    """A customer cancelled this turn; it must not retry or run more tools."""
+
+
 # Use bounded intent rules for explicit task words, removing supported negated actions before
 # choosing a goal.
 def explicit_goal(message):
@@ -115,8 +123,19 @@ def explicit_goal(message):
 def _ollama_worker(connection, payload):
     try:
         from ollama import Client
-        response = Client(host='http://127.0.0.1:11434', timeout=payload.pop('timeout_seconds')).chat(**payload)
+        # Keep a streaming HTTP connection so terminating this owned worker
+        # closes the request while generation is still running.
+        client = Client(host='http://127.0.0.1:11434', timeout=payload.pop('timeout_seconds'))
+        chunks = client.chat(**payload, stream=True)
+        parts, response = [], None
+        for index, response in enumerate(chunks):
+            parts.append(response.message.content or '')
+            if index == 0:
+                connection.send(('progress', None))
+        if response is None:
+            raise RuntimeError('The local model returned no response.')
         message = response.message.model_dump(exclude_none=True)
+        message['content'] = ''.join(parts)
         message['_metrics'] = {k: getattr(response, k, None) for k in ('prompt_eval_count', 'eval_count', 'total_duration', 'eval_duration')}
         connection.send(('ok', message))
     except Exception as error:
@@ -139,12 +158,19 @@ def compact(value):
 # responses.
 class OllamaBackend:
     # Remember the installed model tag; constructing this adapter does not download or run a model.
-    def __init__(self, model='qwen3:4b'):
+    def __init__(self, model='qwen3:4b', cancellation=None):
         self.model = model
+        self.cancellation = cancellation if cancellation is not None else Event()
+        self.active_worker_pid = None
+        self.last_worker_pid = None
+        self.last_worker_exitcode = None
+        self.received_stream_chunk = False
 
     # Run one schema-constrained request with shared context size, bounded output tokens and a
     # wall-clock deadline.
     def chat(self, messages, *, timeout_seconds, format=None, tools=None):
+        if self.cancellation.is_set():
+            raise ConsultationCancelled()
         # A separate process supplies a wall-clock cancellation boundary. HTTP
         # read timeouts alone can reset while bytes are arriving.
         planning = format is not None and format.get('title') == 'ToolRequest'
@@ -158,11 +184,24 @@ class OllamaBackend:
         process = context.Process(target=_ollama_worker, args=(sender, payload), daemon=True)
         started = time.monotonic()
         process.start()
+        self.active_worker_pid = self.last_worker_pid = process.pid
+        self.received_stream_chunk = False
         sender.close()
         try:
-            if not receiver.poll(max(0, timeout_seconds - (time.monotonic() - started))):
-                raise TimeoutError('The local model request exceeded its wall-clock limit.')
-            answer = receiver.recv()
+            while True:
+                if self.cancellation.is_set():
+                    raise ConsultationCancelled()
+                remaining = timeout_seconds - (time.monotonic() - started)
+                if remaining <= 0:
+                    raise TimeoutError('The local model request exceeded its wall-clock limit.')
+                if receiver.poll(min(.05, remaining)):
+                    answer = receiver.recv()
+                    if answer[0] == 'progress':
+                        self.received_stream_chunk = True
+                        continue
+                    break
+            if self.cancellation.is_set():
+                raise ConsultationCancelled()
             if answer[0] == 'error':
                 if 'timeout' in answer[1].lower():
                     raise TimeoutError(answer[2])
@@ -174,6 +213,11 @@ class OllamaBackend:
             if process.is_alive():
                 process.terminate()
             process.join(timeout=1)
+            if process.is_alive():
+                process.kill()
+                process.join(timeout=1)
+            self.last_worker_exitcode = process.exitcode
+            self.active_worker_pid = None
             receiver.close()
 
 
@@ -217,7 +261,7 @@ def render_result(goal, result):
         return result.get('message', 'There are insufficient comparable listings. No price is invented.')
     if goal == 'buy':
         if not result['matches']:
-            return 'No saved listing satisfies all your hard constraints. Review the rejection reasons or explicitly change your requirements; no constraint was relaxed.'
+            return 'No saved listing satisfies all your hard constraints. You can change your budget, minimum seats or excluded brands in chat or the details form. Review the rejection reasons; no constraint was relaxed.'
         lines = ['These saved listings satisfy your hard constraints, ranked by the supported lifestyle score:']
         for row in result['matches'][:3]:
             v = row['vehicle']
@@ -264,7 +308,7 @@ def render_result(goal, result):
 class AgentController:
     # Inject backend/data/clock for testability; otherwise load saved listings and use the
     # Malaysia consultation date.
-    def __init__(self, *, state=None, backend=None, cars=None, as_of=None, limits=None, clock=time.monotonic):
+    def __init__(self, *, state=None, backend=None, cars=None, as_of=None, limits=None, clock=time.monotonic, cancellation=None):
         self.state = state or SessionState()
         self.backend = backend or OllamaBackend()
         self.cars = cars if cars is not None else load_vehicles(ROOT/'data/vehicles_real.json')
@@ -273,6 +317,13 @@ class AgentController:
         self.as_of = as_of or datetime.now(timezone(timedelta(hours=8))).date()
         self.limits = limits or AgentLimits()
         self.clock = clock
+        self.cancellation = cancellation if cancellation is not None else Event()
+        if isinstance(self.backend, OllamaBackend):
+            self.backend.cancellation = self.cancellation
+
+    def check_cancellation(self):
+        if self.cancellation.is_set():
+            raise ConsultationCancelled()
 
     # Bound model attempts by both request and turn deadlines; validate response JSON and record
     # safe request metrics.
@@ -281,18 +332,23 @@ class AgentController:
         # model_retries counts extra attempts: a value of 1 allows at most two
         # calls. Every attempt consumes the same overall turn time budget.
         for attempt in range(self.limits.model_retries + 1):
+            self.check_cancellation()
             remaining = deadline - self.clock()
             if remaining <= 0:
                 raise TimeoutError('The per-turn deadline was reached.')
             try:
                 result = self.backend.chat(messages, timeout_seconds=min(remaining, self.limits.request_timeout_seconds), format=format, tools=tools)
+                self.check_cancellation()
                 if self.clock() > deadline:
                     raise TimeoutError('The per-turn deadline was reached during model execution.')
                 schema = TurnPatch if format and format.get('title') == 'TurnPatch' else ToolRequest
                 schema.model_validate_json(result.get('content', ''))
                 self.state.event('model', phase='sense' if schema is TurnPatch else 'plan', attempt=attempt + 1, success=True, metrics=result.get('_metrics'))
                 return result
+            except ConsultationCancelled:
+                raise
             except Exception as caught:
+                self.check_cancellation()
                 error = caught
                 phase = 'sense' if format and format.get('title') == 'TurnPatch' else 'plan'
                 self.state.event('model', phase=phase, attempt=attempt + 1, success=False, error=type(caught).__name__)
@@ -342,6 +398,7 @@ class AgentController:
         deadline = self.clock() + self.limits.turn_timeout_seconds
         runtime = None
         try:
+            self.check_cancellation()
             # SENSE: first establish a supported task scope, then request only
             # new slot updates with verbatim evidence from this user's message.
             hint = explicit_goal(message)
@@ -383,6 +440,7 @@ class AgentController:
             # PLAN repeatedly from actual observations. The model can choose
             # business tools, while Python enforces valid stages and goal guards.
             while calls < self.limits.maximum_tool_calls:
+                self.check_cancellation()
                 available = runtime.available_tools(message)
                 request_schema = ToolRequest.model_json_schema()
                 request_schema['properties']['name']['enum'] = available
@@ -401,9 +459,11 @@ class AgentController:
                     function = requested_call.get('function', {})
                     name, arguments = function.get('name', ''), function.get('arguments', {})
                     try:
+                        self.check_cancellation()
                         # ACT: this call runs the real registered Python tool.
                         # A JSON request or an assistant claim is not execution.
                         observation = runtime.call(name, arguments)
+                        self.check_cancellation()
                         self.state.event('tools', name=name, arguments=arguments, executed=True, observation=observation)
                         rules = observation.get('fired_rules', []) + observation.get('buyer_reasoning', {}).get('fired_rules', [])
                         for rule in rules:
@@ -428,6 +488,9 @@ class AgentController:
                     if errors >= self.limits.maximum_tool_errors:
                         return self._response('tool_error_limit', 'The limited tool-repair attempts were exhausted. Facts are retained; no unverified result is presented as complete.', runtime, start_index)
             return self._response('step_limit', 'The tool-step limit was reached. Facts are retained; the task is not marked complete.', runtime, start_index)
+        except ConsultationCancelled:
+            self.state.event('system', action='cancelled_during_turn')
+            return self._response('cancelled', 'Calculation stopped. No further tools will run for this request.', start_index=start_index)
         except Exception as error:
             # Failure is a stop state, not a successful consultation. Return
             # retained checked facts without claiming unexecuted tools succeeded.

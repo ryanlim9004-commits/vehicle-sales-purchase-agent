@@ -6,8 +6,10 @@ their fields are explicit, but still use grounding, memory, planning and checks.
 from dataclasses import dataclass
 from decimal import Decimal
 import re
+from pydantic import ValidationError
 from agent_state import SessionState, SlotUpdate, TurnPatch, set_slot, switch_goal
 from buyer_usage import USAGES, parse_usage_list
+from input_grounding import money_number_value
 
 GOALS = {'buy': 'Buy', 'sell': 'Sell', 'negotiate': 'Negotiation', 'trade_in': 'Trade-In'}
 INTENTS = {'buy': 'I want to buy a car.', 'sell': 'I want to sell my car.',
@@ -87,6 +89,13 @@ def current_value(state, path):
 # Numeric forms accept an explicit decimal, not scientific notation or a currency guess.
 def parse_number(raw, kind):
     text = str(raw).strip()
+    if kind == 'money':
+        try:
+            # The visible MYR field label supplies the currency; a foreign
+            # currency token is never stripped or converted.
+            return float(money_number_value(text))
+        except ValueError:
+            raise ValueError('Enter a MYR amount such as 60000, 60k or 1 million; omit currency symbols. Use at most two decimal places.') from None
     if not re.fullmatch(r'[+-]?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?', text):
         raise ValueError('Enter a number without units or currency; the field label supplies them.')
     number = Decimal(text.replace(',', ''))
@@ -175,6 +184,11 @@ def prepare_form(goal, entries, state=None, *, mileage_unit='km'):
             set_slot(working, path, value)
             evidence = evidence_for(field, value, text, mileage_unit)
             updates.append(SlotUpdate(slot=path, value=value, evidence=evidence))
+        except ValidationError as error:
+            # Show the actual field problem, not a Python Frame class heading.
+            detail = error.errors()[0]['msg']
+            examples = ' Examples: 60000, 60k or 1 million.' if field.kind == 'money' else ''
+            raise ValueError(f'{field.label}: {detail}.{examples}') from None
         except (ValueError, KeyError, ArithmeticError) as error:
             raise ValueError(f'{field.label}: {str(error).splitlines()[0]}') from error
     if not updates:

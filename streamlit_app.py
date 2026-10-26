@@ -6,7 +6,7 @@ Only explicit submit events run a turn. Browsing/rendering never calls a model.
 from uuid import uuid4
 import streamlit as st
 from form_inputs import GOALS, USAGES, fields_for, current_value, prepare_form
-from ui_session import UISession, display_money, source_url, verified_result, inference_lock
+from ui_session import UISession, display_money, source_url, verified_result
 from vehicle_evidence import load_catalogue, evidence_for_vehicle
 
 
@@ -16,7 +16,83 @@ def queue_turn(text, goal, patch=None):
         return
     st.session_state.pending_turn = {'text': text, 'goal': goal, 'patch': patch, 'request_id': uuid4().hex}
     st.session_state.busy = True
+    st.session_state.active_view = 'consultation'
     st.rerun()
+
+
+def open_view(view):
+    # Navigation reads saved results; it never submits another consultation.
+    st.session_state.active_view = view
+
+
+def request_cancellation():
+    ui = st.session_state.ui_session
+    if ui.active_turn is not None:
+        ui.active_turn.cancel()
+    elif st.session_state.get('pending_turn'):
+        st.session_state.pop('pending_turn')
+        st.session_state.busy = False
+        ui.submit('/stop', goal=ui.controller.state.goal or 'buy')
+
+
+def collect_finished_turn(ui):
+    if ui.active_turn is not None and ui.active_turn.done.is_set():
+        ui.finish_background()
+        st.session_state.busy = False
+        if ui.controller.state.goal:
+            st.session_state.next_area = ui.controller.state.goal
+        return True
+    return False
+
+
+@st.fragment(run_every=.2)
+def watch_calculation():
+    """Refresh status while the worker runs, leaving the Stop button responsive."""
+    ui = st.session_state.ui_session
+    if collect_finished_turn(ui):
+        st.rerun()
+    if ui.active_turn is not None:
+        if ui.active_turn.cancellation.is_set():
+            st.info('Stopping the current calculation…')
+        else:
+            st.info('Working on your request… Select Stop at the upper right to cancel.')
+
+
+def render_confirmed_details(state):
+    """Show remembered customer inputs as readable labels, without changing them."""
+    active_goal = state.goal
+    if active_goal not in GOALS:
+        st.info('No confirmed details yet. Send a message to start your consultation.')
+        return
+    st.caption('Consultation: ' + GOALS[active_goal])
+    rows = []
+    for field in fields_for(active_goal):
+        value = current_value(state, field.path)
+        if value is None or value == [] or value == '':
+            continue
+        if field.kind == 'money':
+            shown = display_money(value)
+        elif field.kind == 'boolean':
+            shown = 'Yes' if value else 'No'
+        elif field.kind == 'usage':
+            shown = ', '.join(label for label, key in USAGES.items() if key in value)
+        elif isinstance(value, list):
+            shown = ', '.join(value)
+        elif field.kind == 'distance':
+            shown = f'{value:g} km'
+        else:
+            shown = str(value).replace('_', ' ')
+        label = field.label if field.group == 'Details' else field.group + ' · ' + field.label
+        rows.append({'Detail': label, 'Confirmed value': shown})
+    if rows:
+        st.table(rows)
+    else:
+        st.info('Your confirmed details will appear here after you send a message.')
+    pending_usage = state.provenance.get('buyer.usage_pending') if active_goal == 'buy' else None
+    if pending_usage:
+        st.caption('Use described: ' + pending_usage['evidence'] + ' (category awaiting clarification).')
+    for question in dict.fromkeys(state.issues.values()):
+        st.warning(question)
 
 
 # Source links show saved evidence; they do not fetch or refresh advertisements.
@@ -78,8 +154,13 @@ def render_buy(result):
     st.subheader('Compare eligible vehicles')
     st.caption(result['dataset_notice'])
     if not result['matches']:
-        st.info('No saved listing meets the supported hard constraints. Change a requirement explicitly to search again.')
+        st.info('No saved listing matches your current requirements. You can change your budget, minimum seats or excluded brands in chat or the details form. Your requirements stay in effect until you change them.')
     else:
+        preferred = result['buyer_reasoning']['extracted_profile']['preferred_brands']
+        eligible_brands = {row['vehicle']['brand'].casefold() for row in result['matches']}
+        unavailable = [brand for brand in preferred if brand.casefold().strip() not in eligible_brands]
+        if unavailable:
+            st.info('No eligible saved listing was found for your preferred brand(s): ' + ', '.join(unavailable) + '. Other eligible brands are shown below; your preference is still recorded.')
         rows = result['matches'][:3]
         columns = st.columns(len(rows))
         for column, row in zip(columns, rows):
@@ -209,7 +290,7 @@ def render_trade(result):
 # Every widget starts blank: old quotes cannot be accidentally reconfirmed by a
 # form whose only intended change was the vehicle identity.
 def render_form(ui, goal, busy):
-    with st.expander('Add or update details with a form', expanded=not ui.history):
+    with st.expander('Add or update details with a form', expanded=False):
         st.caption('Blank = keep confirmed facts. Enter Unknown to clear a value. Enter 0 only for a confirmed zero; prices must be positive.')
         st.caption('Driving use: selected uses replace confirmed uses. Empty keeps them; Unknown alone clears them. Brand lists replace the previous list.')
         with st.form(f'details_{goal}_{ui.generation}'):
@@ -233,7 +314,9 @@ def render_form(ui, goal, busy):
                         entries[field.path] = st.selectbox(field.label, options, key=key, help=help_text, disabled=busy,
                                                           format_func=lambda value: 'Keep / not provided' if value == '' else value)
                     else:
-                        entries[field.path] = st.text_input(field.label, key=key, help=help_text, disabled=busy, max_chars=160)
+                        placeholder = 'e.g. 60000, 60k or 1 million' if field.kind == 'money' else ''
+                        entries[field.path] = st.text_input(field.label, key=key, help=help_text, disabled=busy, max_chars=160,
+                                                           placeholder=placeholder)
                 index += 1
             unit = st.selectbox('Odometer unit', ['km', 'm', 'miles'], disabled=busy) if goal == 'sell' else 'km'
             submitted = st.form_submit_button('Submit details to Agent', type='primary', disabled=busy)
@@ -248,13 +331,46 @@ def render_form(ui, goal, busy):
 # A rerun with no queued submit only renders stored evidence; it makes no API call.
 def main():
     st.set_page_config(page_title='Vehicle Consultation Agent', page_icon='🚗', layout='wide')
+    # The requested four-color palette uses red for actions, brown for headings,
+    # and neutral greys for surfaces. White keeps form fields easy to distinguish.
+    st.markdown('''<style>
+    /* The app Stop control owns cancellation; hide the framework's separate
+       script-only running control to avoid two different Stop behaviours. */
+    [data-testid="stStatusWidget"] {display: none;}
+    [data-testid="stHeadingWithActionElements"] h1,
+    [data-testid="stHeadingWithActionElements"] h2,
+    [data-testid="stHeadingWithActionElements"] h3 {
+        color: #6B2B06;
+    }
+    [data-testid="stCaptionContainer"] {color: #6B2B06;}
+    .st-key-message_composer {
+        background: #FFFFFF;
+        border: 2px solid #B80C09;
+        border-radius: 16px;
+        padding: 1.1rem;
+        margin-bottom: 0.8rem;
+    }
+    .st-key-message_composer strong {color: #6B2B06;}
+    .st-key-message_composer textarea {font-size: 1.05rem;}
+    .st-key-message_composer [data-testid="stChatInput"] {
+        background: #E5E7E6;
+        border: 1px solid #B7B5B3;
+        border-radius: 12px;
+    }
+    .st-key-message_composer textarea::placeholder {color: #6B2B06; opacity: 1;}
+    .st-key-message_composer [data-testid="stChatInput"]:focus-within {
+        outline: 3px solid #B80C09;
+        outline-offset: 2px;
+    }
+    </style>''', unsafe_allow_html=True)
     if 'ui_session' not in st.session_state:
         st.session_state.ui_session = UISession()
     ui = st.session_state.ui_session
+    collect_finished_turn(ui)
     if 'next_area' in st.session_state:
         st.session_state.task_area = st.session_state.pop('next_area')
     executing = st.session_state.get('busy', False)
-    # A blocked draft stays intact until Retry/Discard/Reset; it has not updated
+    # A blocked draft stays intact until Retry/Discard; it has not updated
     # facts. Disable new edits so retry cannot later overwrite newer facts.
     busy = executing or bool(st.session_state.get('blocked_turn'))
     with st.sidebar:
@@ -263,36 +379,10 @@ def main():
         goal = st.selectbox('Consultation area', list(GOALS), format_func=GOALS.get, key='task_area', disabled=busy)
         st.caption('Browsing areas keeps facts unchanged. Submitting starts or switches the consultation.')
         st.divider()
-        st.markdown('**Saved snapshot demo**')
-        st.caption('Data snapshot: 15 Oct 2026\n\nReference checks: 15 Oct 2026\n\nNot live inventory. No live web search.')
-        st.caption('Current-date checks and live search are separate deferred features.')
-        st.caption('V2 safety/review research checked: 16 Oct 2026. Research dates do not refresh the saved price snapshot.')
-        if st.button('New consultation / Reset', disabled=executing, width='stretch'):
-            ui.reset()
-            st.session_state.pop('pending_turn', None)
-            st.session_state.pop('blocked_turn', None)
-            st.rerun()
-        if st.button('Stop consultation', disabled=busy or not ui.history, width='stretch'):
-            ui.submit('/stop', goal=goal)
-            st.rerun()
-        st.caption('Stop applies between turns. In-progress requests use bounded timeouts.')
-        st.download_button('Download consultation record', ui.export_json(), file_name='vehicle-consultation.json', mime='application/json',
-                           disabled=executing, on_click='ignore', width='stretch')
-        st.caption('Memory stays in this tab. Reloading/closing may reset it. Export is manual; no automatic chat files.')
-        st.divider()
-        st.markdown('**Confirmed facts**')
-        st.caption('Active goal: ' + (GOALS.get(ui.controller.state.goal) or 'Not started'))
-        active = {'buy': ui.controller.state.buyer, 'sell': ui.controller.state.seller,
-                  'negotiate': ui.controller.state.negotiation, 'trade_in': ui.controller.state.trade_in}.get(ui.controller.state.goal)
-        st.json(active.model_dump() if active else {}, expanded=False)
-        if ui.controller.state.goal == 'buy':
-            pending_usage = ui.controller.state.provenance.get('buyer.usage_pending')
-            if pending_usage:
-                st.caption('Use described: ' + pending_usage['evidence'] + ' (category awaiting clarification).')
+        with st.popover('View confirmed details', icon=':material/fact_check:', width='stretch', disabled=executing):
+            render_confirmed_details(ui.controller.state)
     st.title('Vehicle Sales & Purchase Consultation')
     st.write('Find suitable vehicles, review asking-price evidence and compare negotiation or trade-in choices.')
-    st.caption('Local Ollama + Python · Saved-source consultation · A consultation result does not execute a transaction.')
-    st.caption('Snapshot demo · Data and reference date: 15 Oct 2026 · Not live inventory')
     if st.session_state.get('blocked_turn'):
         st.warning('The local model is serving another browser session. Your submission is kept in this tab and has not been applied. Retry when the model is free, or discard it. Existing results belong to the previous completed turn.')
         with st.expander('Saved submission awaiting Retry'):
@@ -306,21 +396,55 @@ def main():
             st.session_state.pop('blocked_turn')
             ui.generation += 1  # Clear the discarded form's widget values too.
             st.rerun()
-    chat, results, evidence, research = st.tabs(['Consultation', 'Results & comparison', 'Evidence & checks', 'Vehicle research'])
-    with research:
+    view = st.session_state.get('active_view', 'consultation')
+    navigation, stop_control, menu = st.columns([7, 1.5, 2], vertical_alignment='center')
+    with navigation:
+        if view != 'consultation':
+            st.button('Back to consultation', icon=':material/chat:', key='nav_consultation',
+                      on_click=open_view, args=('consultation',), disabled=executing)
+    with stop_control:
+        stopping = ui.active_turn is not None and ui.active_turn.cancellation.is_set()
+        st.button('Stop', icon=':material/stop_circle:', key='cancel_calculation', width='stretch',
+                  type='primary' if executing else 'secondary', disabled=not executing or stopping,
+                  on_click=request_cancellation, help='Cancel the current calculation and keep previously confirmed details.')
+    with menu:
+        with st.popover('Menu', icon=':material/menu:', key='consultation_menu_' + view, width='stretch', disabled=executing):
+            st.button('Results & comparison', key='nav_results', on_click=open_view, args=('results',), width='stretch')
+            st.button('Evidence & checks', key='nav_evidence', on_click=open_view, args=('evidence',), width='stretch')
+            st.button('Vehicle research', key='nav_research', on_click=open_view, args=('research',), width='stretch')
+    if ui.active_turn is not None:
+        watch_calculation()
+    if view == 'research':
         render_research_catalogue()
-    with chat:
+    if view == 'consultation':
         st.subheader(GOALS[goal] + ' consultation')
         if not ui.history:
-            st.info('Describe your goal in English, or open the details form. You can answer questions and change conditions over several turns.')
+            st.caption('Start here. Tell us what you need, and the Agent will ask for any missing details.')
         for item in ui.history:
             with st.chat_message('user'):
                 st.text(item['user'])
             with st.chat_message('assistant'):
                 st.text(item['response']['message'])
                 st.caption('Status: ' + item['response']['status'])
+        budget_source = ui.controller.state.provenance.get('buyer.budget_myr', {})
+        if ui.controller.state.goal == 'buy' and budget_source.get('turn') == ui.controller.state.turn:
+            budget_issue = ui.controller.state.issues.get('buyer.budget_myr')
+            if budget_issue:
+                st.warning('Budget not accepted. ' + budget_issue)
+            elif ui.controller.state.buyer.budget_myr is not None:
+                st.caption('Budget recorded: ' + display_money(ui.controller.state.buyer.budget_myr) + ' maximum vehicle price.')
+        with st.container(key='message_composer'):
+            st.markdown('**Message the Agent**')
+            if goal == 'buy':
+                st.caption('Example: Budget RM60000, at least 5 seats, family travel, save fuel. You can also write RM1 million.')
+            else:
+                st.caption('Describe your vehicle and question in English. Include RM/MYR for money and km, m or miles for the odometer.')
+            text = st.chat_input('Type your message here, then press Enter to send', key='chat_message', height=100,
+                                 max_chars=6000, disabled=busy, submit_mode='disable')
+        if text:
+            queue_turn(text, goal)
         render_form(ui, goal, busy)
-    with results:
+    if view == 'results':
         response = ui.last_response
         result = verified_result(response)
         if result is None:
@@ -335,7 +459,7 @@ def main():
             render_negotiation(result)
         else:
             render_trade(result)
-    with evidence:
+    if view == 'evidence':
         if ui.last_response:
             response = ui.last_response
             st.write('Consultation status: **' + response['status'] + '**')
@@ -347,27 +471,20 @@ def main():
                 st.json({'trace': response['trace'], 'limits': response['limits']})
         else:
             st.info('The Agent records facts, rules, tool execution and checks after a submission.')
-    text = st.chat_input('Describe your vehicle goal or answer the Agent in English…', key='chat_message',
-                         max_chars=6000, disabled=busy, submit_mode='disable')
-    if text:
-        queue_turn(text, goal)
     if st.session_state.get('pending_turn'):
         # Pop before executing so any rerun cannot repeat this submitted request.
         pending = st.session_state.pop('pending_turn')
-        lock = inference_lock()
-        if not lock.acquire(blocking=False):
+        if not ui.start_background(pending['text'], goal=pending['goal'], form_patch=pending['patch'], request_id=pending['request_id']):
             # Keep the original patch/ID; never automatically run a blocked draft.
             st.session_state.blocked_turn = pending
             st.session_state.busy = False
             st.rerun()
         else:
-            try:
-                with st.spinner('Agent is validating facts, choosing tools and checking results. Local-model requests can take up to 240 seconds…', show_time=True):
-                    ui.submit(pending['text'], goal=pending['goal'], form_patch=pending['patch'], request_id=pending['request_id'])
-                if ui.controller.state.goal:
-                    st.session_state.next_area = ui.controller.state.goal
-            finally:
-                lock.release()
+            if ui.active_turn is not None:
+                # Fast local commands/tools need no separate waiting screen.
+                ui.active_turn.done.wait(.03)
+                collect_finished_turn(ui)
+            else:
                 st.session_state.busy = False
             st.rerun()
 

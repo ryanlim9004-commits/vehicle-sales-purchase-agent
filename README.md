@@ -2,6 +2,12 @@
 
 An educational Python + Ollama project for used-vehicle consultation in Malaysia. Application prompts, inputs and outputs use English; accompanying Chinese lessons explain the implementation for beginners.
 
+**26 Oct menu and cancellation:** Results, evidence and research are accessed from the right-side hamburger **Menu**. The app's **Stop** button cancels an active streamed Ollama request through its owned worker process. A background turn uses isolated memory; cancellation discards unfinished updates and allows the next request without shutting down the page. See [verification and limits](STOP_MENU_20261026_ZH.md).
+
+**26 Oct palette:** Brick red `#B80C09` highlights primary actions, dark brown `#6B2B06` marks headings, and `#E5E7E6` / `#B7B5B3` provide the main and sidebar surfaces. White input cards and dark body text support readability. See the [current page](docs/palette-20261026.png) and [scoped interface verification](docs/palette-20261026.json).
+
+**26 Oct input experience:** The chat composer is highlighted and placed inside the consultation above the collapsed helper form. Confirmed session inputs are behind a **View confirmed details** button with readable labels. Amounts such as `RM1 million` in chat and `1million` in MYR form fields are checked against the complete source text; unsupported formats receive correction examples. A customer budget is an upper bound, not limited by saved listing prices. See the [input guide](INPUT_GUIDANCE_20261026_ZH.md).
+
 **26 Oct update:** [Buy follow-up clarification fix](BUY_FOLLOWUP_FIX_20261026_ZH.md) resolves stale driving-use questions, preserves stated travel wording, clarifies ambiguous "safe fuel" and handles named no-preference answers in chat and forms. All 232 offline tests and the final three-turn actual Ollama replay passed; actual browser conversation evidence and earlier failures are retained separately. [Malaysia dataset integration plan](DATA_IMPORT_PLAN_ZH.md) explains the existing JSON storage and proposed historical candidate pipeline; no SQL Server installation is needed. Historical Kaggle rows are not activated stock or approved regression training data. Verification records identify the development source before its subsequent Git delivery.
 
 **22 Oct development record:** [Driving-use memory and form fix](USAGE_FIX_20261022_ZH.md): 213 offline checks and two actual Ollama checks passed. Driving use is now a multiselect. [Kaggle candidate review](docs/KAGGLE_RESEARCH_20261022.md) rejects the supplied synthetic dataset and records a quarantined historical Malaysian alternative; active stock and regression approval are unchanged. These are historical checks; the 26 Oct record describes the later fix.
@@ -30,7 +36,7 @@ Start the browser interface with the installed project environment:
 .\.venv\Scripts\python.exe -m streamlit run streamlit_app.py
 ```
 
-Open `http://127.0.0.1:8501`. The UI uses the explicitly labelled 15 Oct 2026 snapshot and reference date; no current-date selector or live search is included. Keep Ollama and the Streamlit process running. See the [Stage 9 beginner guide](STAGE9_GUIDE_ZH.md).
+Open `http://127.0.0.1:8501`. The data/reference baseline remains 15 Oct 2026; no current-date selector or live search is included. The 26 Oct layout removes the snapshot sidebar block and its reset/stop/download buttons, plus the two technical/snapshot captions below the page introduction. Record-level sources and dates remain in results/evidence. Use `/reset` or `/stop` in chat between turns. Keep Ollama and the Streamlit process running. See the [Stage 9 beginner guide](STAGE9_GUIDE_ZH.md).
 
 ## Implemented features
 
@@ -42,7 +48,7 @@ Open `http://127.0.0.1:8501`. The UI uses the explicitly labelled 15 Oct 2026 sn
 - **Input grounding:** check explicit measurement units and budget currencies against the original message. Unsupported or conflicting readings trigger clarification.
 - **Negotiation / Trade-In:** hand-authored buyer/seller limits and asking-reference rules; explicit fees, loan settlement and path-specific replacement quotes; user-estimated time/effort and cash limits.
 - **Agent Loop:** typed conversation memory, source-grounded updates, a tool allowlist, checked observations, bounded retries/timeouts and inspectable facts/rules/tools/checks.
-- **Browser UI:** English chat and typed update forms over the same Controller, per-tab temporary memory, checked result panels and manual JSON evidence export.
+- **Browser UI:** English chat and typed update forms over the same Controller, per-tab temporary memory and checked result panels. The consultation download button was removed in the 26 Oct layout revision.
 
 Ollama extracts fact patches and proposes tools through schema-constrained JSON requests; Python validates, executes, checks and renders verified results. This is a bounded hybrid controller, not a claim of verified native Ollama `tool_calls` support. Earlier native-protocol failures are retained in the development evidence.
 
@@ -167,7 +173,7 @@ On 19 Oct, **195 offline tests passed** in a fresh virtual environment using a s
 | [Stage 7 guide](STAGE7_GUIDE_ZH.md) | Negotiation, fee semantics, trade-in formulas and manual execution |
 | [Stages 1–7 audit](STAGES1_7_AUDIT_ZH.md) | Scope, repairs, asking-price evidence and remaining gaps |
 | [Stage 8 guide](STAGE8_GUIDE_ZH.md) | Multi-turn execution, memory, corrections, limits and traces |
-| [Stage 9 guide](STAGE9_GUIDE_ZH.md) | Browser startup, four tasks, forms, sources and manual downloads |
+| [Stage 9 guide](STAGE9_GUIDE_ZH.md) | Browser startup, four tasks, forms, sources and evidence capture |
 | [Stage 9 decisions](docs/STAGE9_DECISIONS.md) | User-confirmed scope, date policy and integration boundaries |
 | [Accelerated plan](ACCELERATED_PLAN_ZH.md) | Current delivery schedule |
 | [Original proposal](docs/PROPOSAL_EN.md) | Historical design intent; current status above takes precedence |

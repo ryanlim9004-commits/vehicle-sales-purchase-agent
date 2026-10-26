@@ -8,7 +8,7 @@ Unsupported or conflicting expressions are clarified rather than guessed.
 # Regexes support bounded English number, unit, currency and history forms.
 # Return unknown plus a question when evidence is missing, conflicting or unsupported.
 import re
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from buyer_usage import explicit_buyer_usages
 
 # Regex named groups preserve the written number together with its unit or
@@ -16,9 +16,12 @@ from buyer_usage import explicit_buyer_usages
 DIGITS = r'[+-]?(?:\d{1,3}(?:,\d{3})+|\d{1,3}(?: \d{3})+|\d+)(?:\.\d+)?'
 WORDS = r'(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million)'
 NUMBER = rf'(?:{DIGITS}\s*[kK]?|{WORDS}(?:[\s-]+(?:and\s+)?{WORDS})*)'
+# Money scales are separate from distance units: RM1m is a million MYR,
+# while an odometer reading of 1m still means one metre.
+MONEY_NUMBER = rf'(?:{DIGITS}\s*(?:million|thousand|[km])?|{WORDS}(?:[\s-]+(?:and\s+)?{WORDS})*)'
 DISTANCE = re.compile(rf'(?<![\w.,/])(?P<number>{NUMBER})\s*(?P<unit>kilometres?|kilometers?|kms?|metres?|meters?|miles?|mi|m)\b', re.I)
 CURRENCY = r'(?:MYR|RM|USD|SGD|AUD|EUR|GBP|\$|\u00a3|\u20ac)'
-MONEY = re.compile(rf'(?<![A-Za-z])(?P<currency>{CURRENCY})\s*(?P<number>{NUMBER})(?!\w|[.,]\d)|(?<![\w.,])(?P<suffix_number>{NUMBER})\s*(?P<suffix_currency>MYR|RM|ringgit|USD|SGD|AUD|EUR|GBP)\b',re.I)
+MONEY = re.compile(rf'(?<![A-Za-z])(?P<currency>{CURRENCY})\s*(?P<number>{MONEY_NUMBER})(?!\w|[.,]\d)|(?<![\w.,])(?P<suffix_number>{MONEY_NUMBER})\s*(?P<suffix_currency>MYR|RM|ringgit|USD|SGD|AUD|EUR|GBP)\b',re.I)
 UNITS = dict(zip('zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen'.split(),range(20)))
 UNITS.update(dict(zip('twenty thirty forty fifty sixty seventy eighty ninety'.split(),range(20,100,10))))
 
@@ -44,6 +47,25 @@ def number_value(raw):
         else:
             raise ValueError('Unsupported number expression.')
     return Decimal(total+current)
+
+
+def money_number_value(raw):
+    """Read a complete bounded money amount without changing distance parsing."""
+    text = raw.strip().casefold()
+    if not re.fullmatch(MONEY_NUMBER, text, re.I):
+        raise ValueError('Use an amount such as 60000, 60k or 1 million.')
+    scaled = re.fullmatch(rf'(?P<digits>{DIGITS})\s*(?P<scale>million|thousand|[km])', text, re.I)
+    if scaled:
+        factor = 1000000 if scaled['scale'] in ('m', 'million') else 1000
+        value = number_value(scaled['digits']) * factor
+    else:
+        value = number_value(text)
+    try:
+        if not value.is_finite() or value != value.quantize(Decimal('0.01')):
+            raise ValueError('MYR amounts allow at most two decimal places.')
+    except InvalidOperation:
+        raise ValueError('This amount is outside the supported numeric precision. Use an amount such as 60000 or 1 million.') from None
+    return value
 
 
 # Read a bounded preceding clause so unit/currency guards can distinguish an amount from nearby
@@ -106,7 +128,12 @@ def budget_from_text(text):
         if currency not in ('RM','MYR','RINGGIT'):
             foreign = True
             continue
-        amount = number_value(raw)
+        if re.match(r'\s*(?:billion|trillion|crore|lakh)\b', text[match.end():], re.I):
+            return None, [], 'That amount format is not supported. Use RM1000000 or RM1 million, with at most two decimal places.'
+        try:
+            amount = money_number_value(raw)
+        except ValueError as error:
+            return None, [], str(error)
         if amount <= 0:
             return None, [], 'Please provide a positive total purchase budget in MYR.'
         totals.append(amount)
@@ -114,9 +141,14 @@ def budget_from_text(text):
         evidence.append(f"Budget source '{match.group().strip()}' normalized to MYR {amount.normalize():f}.")
         # A common range with one currency token: RM40k to 50k.
         tail = text[match.end():]
-        upper = re.match(rf'\s*(?:-|to)\s*(?!(?:{CURRENCY}))(?P<upper>{NUMBER})(?!\w|[.,]\d)',tail,re.I)
+        upper = re.match(rf'\s*(?:-|to)\s*(?!(?:{CURRENCY}))(?P<upper>{MONEY_NUMBER})(?!\w|[.,]\d)',tail,re.I)
         if upper:
-            upper_amount = number_value(upper['upper'])
+            try:
+                upper_amount = money_number_value(upper['upper'])
+            except ValueError as error:
+                return None, evidence, str(error)
+            if re.match(r'\s*(?:billion|trillion|crore|lakh)\b', tail[upper.end():], re.I):
+                return None, evidence, 'That range format is not supported. Use explicit amounts such as RM60000 to RM1000000.'
             if upper_amount < amount:
                 return None, evidence, 'Budget range is reversed. Please confirm the maximum total purchase budget in MYR.'
             totals.append(upper_amount)
@@ -124,7 +156,7 @@ def budget_from_text(text):
     if foreign:
         return None, evidence, 'A non-MYR or ambiguous currency was supplied. Please confirm a total purchase budget in MYR; no exchange conversion is performed.'
     if not totals:
-        return None, evidence, 'Please specify the total purchase budget with an explicit MYR/RM currency; a monthly payment alone is not a purchase budget.'
+        return None, evidence, 'Please include RM or MYR with your total budget, for example RM60000 or RM1 million. A monthly payment alone is not a purchase budget.'
     unique = set(totals)
     if len(unique)>1:
         if len(spans)==2:
@@ -135,6 +167,20 @@ def budget_from_text(text):
             return float(max(totals)), evidence+['Explicit budget range: its upper bound is used.'], None
         return None, evidence, 'Conflicting total budgets were supplied. Please confirm one maximum purchase budget in MYR.'
     return float(totals[0]), evidence, None
+
+
+def stated_buyer_budget(text, *, pending=False):
+    """Locate an explicit budget clause; omission is not a request to change it."""
+    clauses = re.split(r'[;!?\n]|,(?!\d)|\.(?!\d)', text)
+    marked = [clause for clause in clauses if re.search(r'\b(?:budget|maximum purchase|max(?:imum)? price|spending limit)\b', clause, re.I)
+              and not re.search(r'\b(?:unchanged|same|keep|retain)\b', clause, re.I)]
+    if not marked and pending and re.fullmatch(rf'\s*(?:{MONEY_NUMBER}|{CURRENCY}\s*{MONEY_NUMBER}|{MONEY_NUMBER}\s*(?:MYR|RM|ringgit))\s*[.!]?\s*', text, re.I):
+        marked = [text]
+    if not marked or not any(re.search(r'\d|\b(?:' + WORDS + r')\b', clause, re.I) for clause in marked):
+        return None
+    evidence = '; '.join(marked)
+    amount, notes, issue = budget_from_text(evidence)
+    return amount, notes, issue, evidence
 
 
 # Mask unsupported currency amounts only in the model input; original wording still drives the

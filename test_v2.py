@@ -241,12 +241,13 @@ class V2IntegrationTests(unittest.TestCase):
         app = AppTest.from_file(str(ROOT/'streamlit_app.py'), default_timeout=30)
         app.session_state['ui_session'] = ui
         app.run()
+        app.button(key='nav_research').click().run()
         app.selectbox(key='research_profile').set_value('MYVI_FACELIFT_2022_AV').run()
         self.assertFalse(app.exception)
         self.assertEqual(ui.controller.backend.requests, [])
         text, patch = prepare_form('buy', {'buyer.budget_myr': '60000', 'buyer.required_seats': '5', 'buyer.usage': 'City commuting', 'buyer.safety_priority': 'high'})
         ui.submit(text, goal='buy', form_patch=patch)
-        app.run()
+        app.button(key='nav_results').click().run()
         self.assertFalse(app.exception)
         self.assertTrue(any('sugeno-lifestyle-v2.0' in c.value for c in app.caption))
 

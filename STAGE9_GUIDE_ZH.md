@@ -1,12 +1,12 @@
 # 阶段9：英文Streamlit浏览器界面
 
-日期：2026-10-16。Streamlit 1.66.0已安装在项目现有`.venv`；本机用户不必重新安装。应用、字段、错误提示和代码comments使用英文，教学说明使用中文。
+更新：2026-10-26。Streamlit 1.66.0已安装在项目现有`.venv`；本机用户不必重新安装。应用、字段、错误提示和代码comments使用英文，教学说明使用中文。
 
 ## 1. Streamlit负责什么
 
-Streamlit把Python程序呈现为网页，提供聊天框、表单、表格和下载按钮。它是本项目的UI，Ollama仍在本机负责模型推理，Python Controller仍负责记忆、工具执行和结果检查。浏览器操作不等于部署到云端。
+Streamlit把Python程序呈现为网页，提供聊天框、表单和表格。它是本项目的UI，Ollama仍在本机负责模型推理，Python Controller仍负责记忆、工具执行和结果检查。浏览器操作不等于部署到云端。
 
-已确认的第一版决定：英文聊天为主、辅助表单；每个浏览器tab独立临时记忆，可手动导出；固定15 Oct 2026快照演示，不加入当天日期切换。当前日期检查和实时网站搜索是两个不同功能，均留待第一版之后评估。里程／车况校准也暂缓。完整记录见docs/STAGE9_DECISIONS.md。
+第一版采用英文聊天为主、辅助表单、每个浏览器tab独立临时记忆；资料基准为15 Oct 2026，不加入当天日期切换。26Oct按用户设计要求移除整块Saved snapshot demo侧栏，包括Reset、Stop、Download按钮及其说明，同时移除主标题下两行技术／快照文字。结果和证据仍保留资料本身的来源与日期。第一版原始决定记录见docs/STAGE9_DECISIONS.md，界面操作以本次更新为准。
 
 ## 2. 怎样启动
 
@@ -31,11 +31,13 @@ PowerShell负责维持服务，保持该窗口运行。结束时在该terminal�
 
 - **Consultation area**：Buy、Sell、Negotiation、Trade-In。浏览分类本身不执行工具；提交资料才开始／切换任务。英文消息明确提出另一个目标时，Controller也可以切换目标。
 - **Consultation**：英文聊天、追问回答、条件修改和辅助表单。
-- **Results & comparison**：当前经独立检查的候选比较、估价或现金路径结果。
-- **Evidence & checks**：facts、rules、tools／真实observations、checks和有限trace。
-- **Confirmed facts**：侧栏显示当前实际目标的结构化事实。
+- **Menu（三条杠）→ Results & comparison**：当前经独立检查的候选比较、估价或现金路径结果。
+- **Menu → Evidence & checks**：facts、rules、tools／真实observations、checks和有限trace。
+- **Menu → Vehicle research**：有来源的车型研究资料。查看后可按Back to consultation返回聊天。
+- **View confirmed details**：侧栏按钮展开当前会话实际记住的资料，以易读的标签和数值显示；打开按钮不执行咨询。尚无资料时会提示先发送消息。
+- **Message the Agent**：砖红色边框标出主要输入区，附英文示例。辅助表单默认收起，聊天不再固定在页面最底部。
 
-界面在执行期间禁用重复提交。一次本机任务可能较慢，沿用模型请求90秒、整轮240秒等限制；浏览器里没有承诺瞬时中断模型的按钮。Stop consultation用于轮次之间停止并保留事实；New consultation / Reset清空事实和聊天。
+界面在执行期间禁用重复提交。右侧 **Stop** 在计算时可用：取消当前模型请求，停止后续工具步骤，丢弃本轮未完成资料并保留之前已确认的需求。网页服务继续运行，停止后可发送新消息。没有计算时Stop为灰色。需要清空事实和聊天时发送 `/reset`；聊天命令 `/stop` 仍用于轮次之间停止。实际取消及其边界见[菜单与停止说明](STOP_MENU_20261026_ZH.md)。
 
 ## 4. 聊天和表单如何共用Agent
 
@@ -50,8 +52,8 @@ PowerShell负责维持服务，保持该窗口运行。结束时在该terminal�
 | 留空／Keep / not provided | 保留已确认值，本轮不更新这个字段 |
 | Unknown | 明确把字段变成未知；brand／usage列表则清空 |
 | 0 | 明确的已知零，仅允许在fee／settlement等支持零的字段 |
-| 60000 | 金额栏位已标MYR；不要填USD、单位或科学记数法 |
-| City commuting, Family travel | driving use的可支持英文选项，逗号分隔 |
+| 60000、60k、1million | 金额栏位已标MYR；支持数字及thousand／million简写，最多两位小数；不做外币兑换或接受科学记数法 |
+| Driving use多选 | 选择City commuting／Family travel／Long-distance driving；非空替换、留空保留、Unknown单独清空，无需输入逗号 |
 | Toyota, Honda | brand列表；本轮完整替换该列表，不是只追加 |
 
 旧现金报价不会自动预填，避免修改车型时意外重新确认旧报价。已确认值在字段help和侧栏可查。只需填本轮想改的内容，不必重复所有资料。
@@ -100,20 +102,20 @@ I want to buy a car. Save fuel.
 
 ## 6. 保存、刷新与来源
 
-Download consultation record只在用户点击时向浏览器下载JSON，包含当前facts、provenance、conversation、tools和checks。应用不自动保存聊天文件，不读取本机历史session，也不支持导入此export恢复咨询。
+本次设计已移除网页咨询记录下载按钮。需要保留网页测试证据时，手动保存输入／结果截图，并在测试表记录预期与实际结果。应用不自动保存聊天文件，也不读取本机历史session。此前导出按钮的验收属于旧版界面的历史记录。
 
 刷新／关闭tab或重启server可能清空会话，符合第一版已确认范围。不同tab各有自己的Controller，不能把客户state放进全局cache。全局只共享一把本机推理锁；另一tab正在执行时，界面要求稍后重试，不许串用资料。
 
-模型忙碌时，本次提交会保存在当前tab，尚未应用到facts。点击Retry saved submission才再次尝试；Discard saved submission丢弃并清空草稿，Reset也会清空。此时其他输入暂时禁用，避免旧草稿日后覆盖新条件。模型空闲不会自动执行草稿；下载记录只包含已经处理的咨询。
+模型忙碌时，本次提交会保存在当前tab，尚未应用到facts。点击Retry saved submission才再次尝试；Discard saved submission丢弃并清空草稿。此时其他输入暂时禁用，避免旧草稿日后覆盖新条件。模型空闲不会自动执行草稿。
 
-开发者修改被导入的Python模块后，若旧服务仍加载旧模块，应在启动服务的terminal按Ctrl+C，再执行上面的启动命令；重启会清空临时咨询，应先手动导出需要保留的证据。
+开发者修改被导入的Python模块后，若旧服务仍加载旧模块，应在启动服务的terminal按Ctrl+C，再执行上面的启动命令；重启会清空临时咨询，应先保存需要保留的输入和结果截图。
 
-界面始终公开15 Oct 2026数据和reference日期。来源按钮打开原广告／规格网页；保存价格可能与后来网页不同。实时搜索需要另一套抓取、来源验证和数据更新流程，不能靠把日期改成今天实现。
+结果和证据保留各记录的来源与日期，首页不再显示原快照说明块。来源按钮打开原广告／规格网页；保存价格可能与后来网页不同。实时搜索需要另一套抓取、来源验证和数据更新流程，不能靠把日期改成今天实现。
 
 ## 7. 检查与后续
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest -q test_profile test_matching test_scoring test_valuation test_input_grounding test_stage5_audit test_negotiation test_agent test_streamlit_ui
+.\.venv\Scripts\python.exe run_team_tests.py --tester YOUR_NAME
 ```
 
 test_streamlit_ui使用控制过的模型回复验证状态与真实tools；真实浏览器／Ollama结果另存stage9-browser-*.json。具体数量、结果和限制见STAGE9_RESULTS.md。

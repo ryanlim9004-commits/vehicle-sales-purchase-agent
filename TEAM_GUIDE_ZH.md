@@ -172,7 +172,7 @@ ollama serve
 
 把 `YOUR_NAME` 换成实际测试者名称。这个指令自动找出全部 `test_*.py`，不需要自己逐个打开。离线测试不用Ollama；其中Agent／UI测试使用预设模型回复，但Python业务工具实际执行。
 
-成功标准：末尾显示 `OK`，报告中 `passed` 为 `true`，`failures` 和 `errors` 都为空。26Oct本机修复版预期232项（19Oct交接版195项、22Oct的18项用途测试及26Oct的19项追问测试）；日后新增测试可能改变数量，必须同时记录commit和本机是否修改过代码。
+成功标准：末尾显示 `OK`，报告中 `passed` 为 `true`，`failures` 和 `errors` 都为空。26Oct菜单／停止更新后预期250项（此前242项加8项取消与导航测试）；日后新增测试可能改变数量，必须同时记录commit和本机是否修改过代码。
 
 最后会打印 `Offline report: ...`，例如 `team_results\offline-日期时间.json`。把实际路径记下来。若出现FAIL或ERROR，保留报告和终端输出，不修改预期值来凑通过。
 
@@ -198,14 +198,22 @@ http://127.0.0.1:8501
 |---|---|
 | Sidebar → Consultation area | 选择Buy、Sell、Negotiation、Trade-In；提交资料才执行咨询 |
 | Consultation | 输入英文；也可以打开 `Add or update details with a form` 补资料 |
+| Message the Agent | 砖红色边框内是主要聊天框，填写后按Enter发送；辅助表单默认收起 |
+| View confirmed details | 侧栏按钮展开当前会话已经记住的资料；会自动更新，点击查看不执行模型或工具 |
 | 表单 → Driving use | 多选City commuting／Family travel／Long-distance driving。非空选择替换旧用途；留空保留，Unknown单独清空，无需输入逗号 |
-| Results & comparison | 查看当前经过工具检查的候选／计算结果 |
-| Evidence & checks | 查看Facts、Rules、实际Tools和Checks；保留通过及失败记录 |
-| Vehicle research | 浏览有来源的研究资料；价格、费用、库存未知，不会因此变成可购买候选 |
-| New consultation / Reset | 开始独立新案例前清空之前的记忆 |
-| Download consultation record | 手动下载当前咨询JSON，作为本轮证据 |
+| 右侧Menu → Results & comparison | 查看当前经过工具检查的候选／计算结果 |
+| Menu → Evidence & checks | 查看Facts、Rules、实际Tools和Checks；保留通过及失败记录 |
+| Menu → Vehicle research | 浏览有来源的研究资料；价格、费用、库存未知，不会因此变成可购买候选 |
+| Back to consultation | 从其他页面返回英文聊天 |
+| 右侧Stop | 正在计算时取消当前任务，保留之前确认的资料；空闲时按钮不可用 |
+| 聊天输入 `/reset` | 开始独立新案例前清空之前的记忆；原Reset侧栏按钮已移除 |
+| 测试证据 | 保存输入、结果及Evidence截图；原咨询下载按钮已移除 |
 
 每次提交后等到出现结果、追问或错误再进行下一步。原设置模型请求有90秒限制、整轮240秒限制；超时应记录。多开tab不会共享客户事实，但同一台电脑的模型仍共用。出现忙碌提示时，草稿会保留，稍后明确点Retry；不再需要则Discard。
+
+停止检查：先完成一轮咨询，再发送修改预算等新消息；计算期间点击右侧Stop。应显示cancelled、输入框恢复、之前的已确认资料保留，本轮未完成结果不发布。之后再发新消息，应能正常继续；这不是关闭整个Streamlit或Ollama服务。详见[实测说明](STOP_MENU_20261026_ZH.md)。
+
+金额例子：聊天用 `My maximum budget is RM1 million.`，表单MYR金额栏可用 `1million`、`1,000,000` 或 `1000k`，均代表1000000。聊天缺货币时会提示补RM／MYR；不支持的格式会给具体写法。高预算不受当前挂牌价格上限限制。详情见[输入与需求查看说明](INPUT_GUIDANCE_20261026_ZH.md)。
 
 ## 10. 四类业务的操作检查
 
@@ -213,7 +221,7 @@ http://127.0.0.1:8501
 
 ### A. 买车、多轮修改与模糊评分
 
-1. 点 `New consultation / Reset`，选择Buy。
+1. 在聊天框发送 `/reset`，再选择Buy。下文Reset也指发送此命令。
 2. 在英文聊天框输入：
 
 ```text
@@ -250,7 +258,7 @@ I mean save fuel: fuel economy is important. I have no safety preference.
 
 第一句的 `travel` 没有说明是哪类用途，应显示待确认的原词，并询问用途与预算；`safe fuel` 可能指 `save fuel`（省油）或安全，应该询问。第二句应保存 `family_travel` 和20000，不应再次询问用途。第三句后应保留至少4座／舒适／省油，不凭空加安全偏好；现有快照没有符合RM20000的车，应显示 `no_matches`，不能提高预算。至少4座也允许5座或7座，不要求汽车恰好4座。
 
-若刚更新了Python模块，先手动导出要保留的会话，在启动网页的PowerShell窗口按 `Ctrl+C`，再重新运行本指南的Streamlit启动命令；随后刷新网页并开始新咨询。仅刷新浏览器可能仍使用旧进程里已导入的代码。
+若刚更新了Python模块，先保存需要保留的输入和结果截图，在启动网页的PowerShell窗口按 `Ctrl+C`，再重新运行本指南的Streamlit启动命令；随后刷新网页并开始新咨询。仅刷新浏览器可能仍使用旧进程里已导入的代码。
 
 ### B. 卖车与里程单位
 
@@ -337,12 +345,12 @@ The replacement price using trade-in is RM65000, with replacement fees RM1000. T
 
 1. `setup-offline.json` 和 `setup-with-ollama.json`。
 2. 一份 `offline-日期时间.json`；实际模型测试的 `live-v2-日期时间.json`。
-3. Buy、Sell、Negotiation、Trade-In各一份通过或失败的咨询导出，以及关键结果／错误截图。
+3. Buy、Sell、Negotiation、Trade-In各一份通过或失败的操作记录，以及输入、关键结果／错误和Evidence截图。
 4. 自己预先写好并冻结的独立案例／哈希、实际结果和评语；与上述公开检查例子分开。
 
-每个案例在页面侧栏点击 `Download consultation record`，从浏览器的下载记录／Downloads文件夹找到 `vehicle-consultation.json`，移动并改名为自己的案例名，例如 `team_results\buy-01.json`。下载前后查看里面的日期、goal、conversation和checks，确认不是上一个案例的文件。若下载没有生成文件，把浏览器类型和现象记为失败，保留截图，不写“导出成功”。
+26Oct的界面设计已移除咨询下载按钮。每个案例请记录原始输入、预期、实际结果和状态，并保存Confirmed facts、Results及Evidence & checks截图；文件按自己的案例编号命名。保留实际失败现象，不把截图或手写记录称为系统导出的JSON。
 
-刷新、Reset、关闭tab或重启服务前先下载需要保留的记录。网页会话只在当前tab临时保留；报告下载不是恢复会话的导入文件。
+刷新、Reset、关闭tab或重启服务前先保存需要保留的输入和截图。网页会话只在当前tab临时保留，截图不能用来自动恢复会话。
 
 `team_results/` 默认被Git忽略。把需要的文件用组内既定方式交给Ryan检查；工具不会替你自动上传或通知别人。提交到Git仓库的正式验收证据由团队确认后另行整理，原始案例不随意塞进数据集。
 
@@ -403,4 +411,4 @@ Git提示本机有代码修改或无法快进时先记录并交Ryan确认，不�
 
 ## 完成检查
 
-安装检查通过 → 离线测试通过 → 真模型推理与修改条件完成 → 四类浏览器场景、错误边界与下载记录保存 → 独立案例、硬件版本和失败情况交回。只有组员在自己电脑实际做完，才登记该组员的跨电脑复现；Ryan本机新建环境仍只算本机隔离安装检查。
+安装检查通过 → 离线测试通过 → 真模型推理与修改条件完成 → 四类浏览器场景、错误边界与操作证据保存 → 独立案例、硬件版本和失败情况交回。只有组员在自己电脑实际做完，才登记该组员的跨电脑复现；Ryan本机新建环境仍只算本机隔离安装检查。

@@ -8,4 +8,16 @@ gatherUsageStats = false
 
 [theme]
 base = "light"
-primaryColor = "#0F766E"
+primaryColor = "#B80C09"
+backgroundColor = "#E5E7E6"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#2B2420"
+linkColor = "#B80C09"
+borderColor = "#B7B5B3"
+
+[theme.sidebar]
+primaryColor = "#B80C09"
+backgroundColor = "#B7B5B3"
+secondaryBackgroundColor = "#E5E7E6"
+textColor = "#6B2B06"
+borderColor = "#6B2B06"

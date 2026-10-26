@@ -1,0 +1,71 @@
+{
+  "checked_at": "2026-10-26T16:10:34.687921+08:00",
+  "scope": "Local input guidance and budget parsing verification; not independent relevance or market calibration.",
+  "source": {
+    "git_parent": "6a17e75d8b1246e05778964bad5e340cf4ce5596",
+    "code_and_data_sha256": "46888704d80ac39bed31a5162ecd26da84f0d130b3732372c33e22fd65838172"
+  },
+  "offline": {
+    "passed": true,
+    "tests_run": 242,
+    "new_budget_tests": 10,
+    "elapsed_seconds": 14.036
+  },
+  "actual_browser": {
+    "ollama": true,
+    "consultation_turns": 3,
+    "checks": [
+      "RM1 million chat completes matching with a MYR1000000 budget",
+      "View confirmed details shows formatted budget, five seats and family travel",
+      "Currency-less correction asks for RM/MYR and does not reuse the previous budget",
+      "1billion in the MYR form is rejected locally with examples",
+      "1million in the MYR form completes with existing seats and use preserved",
+      "Current checked result cards are visible"
+    ],
+    "separate_cli_replay": false
+  },
+  "receipts": [
+    {
+      "path": "team_results/input-guidance-20261026-offline.json",
+      "sha256": "5442d3ae9800468d866cec89650bbd2d1f6c5f9fd671603a5a373d4355f87026"
+    },
+    {
+      "path": "team_results/input-guidance-20261026-million.txt",
+      "sha256": "ffc1f14882a31821520e438384ef95f24f7a29e4052d7f27fe742863133383db"
+    },
+    {
+      "path": "team_results/input-guidance-20261026-missing-currency.txt",
+      "sha256": "619fb88b6720dd2441ae9d99c13c3301488f6c93a989af1893090ed6ddece069"
+    },
+    {
+      "path": "team_results/input-guidance-20261026-invalid-form.txt",
+      "sha256": "0592695fdfbd4d0b835ea0335741f7bd7edcbcd1c883ecbd50eabc918198d909"
+    },
+    {
+      "path": "team_results/input-guidance-20261026-corrected-form.txt",
+      "sha256": "b6c7c457509bea122f85acc998cd608569e3442dbc459fb1b6599428544b0036"
+    },
+    {
+      "path": "team_results/input-guidance-20261026-results.txt",
+      "sha256": "902d320da6c02e70e83e6d5c5600f3e526f0082acf055e80c9caf1d484603350"
+    },
+    {
+      "path": "docs/input-guidance-ui-20261026.png",
+      "sha256": "0af0885caf310600cd05434e021c9978d63e1ba567acbc39c200c39d25b6e39b"
+    },
+    {
+      "path": "docs/input-guidance-million-20261026.png",
+      "sha256": "517c9c290595d422a7b82b769e226e6395a27370d689eb827c3d9e4d06f50cfa"
+    },
+    {
+      "path": "docs/input-guidance-help-20261026.png",
+      "sha256": "15618f126f24256b1be7c883dcc9e57650421c55da18837c1f7e1856022d96dc"
+    }
+  ],
+  "limitations": [
+    "Existing bounded English patterns do not cover every possible input.",
+    "Vehicle inventory and market evidence remain unchanged.",
+    "No browser consultation export was tested; its button was previously removed."
+  ],
+  "git_delivery": "Local changes not committed or pushed in this task."
+}

@@ -7,7 +7,7 @@ import re
 from decimal import Decimal
 from pydantic import ValidationError
 from agent_state import SLOTS, set_slot, switch_goal
-from input_grounding import MONEY, NUMBER, number_value, budget_from_text, mileage_from_text, ground_seller, clause_before, clause_after
+from input_grounding import MONEY, NUMBER, number_value, money_number_value, budget_from_text, stated_buyer_budget, mileage_from_text, ground_seller, clause_before, clause_after
 from seller_profile import SellerVehicleFrame
 from input_grounding import ground_reference_priority, explicit_buyer_usages, explicit_priority_clear
 from buyer_usage import ground_usage_update, usage_replacement_requested, ambiguous_buyer_travel
@@ -49,7 +49,7 @@ def explicit_quote_amounts(message):
             slot = 'trade_in.' + scope + '.' + field
             currency = (match['currency'] or match['suffix_currency']).upper()
             invalid = currency not in ('RM', 'MYR', 'RINGGIT') or re.search(r'\b(monthly|per month|instalments?|installments?)\b|/\s*(?:mo|month)\b', sentence, re.I)
-            amount = None if invalid else float(number_value(match['number'] or match['suffix_number']))
+            amount = None if invalid else float(money_number_value(match['number'] or match['suffix_number']))
             recovered.setdefault(slot, []).append((amount, sentence))
     return recovered
 
@@ -67,7 +67,7 @@ def money_from_evidence(text, slot):
         currency = (match['currency'] or match['suffix_currency']).upper()
         if currency not in ('MYR', 'RM', 'RINGGIT'):
             raise ValueError('Please state this amount explicitly in MYR/RM; no currency conversion is performed.')
-        amounts.append(number_value(match['number'] or match['suffix_number']))
+        amounts.append(money_number_value(match['number'] or match['suffix_number']))
     if not amounts or len(set(amounts)) != 1:
         raise ValueError('Please provide one explicit MYR/RM amount for this item; unknown or conflicting amounts are not assumed.')
     return float(amounts[0])
@@ -262,6 +262,21 @@ def apply_patch(state, patch, message):
                 state.ranked_vehicle_ids = []
                 state.selected_vehicle_id = None
     if state.goal == 'buy':
+        # Recheck the full explicit budget clause, including a scale the model
+        # may have omitted from its evidence (e.g. RM1 from RM1 million).
+        stated_budget = stated_buyer_budget(message, pending=state.pending_slots == ['buyer.budget_myr'])
+        if stated_budget:
+            amount, notes, issue, evidence = stated_budget
+            set_slot(state, 'buyer.budget_myr', None if issue else amount)
+            if issue:
+                state.issues['buyer.budget_myr'] = issue
+            else:
+                state.issues.pop('buyer.budget_myr', None)
+            state.provenance['buyer.budget_myr'] = {'turn': state.turn, 'evidence': evidence, 'source': 'explicit budget source rule'}
+            state.event('rules', rule_id='BUY_BUDGET_SOURCE', reason='Check the stated currency, scale and total budget before matching; saved listing prices do not cap the customer budget.',
+                        evidence=evidence, derived_fact={'buyer.budget_myr': state.buyer.budget_myr}, notes=notes, issue=issue)
+            state.ranked_vehicle_ids = []
+            state.selected_vehicle_id = None
         # Explicit named clearing also works when the model omits the slot.
         # It cannot clear another priority: "no safety preference" names safety.
         for name in ('fuel', 'space', 'safety', 'comfort', 'reliability'):

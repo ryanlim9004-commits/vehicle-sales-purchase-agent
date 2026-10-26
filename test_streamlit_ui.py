@@ -211,11 +211,13 @@ class StreamlitAppTests(unittest.TestCase):
         next(button for button in app.button if button.label == 'Submit details to Agent').click().run()
         self.assertFalse(app.exception)
         self.assertEqual(ui.last_response['status'], 'complete')
+        app.button(key='nav_results').click().run()
         self.assertEqual(sum(item.value.startswith('**MYR ') for item in app.markdown), 3)
         count = len(ui.controller.backend.requests)
         app.run()
         self.assertEqual(len(ui.controller.backend.requests), count)
-        next(button for button in app.button if button.label == 'New consultation / Reset').click().run()
+        app.button(key='nav_consultation').click().run()
+        app.chat_input[0].set_value('/reset').run()
         self.assertFalse(app.exception)
         self.assertIsNone(ui.controller.state.goal)
         self.assertEqual(ui.history, [])
@@ -261,27 +263,23 @@ class StreamlitAppTests(unittest.TestCase):
         app.run()
         self.assertEqual(len(ui.controller.backend.requests), count)
 
-    # Discard and Reset both clear a blocked draft without ever touching the model.
-    def test_discard_and_reset_clear_blocked_submission(self):
+    # Discard clears a blocked draft without ever touching the model.
+    def test_discard_clears_blocked_submission(self):
         ui = session()
         app = self.mount(ui)
         lock = inference_lock()
         self.assertTrue(lock.acquire(blocking=False))
         try:
-            for action in ('discard_submission', 'reset'):
-                app.text_input(key=f'field_buy_{ui.generation}_buyer.budget_myr').set_value('60000')
-                next(button for button in app.button if button.label == 'Submit details to Agent').click().run()
-                self.assertIn('blocked_turn', app.session_state)
-                if action == 'reset':
-                    next(button for button in app.button if button.label == 'New consultation / Reset').click().run()
-                else:
-                    app.button(key=action).click().run()
-                self.assertFalse(app.exception)
-                self.assertNotIn('blocked_turn', app.session_state)
-                self.assertFalse(app.chat_input[0].disabled)
-                self.assertEqual(app.text_input(key=f'field_buy_{ui.generation}_buyer.budget_myr').value, '')
-                self.assertIsNone(ui.controller.state.goal)
-                self.assertEqual(ui.controller.backend.requests, [])
+            app.text_input(key=f'field_buy_{ui.generation}_buyer.budget_myr').set_value('60000')
+            next(button for button in app.button if button.label == 'Submit details to Agent').click().run()
+            self.assertIn('blocked_turn', app.session_state)
+            app.button(key='discard_submission').click().run()
+            self.assertFalse(app.exception)
+            self.assertNotIn('blocked_turn', app.session_state)
+            self.assertFalse(app.chat_input[0].disabled)
+            self.assertEqual(app.text_input(key=f'field_buy_{ui.generation}_buyer.budget_myr').value, '')
+            self.assertIsNone(ui.controller.state.goal)
+            self.assertEqual(ui.controller.backend.requests, [])
         finally:
             lock.release()
 
@@ -310,6 +308,7 @@ class StreamlitAppTests(unittest.TestCase):
                 ui.submit('Please continue.', goal=goal, form_patch=TurnPatch())
                 self.assertEqual(ui.last_response['status'], 'complete')
                 app = self.mount(ui)
+                app.button(key='nav_results').click().run()
                 self.assertFalse(app.exception)
                 self.assertTrue(app.dataframe or app.json)
                 if goal == 'sell':

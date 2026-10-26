@@ -1,0 +1,36 @@
+{
+  "checked_at": "2026-10-26T15:32:16.280138+08:00",
+  "scope": "Requested Streamlit layout removal; no new model inference or data refresh.",
+  "git_parent": "6a17e75d8b1246e05778964bad5e340cf4ce5596",
+  "code_and_data_sha256": "584e734a8acba9fefbc8453ecfe43f157f7714d6b474cbe3016ffee372c2ddff",
+  "removed": [
+    "Saved snapshot demo sidebar block, including all three buttons and supporting captions",
+    "Two technical and snapshot captions below the page introduction"
+  ],
+  "offline": {
+    "passed": true,
+    "tests_run": 232,
+    "elapsed_seconds": 17.942
+  },
+  "browser": {
+    "actual_page_render_verified": true,
+    "requested_labels_absent": true,
+    "form_expander_checked": true,
+    "actual_ollama_retested": false
+  },
+  "receipts": [
+    {
+      "path": "team_results/ui-layout-20261026-offline.json",
+      "sha256": "296522ceda4a871bfc8513907ebf7c701d127bd057afe6363b60869e371edd49"
+    },
+    {
+      "path": "team_results/ui-layout-20261026-browser.txt",
+      "sha256": "a8eb572051d9ca3bec2d941287616714e8ba3875bf58cb3ff600306f8f6b453f"
+    },
+    {
+      "path": "docs/ui-layout-20261026.png",
+      "sha256": "d6b46318553094b80d16f429cfcbe084a7dd9fd3dfd64add6a51fd19406536cb"
+    }
+  ],
+  "git_delivery": "Local layout change; not committed or pushed in this task."
+}
