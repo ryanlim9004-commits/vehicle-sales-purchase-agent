@@ -8,6 +8,7 @@ from datetime import date
 from fuzzy_lifestyle import infer_lifestyle, POLICY_VERSION
 from scoring import clip
 from vehicle_evidence import evidence_for_vehicle, load_catalogue
+from vehicle_frame import fuel_comparison_basis
 
 
 def component_sources(name, vehicle, evidence, fuel_weight, luggage_weight):
@@ -43,13 +44,15 @@ def rank_vehicles_v2(profile, filtered, *, as_of=date(2026, 10, 15), catalogue=N
         'Comfort and reliability coding is attributed opinion, not a failure rate. Exact year, variant and transmission applicability is required.',
     ]
     rows = result['matches']
-    bases = {r['vehicle']['fuel_basis'] for r in rows if r['vehicle']['fuel_km_per_l'] is not None}
-    if fuel_weight and len(bases) > 1:
+    bases = {fuel_comparison_basis(r['vehicle']) for r in rows if r['vehicle']['fuel_km_per_l'] is not None}
+    if fuel_weight and (len(bases) > 1 or None in bases):
         fuel_weight = 0
         notes.append('Fuel scoring disabled: incompatible claim/test bases; no cross-cycle comparison.')
     elif fuel_weight and not bases:
         fuel_weight = 0
         notes.append('No fuel-economy recommendation is supported: all eligible fuel features are unknown.')
+    if result.get('simulation_record_count'):
+        notes.append('Historical simulation candidates use assumed years/seats and unverified catalogue fuel references. Any compatible-cycle fuzzy comparison is a simulation only, not a real-world fuel-saving claim.')
     importance = {None: 0, 'low': .5, 'medium': 2, 'high': 3}
     raw = {'budget': 1, 'fuzzy_lifestyle': fuel_weight + luggage_weight,
            'brand': 2 if profile.preferred_brands else 0,

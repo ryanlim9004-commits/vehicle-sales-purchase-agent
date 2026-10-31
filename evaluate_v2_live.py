@@ -49,7 +49,7 @@ def main():
             checks.update(budget_correction=agent.state.buyer.budget_myr == 55000,
                           space_priority=agent.state.buyer.space_priority == 'high',
                           exclusion='toyota' in [b.casefold() for b in agent.state.buyer.excluded_brands],
-                          nine_fuzzy_rules_for_supported_inputs=bool(supported) and all(len(t['rules']) == 9 for t in supported),
+                          complete_rule_table_for_active_inputs=bool(supported) and all(len(t['rules']) == 3 ** len(t['importance']) for t in supported),
                           no_rules_invented_for_unknown_inputs=all(not t['rules'] and t['unknown_reason'] for t in unknown))
         report['turns'].append({'turn': i, 'input': message, 'checks': checks, 'passed': all(checks.values()),
                                 'elapsed_seconds': round(time.monotonic()-start, 2), 'response': actual})

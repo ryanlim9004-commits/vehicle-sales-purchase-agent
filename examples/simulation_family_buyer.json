@@ -1,0 +1,6 @@
+{
+  "budget_myr": 30000.0,
+  "required_seats": 5,
+  "usage": ["family_travel"],
+  "fuel_priority": "high"
+}

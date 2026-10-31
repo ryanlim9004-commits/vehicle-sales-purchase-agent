@@ -73,7 +73,8 @@ def repository_identity(root=ROOT):
     # rather than mistaking an enclosing unrelated repository for this project.
     names = {p.name for p in root.glob('*.py')}
     names.update(('requirements-lock.txt', '.streamlit/config.toml',
-                  'data/vehicles_real.json', 'data/model_evidence_v2.json', 'data/regression_manifest.json'))
+                  'data/vehicles_real.json', 'data/vehicles_simulation.json', 'data/historical_simulation_source.json',
+                  'data/model_evidence_v2.json', 'data/regression_manifest.json'))
     hashes = {name: hashlib.sha256((root/name).read_bytes()).hexdigest()
               for name in sorted(names) if (root/name).is_file()}
     digest = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()
@@ -130,12 +131,14 @@ def collect_environment(*, check_ollama=False):
     check('dependency_imports', imports_ok, 'Import checks do not call Ollama or start Streamlit.')
     if imports_ok:
         try:
-            from vehicle_frame import load_vehicles
+            from vehicle_frame import load_vehicles, load_agent_vehicles
             from vehicle_evidence import load_catalogue
             from price_regression import PriceDataset, gate
             cars, catalogue = load_vehicles(ROOT/'data/vehicles_real.json'), load_catalogue()
             manifest = PriceDataset.model_validate_json((ROOT/'data/regression_manifest.json').read_bytes())
             report['saved_data'] = {'price_rows': len(cars), 'research_profiles': len(catalogue.profiles),
+                                    'simulation_rows': sum(v.simulation is not None for v in load_agent_vehicles()),
+                                    'agent_total_rows': len(load_agent_vehicles()),
                                     'snapshot_date': '2026-10-15', 'research_reviewed_on': catalogue.reviewed_on.isoformat(),
                                     'regression_data_issues': gate(manifest), 'regression_active_in_agent': False}
             check('data_schema', True, 'Saved sources validate. Insufficient regression evidence is a documented feature limit, not an installation failure.')

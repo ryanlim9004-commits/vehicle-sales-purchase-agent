@@ -8,6 +8,7 @@ import streamlit as st
 from form_inputs import GOALS, USAGES, fields_for, current_value, prepare_form
 from ui_session import UISession, display_money, source_url, verified_result
 from vehicle_evidence import load_catalogue, evidence_for_vehicle
+from vehicle_presentation import vehicle_information_lines, mileage_text, fuel_reference_text
 
 
 # Store explicit submissions for one run, rather than run on every widget edit.
@@ -152,7 +153,6 @@ def render_research_catalogue():
 # Keep table rows simple and preserve unknowns explicitly instead of NaN/zero guesses.
 def render_buy(result):
     st.subheader('Compare eligible vehicles')
-    st.caption(result['dataset_notice'])
     if not result['matches']:
         st.info('No saved listing matches your current requirements. You can change your budget, minimum seats or excluded brands in chat or the details form. Your requirements stay in effect until you change them.')
     else:
@@ -166,27 +166,33 @@ def render_buy(result):
         for column, row in zip(columns, rows):
             car = row['vehicle']
             with column, st.container(border=True):
-                st.caption(f"RANK {row['rank']} · {car['vehicle_id']}")
+                st.caption(f"RANK {row['rank']}")
                 st.markdown(f"**{car['year']} {car['brand']} {car['model']}**")
                 st.text(car.get('variant') or 'Variant unknown')
                 # Normal text wraps on narrow windows; oversized metric text
                 # would truncate the amount and hide important price digits.
-                st.caption('Asking price')
+                st.caption('Reference price')
                 st.markdown('**' + display_money(car['price_myr']) + '**')
-                st.write(f"{car['seats']} seats · supported score {row['score']:.3f}/100")
-                st.caption(f"Weighted feature coverage: {row['weighted_data_coverage_percent']:.1f}%")
-                st.caption(f"Bound including unknown features: {row['score']:.3f}–{row['score_upper_bound']:.3f}; not a confidence interval")
-                render_source('View saved listing source', car['source_reference'])
+                for line in vehicle_information_lines(car)[1:]:
+                    st.write(line)
         comparison = []
         for row in rows:
             v = row['vehicle']
-            comparison.append({'ID': v['vehicle_id'], 'Vehicle': f"{v['year']} {v['brand']} {v['model']} {v.get('variant') or ''}",
-                               'Asking price': display_money(v['price_myr']), 'Seats': v['seats'], 'Supported score': row['score'],
-                               'Upper bound': row['score_upper_bound'], 'Weighted coverage (%)': row['weighted_data_coverage_percent'],
-                               'Fuel (km/L claim)': v.get('fuel_km_per_l'), 'Fuel basis': v.get('fuel_basis'),
-                               'Boot (L)': v.get('boot_litres'), 'Boot configuration': v.get('boot_configuration'),
-                               'Length (mm)': v.get('length_mm'), 'Observed on': v['observed_on']})
+            comparison.append({'Rank': row['rank'], 'Vehicle': f"{v['year']} {v['brand']} {v['model']} {v.get('variant') or ''}",
+                               'Reference price': display_money(v['price_myr']), 'Seats': v['seats'],
+                               'Transmission': v.get('transmission') or 'Unknown',
+                               'Mileage': mileage_text(v) or 'Unknown', 'Fuel reference': fuel_reference_text(v) or 'Unknown',
+                               'Boot (L)': v.get('boot_litres'), 'Length (mm)': v.get('length_mm')})
         st.dataframe(comparison, hide_index=True, width='stretch')
+        with st.expander('Vehicle details and sources'):
+            for row in rows:
+                car = row['vehicle']
+                st.markdown(f"**Rank {row['rank']} · {car['brand']} {car['model']}**")
+                st.caption('Record ID: ' + car['vehicle_id'])
+                st.caption('Source observation date: ' + (car.get('observed_on') or 'Unknown'))
+                render_source('Source reference', car['source_reference'])
+                if car.get('specs_source_reference'):
+                    render_source('Specification reference', car['specs_source_reference'])
         with st.expander('Score calculation, weights and missing features'):
             st.json({'weights': result['scoring_weights'], 'formulas': result['scoring_anchors']})
             for row in rows:
@@ -194,15 +200,15 @@ def render_buy(result):
                 st.dataframe([{'Feature': name, **component} for name, component in row['score_breakdown'].items()], hide_index=True, width='stretch')
                 st.caption('Unknown: ' + (', '.join(row['missing_scoring_features']) or 'None'))
                 st.caption(row['ranking_explanation'])
+            for note in result.get('scoring_notes', []):
+                st.caption(note)
         if result.get('ranking_policy'):
-            st.caption('Ranking policy: ' + result['ranking_policy'] + ' · evidence as-of: ' + result['evidence_as_of'])
             with st.expander('Fuzzy rules, safety and attributed review evidence'):
+                st.caption('Ranking policy: ' + result['ranking_policy'] + ' · evidence as-of: ' + result['evidence_as_of'])
                 for row in rows:
                     st.markdown('**' + row['vehicle']['vehicle_id'] + '**')
                     st.json(row['fuzzy_trace'], expanded=False)
                     render_vehicle_evidence(row['vehicle_evidence'])
-    for note in result.get('scoring_notes', []):
-        st.caption(note)
     with st.expander('Hard constraints and rejected records'):
         st.json({'constraints': result['constraints'], 'rejected': result['rejected']})
 

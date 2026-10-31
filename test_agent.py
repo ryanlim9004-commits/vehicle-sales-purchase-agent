@@ -84,6 +84,9 @@ def ready_buyer():
 class AgentLoopTests(unittest.TestCase):
     # Construct a controller with a scripted backend and a fixed evidence date.
     def agent(self, backend, state=None, **kwargs):
+        # Preserve the original 17-row acceptance fixture; expanded defaults
+        # are exercised separately in test_simulation_data.
+        kwargs.setdefault('cars', load_vehicles(ROOT/'data/vehicles_real.json'))
         return AgentController(backend=backend, state=state, as_of=AS_OF, **kwargs)
 
     # A real business tool executes and passes independent checks before finish is accepted.

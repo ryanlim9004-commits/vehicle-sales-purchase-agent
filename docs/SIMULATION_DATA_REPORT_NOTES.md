@@ -1,0 +1,21 @@
+# Report notes: historical scenario extension
+
+## Methodology: dataset and assumptions
+
+The prototype loads 17 saved asking-price advertisement snapshots and 97 user-completed historical simulation records. The simulation extension was derived from the slash-year subset of Malaysia_Resale_Carlist, rather than all 974 original CSV rows. It contains 21 makes and 62 make/model combinations. Each source advertisement contributes at most one simulation record. Within this simulation, a leading YYYY/YYYY is interpreted as manufacturing year followed by registration year. This is an assumption, not a vehicle-specific verification. The latest supplied file supersedes the earlier two-alternative year review representation.
+
+The user supplied seating layouts and catalogue fuel-consumption references, including direct, closely matched and estimated values. The software preserves the supplied test cycle, quality label, specification link and original description. External sources were not independently verified during this integration. The original historical asking amounts become illustrative scenario prices; stock availability and individual advertisement dates remain unknown. These records extend demonstration coverage and do not establish current stock, transaction prices or market-calibrated valuation accuracy.
+
+## Implementation: use in the Agent
+
+The Agent and Streamlit interface load the original snapshot file and a separately labelled simulation file through a common loader. Simulation prices and seats participate in budget and passenger constraints; brand exclusions remain hard constraints. Fuel conversion uses km/L = 100 / (L/100 km). Numerical unit conversion does not harmonise test protocols. Fuel comparison is disabled for candidate sets containing incompatible or unspecified cycles or approximate specification matches. A compatible explicitly named cycle can support labelled simulation scoring; no real-world consumption claim follows. Missing luggage, safety, comfort and reliability features are not invented, and the research catalogue is not automatically applied to assumed simulation identities.
+
+The primary chat reply and recommendation cards present vehicle information without internal IDs or repeated simulation notices. Record IDs remain available in expandable vehicle details and the Evidence & checks trace. Prices are labelled reference prices. Internal simulation metadata, scoring limitations and the dataset distinction remain available for evaluation and documentation; simplifying the presentation does not constitute verification of the data. Displayed fuel references retain their units and test-cycle labels and do not assert a cross-cycle fuel-efficiency winner.
+
+The Sell valuation tool excludes all simulation records from its real-source comparable evidence. Negotiation and Trade-In retain explicit user quotes, complete fees and loan-settlement arithmetic. A simulation price does not automatically populate a seller offer, dealer trade-in quote or private-sale proceeds. Without a usable market reference, negotiation remains limited to the user's stated budget or net-proceeds reserve. The 97 simulation records are not added to the approved regression training manifest, and no price regression model is trained or enabled by this change.
+
+## Evaluation and limitations
+
+Structural checks cover unique source groups, the declared year convention, positive scenario prices, seat ranges, fuel units, preserved mileage intervals and unknown listing dates. Engineering tests check hard constraints, duplicate rejection, mixed-cycle handling, result rendering, the actual Controller/tool/check loop and isolation from market valuation. Scripted model responses in offline tests do not measure independent language understanding, recommendation relevance or market accuracy. Report separately any actual Ollama runs. The largest exact year/variant/transmission group among the 97 simulation records contains only two rows; adding these records does not resolve the original market-valuation coverage limit.
+
+Use the saved integration verification record for actual test counts and outcomes; do not infer completion of teammate evaluation, cross-computer reproduction or market validation from software test passes.

@@ -8,6 +8,22 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, field_validator, model_validator
 
 
+class SimulationMetadata(BaseModel):
+    """User-supplied scenario assumptions, kept apart from verified specifications."""
+    model_config = ConfigDict(extra='forbid', strict=True, allow_inf_nan=False)
+    source_record_group_id: str
+    source_row_number: int = Field(ge=1)
+    raw_description: str
+    registration_year: int
+    year_assumption: str
+    fuel_l_per_100km: float = Field(gt=0)
+    fuel_test_cycle: str
+    specification_match_quality: Literal['direct', 'closely_matched', 'simulation_default']
+    specification_reference_url: str
+    specification_notes: str
+    simulation_only: Literal[True] = True
+
+
 # Represent one source record, including price basis, observation dates, units, availability and
 # provenance.
 class VehicleFrame(BaseModel):
@@ -23,7 +39,8 @@ class VehicleFrame(BaseModel):
     seats: int | None = Field(default=None, ge=1, le=20)
     source_kind: Literal['synthetic_demo', 'listing', 'transaction']
     source_reference: str = Field(min_length=1)
-    observed_on: date
+    observed_on: date | None = None
+    simulation: SimulationMetadata | None = None
     variant: str | None = None
     transmission: str | None = None
     price_type: Literal['asking', 'transaction', 'illustrative'] | None = None
@@ -59,14 +76,18 @@ class VehicleFrame(BaseModel):
     # individual fields validate.
     @model_validator(mode='after')
     def check_dates(self):
-        if self.year > self.observed_on.year:
+        if self.source_kind != 'synthetic_demo' and self.observed_on is None:
+            raise ValueError('Real records require an observation date.')
+        if self.observed_on and self.year > self.observed_on.year:
             raise ValueError('Vehicle year is inconsistent with the observation date.')
-        if self.source_updated_on and self.source_updated_on > self.observed_on:
+        if self.source_updated_on and (self.observed_on is None or self.source_updated_on > self.observed_on):
             raise ValueError('Source update date cannot be after the observation date.')
         if self.mileage_min_km is not None and self.mileage_max_km is not None and self.mileage_min_km > self.mileage_max_km:
             raise ValueError('Mileage lower bound cannot exceed the upper bound.')
         if self.mileage_km is not None and ((self.mileage_min_km is not None and self.mileage_km < self.mileage_min_km) or (self.mileage_max_km is not None and self.mileage_km > self.mileage_max_km)):
             raise ValueError('Exact mileage must agree with any supplied mileage bounds.')
+        if self.simulation and (self.source_kind != 'synthetic_demo' or self.price_type != 'illustrative' or self.availability != 'unknown'):
+            raise ValueError('Simulation assumptions require a synthetic, illustrative record with unknown stock availability.')
         if self.source_kind != 'synthetic_demo':
             # A sold advertisement still contains an asking price. A sale label
             # alone cannot turn it into a verified transaction-price record.
@@ -108,4 +129,27 @@ def load_vehicles(path) -> list[PassengerCarFrame]:
     ids = [v.vehicle_id for v in vehicles]
     if len(ids) != len(set(ids)):
         raise ValueError('Duplicate vehicle IDs found. Each record must have a unique ID.')
+    groups = [v.simulation.source_record_group_id for v in vehicles if v.simulation]
+    if len(groups) != len(set(groups)):
+        raise ValueError('A simulation source group may appear only once, including year alternatives.')
     return vehicles
+
+
+def load_agent_vehicles():
+    """Load real snapshots and the labelled scenario extension used by the UI/Agent."""
+    from pathlib import Path
+    root = Path(__file__).resolve().parent / 'data'
+    cars = load_vehicles(root / 'vehicles_real.json') + load_vehicles(root / 'vehicles_simulation.json')
+    if len({v.vehicle_id for v in cars}) != len(cars):
+        raise ValueError('Duplicate IDs across the Agent datasets.')
+    return cars
+
+
+def fuel_comparison_basis(vehicle):
+    """Do not hide mixed cycles behind the shared synthetic_demo fuel label."""
+    if vehicle.get('simulation'):
+        spec = vehicle['simulation']
+        if spec['specification_match_quality'] != 'direct' or spec['fuel_test_cycle'] in ('manufacturer_rated', 'representative_combined'):
+            return None
+        return ('simulation', spec['fuel_test_cycle'], spec['specification_match_quality'])
+    return vehicle['fuel_basis']

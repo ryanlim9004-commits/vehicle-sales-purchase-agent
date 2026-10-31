@@ -5,6 +5,7 @@
 # Weights and anchors are hand-authored heuristics; missing data is disclosed.
 from copy import deepcopy
 from buyer_profile import BuyerProfileFrame
+from vehicle_frame import fuel_comparison_basis
 
 
 # Bound a feature to [0, 1] so an extreme raw value cannot exceed its allocated score weight.
@@ -32,10 +33,10 @@ def rank_vehicles(profile: BuyerProfileFrame, filtered: dict) -> dict:
                'brand': 2.0 if profile.preferred_brands else 0.0,
                'city_compactness': 1.0 if 'city_commute' in profile.usage else 0.0}
     rows = result['matches']
-    bases = {row['vehicle']['fuel_basis'] for row in rows if row['vehicle']['fuel_km_per_l'] is not None}
+    bases = {fuel_comparison_basis(row['vehicle']) for row in rows if row['vehicle']['fuel_km_per_l'] is not None}
     # Disable an unsupported fuel comparison for the whole candidate set,
     # rather than comparing numbers obtained under different claim conditions.
-    if weights['fuel'] and len(bases) > 1:
+    if weights['fuel'] and (len(bases) > 1 or None in bases):
         weights['fuel'] = 0.0
         result['scoring_notes'].append('Fuel scoring disabled for this candidate set: incompatible claim/test bases. No cross-cycle fuel comparison is made.')
     elif weights['fuel'] and not bases:

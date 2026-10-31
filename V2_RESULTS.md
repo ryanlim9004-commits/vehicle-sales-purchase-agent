@@ -1,5 +1,7 @@
 # V2 development acceptance — 17 Oct 2026
 
+**31 Oct update:** Default Agent/UI data now include 97 user-completed historical simulation records alongside the 17 original source snapshots. They expand Buy scenario coverage, retain unknown stock/dates, and are excluded from market valuation and approved regression training. See [simulation guide](SIMULATION_DATA_GUIDE_ZH.md) and [structural audit](docs/simulation-data-audit.json). The dated table and results below describe the earlier V2 acceptance.
+
 Status: fuzzy matching and scoped research integration delivered for the current
 evidence coverage. The complete V2 data/model goal is **not finished**.
 See V2_GUIDE_ZH.md for the beginner guide and docs/V2_SOURCE_AUDIT.md for receipts.

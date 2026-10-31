@@ -77,6 +77,9 @@ def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerC
     # second unsupported age-depreciation deduction to same-year used prices.
     for v in vehicles:
         reasons = []
+        if v.simulation is not None:
+            result['excluded_records'].append({'vehicle_id': v.vehicle_id, 'reasons': ['User-supplied historical simulation: excluded from real-source market price evidence.']})
+            continue
         if v.vehicle_id in seen_ids or v.source_reference in seen_sources:
             reasons.append('Duplicate ID/source; not counted twice.')
         seen_ids.add(v.vehicle_id)

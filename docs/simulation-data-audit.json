@@ -1,0 +1,75 @@
+{
+  "checked_on": "2026-10-31",
+  "scope": "Local structure and consistency checks only; no external source verification.",
+  "source_file": "historical_simulation_source.json",
+  "source_sha256": "963bf642a66d40bdc7e6961bfec7b7642a7d84dc53f8d10b261b9fc11e8720da",
+  "output_sha256": "db47b9473d51b1751fa0c4855e554319d9b9b263e3e1ccb008b9c3c4a7999ab5",
+  "input_records": 97,
+  "loaded_simulation_records": 97,
+  "unique_source_groups": 97,
+  "brands": [
+    "Audi",
+    "BMW",
+    "Ford",
+    "Honda",
+    "Hyundai",
+    "Isuzu",
+    "Kia",
+    "Land Rover",
+    "Lexus",
+    "MINI",
+    "Maxus",
+    "Mazda",
+    "Mercedes-Benz",
+    "Mitsubishi",
+    "Nissan",
+    "Perodua",
+    "Peugeot",
+    "Porsche",
+    "Proton",
+    "Toyota",
+    "Volkswagen"
+  ],
+  "brand_model_pairs": 62,
+  "seat_counts": {
+    "2": 3,
+    "4": 9,
+    "5": 63,
+    "7": 19,
+    "8": 2,
+    "11": 1
+  },
+  "fuel_cycles": {
+    "NEDC": 31,
+    "JC08": 23,
+    "manufacturer_rated": 25,
+    "US_EPA": 3,
+    "representative_combined": 7,
+    "TH_Eco_Sticker": 1,
+    "CA_combined": 1,
+    "ADR_combined": 3,
+    "EU_combined": 2,
+    "KR_combined": 1
+  },
+  "specification_quality": {
+    "direct": 63,
+    "closely_matched": 27,
+    "simulation_default": 7
+  },
+  "price_range_myr": [
+    21999.0,
+    638800.0
+  ],
+  "largest_exact_identity_group": 2,
+  "all_listing_dates_unknown": true,
+  "simulation_used_by_buy": true,
+  "simulation_used_as_market_valuation_evidence": false,
+  "regression_approved_rows_added": 0,
+  "limitations": [
+    "97 slash-year source records only, not the entire 974-row CSV.",
+    "Latest supplied file supersedes the earlier two-alternative year review scheme.",
+    "Seat layouts and fuel values are user-supplied scenario assumptions.",
+    "Mixed or unspecified fuel cycles/estimated specifications disable fuel comparison for the eligible candidate set.",
+    "No accident, flood, fee, comfort, reliability or safety facts are invented."
+  ]
+}

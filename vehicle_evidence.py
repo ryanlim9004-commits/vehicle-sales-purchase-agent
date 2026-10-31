@@ -198,9 +198,9 @@ def _review_reference(reviews, kind):
 def evidence_for_vehicle(vehicle, *, as_of, catalogue=None, research_profile_id=None):
     # Look up only a documented exact identity, never an adjacent model year.
     catalogue = catalogue or load_catalogue()
-    getter = vehicle.get if isinstance(vehicle, dict) else lambda name: getattr(vehicle, name)
+    getter = vehicle.get if isinstance(vehicle, dict) else lambda name: getattr(vehicle, name, None)
     profile = next((p for p in catalogue.profiles
-                    if (p.profile_id == research_profile_id if research_profile_id else p.automatic_matching)
+                    if not getter('simulation') and (p.profile_id == research_profile_id if research_profile_id else p.automatic_matching)
                     and normalized(p.brand) == normalized(getter('brand')) and normalized(p.model) == normalized(getter('model'))
                     and getter('year') in p.years and normalized(getter('variant')) in {normalized(v) for v in p.variants}
                     and normalized(getter('transmission')) in {normalized(v) for v in p.transmissions}), None)

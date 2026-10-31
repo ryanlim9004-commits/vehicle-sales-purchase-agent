@@ -15,8 +15,8 @@ ROOT = Path(__file__).resolve().parent
 CASES = {
     'buy': [
         ('I want to buy a car. Save fuel.', {'status': 'needs_clarification'}),
-        ('My vehicle budget is RM60000, a six-person family, mainly city commuting. Exclude Toyota.', {'status': 'complete', 'result.matched_count': 3}),
-        ('Change my budget to RM35000.', {'status': 'complete', 'result.status': 'no_matches', 'facts.family_size': 6, 'facts.fuel_priority': 'high'}),
+        ('My vehicle budget is RM60000, a six-person family, mainly city commuting. Exclude Toyota.', {'status': 'complete', 'result.matched_count': 4}),
+        ('Change my budget to RM35000.', {'status': 'complete', 'result.status': 'matches_found', 'result.matched_count': 1, 'facts.family_size': 6, 'facts.fuel_priority': 'high'}),
         ('/reset', {'status': 'reset', 'goal': None})],
     'sell': [
         ('I want to sell my Perodua Alza 1.5 SE, manufactured in 2020, automatic, odometer 50000 m, fair condition. No major accident and no flood damage.',

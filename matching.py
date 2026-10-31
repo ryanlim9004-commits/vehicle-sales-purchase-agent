@@ -20,11 +20,16 @@ def filter_vehicles(profile: BuyerProfileFrame, vehicles: list[PassengerCarFrame
         'status': 'needs_clarification',
         'buyer_reasoning': reasoning,
         'dataset_notice': ('Synthetic records are teaching fixtures, not real listings or market prices.' if any(v.source_kind == 'synthetic_demo' for v in vehicles) else 'Observed listing snapshots, not live inventory or confirmed transaction prices. Verify availability, fees and specifications with the source.'),
-        'observed_on': sorted({v.observed_on.isoformat() for v in vehicles}),
+        'observed_on': sorted({v.observed_on.isoformat() for v in vehicles if v.observed_on}),
         'matching_method': 'Hard constraints only; price/ID display order is not lifestyle ranking.',
         'constraints': {}, 'matches': [], 'rejected': [],
         'checked_count': 0, 'matched_count': 0,
     }
+    result['simulation_record_count'] = sum(v.simulation is not None for v in vehicles)
+    if result['simulation_record_count']:
+        result['dataset_notice'] = ('Mixed demonstration data: saved listing snapshots plus user-supplied historical simulation records. '
+            'Simulation prices, seats and years are scenario inputs; availability and listing dates are unknown. '
+            'These results do not establish current stock or market value. Fuel references retain their test cycle and assumption quality.')
     if not reasoning['ready_for_matching']:
         return result
     facts = reasoning['derived_facts']

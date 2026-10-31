@@ -13,6 +13,7 @@ from agent_grounding import apply_patch
 from agent_state import SessionState
 from buyer_profile import BuyerProfileFrame
 from form_inputs import fields_for, prepare_form
+from vehicle_frame import load_vehicles
 from test_agent import ScriptedBackend, planned, sensed, update
 from ui_session import UISession, SNAPSHOT_DATE, source_url, verified_result, display_money, inference_lock
 
@@ -21,7 +22,9 @@ ROOT = Path(__file__).resolve().parent
 
 # Build a session whose planner is controlled but whose tools are real.
 def session(*actions, state=None):
-    return UISession(AgentController(state=state, backend=ScriptedBackend(planned(*actions)), as_of=SNAPSHOT_DATE))
+    # Keep the original form financial/ranking fixtures reproducible.
+    return UISession(AgentController(state=state, backend=ScriptedBackend(planned(*actions)), as_of=SNAPSHOT_DATE,
+                                     cars=load_vehicles(ROOT/'data/vehicles_real.json')))
 
 
 # Use exact fixture amounts as explicit user entries, never as market-price labels.

@@ -14,7 +14,8 @@ from pydantic import Field, ValidationError
 from agent_state import AgentLimits, SessionState, TurnPatch, SLOTS, StrictFrame, switch_goal
 from agent_grounding import apply_patch
 from agent_tools import ToolRuntime, DESCRIPTIONS, EmptyArgs, SelectArgs, requirements, identity_complete
-from vehicle_frame import load_vehicles
+from vehicle_frame import load_vehicles, load_agent_vehicles
+from vehicle_presentation import vehicle_title, vehicle_information_lines
 
 ROOT = Path(__file__).resolve().parent
 
@@ -262,15 +263,11 @@ def render_result(goal, result):
     if goal == 'buy':
         if not result['matches']:
             return 'No saved listing satisfies all your hard constraints. You can change your budget, minimum seats or excluded brands in chat or the details form. Review the rejection reasons; no constraint was relaxed.'
-        lines = ['These saved listings satisfy your hard constraints, ranked by the supported lifestyle score:']
+        lines = ['Here are the vehicle options that match your requirements:']
         for row in result['matches'][:3]:
             v = row['vehicle']
-            lines.append(f"{row['rank']}. {v['year']} {v['brand']} {v['model']} {v.get('variant') or ''}: MYR {v['price_myr']:,.2f}, {v['seats']} seats, score {row['score']:.3f}; ID {v['vehicle_id']}.")
-            if row['missing_scoring_features']:
-                lines.append('   Unknown scoring features: ' + ', '.join(row['missing_scoring_features']) + '.')
-        lines.append('Scores use formal fuzzy rules and public weights. Safety and review references require exact model-year/variant evidence; Unknown is not a poor rating. These are asking-price snapshots, not live inventory. See result details for rules, sources and coverage.')
-        if any('no fuel-economy recommendation' in note or 'incompatible' in note for note in result['scoring_notes']):
-            lines.append('Fuel comparison is unavailable or incompatible for this candidate set; no fuel-economy claim is made.')
+            lines.append(f"\n{row['rank']}. **{vehicle_title(v)}**")
+            lines.extend('   ' + line + '  ' for line in vehicle_information_lines(v))
         return '\n'.join(lines)
     if goal == 'sell':
         reference = result['reference']
@@ -311,7 +308,7 @@ class AgentController:
     def __init__(self, *, state=None, backend=None, cars=None, as_of=None, limits=None, clock=time.monotonic, cancellation=None):
         self.state = state or SessionState()
         self.backend = backend or OllamaBackend()
-        self.cars = cars if cars is not None else load_vehicles(ROOT/'data/vehicles_real.json')
+        self.cars = cars if cars is not None else load_agent_vehicles()
         if len(self.cars) > 5000:
             raise ValueError('This local prototype supports at most 5000 validated vehicle records.')
         self.as_of = as_of or datetime.now(timezone(timedelta(hours=8))).date()

@@ -95,10 +95,10 @@ def main():
             if args.valuation_seller:
                 from seller_profile import SellerVehicleFrame
                 from valuation import estimate_vehicle_value
-                from vehicle_frame import load_vehicles
+                from vehicle_frame import load_vehicles, load_agent_vehicles
                 vehicle = SellerVehicleFrame.model_validate_json(args.valuation_seller.read_text(encoding='utf-8'))
                 path = args.vehicles or Path(__file__).resolve().parent/'data'/'vehicles_real.json'
-                observation = estimate_vehicle_value(vehicle, load_vehicles(path), as_of=as_of)
+                observation = estimate_vehicle_value(vehicle, load_vehicles(path) if args.vehicles else load_agent_vehicles(), as_of=as_of)
             result = advise_negotiation(consultation, as_of=as_of, valuation_result=observation)
         elif args.trade_in:
             from consultation_frames import TradeInFrame
@@ -108,28 +108,29 @@ def main():
             if args.valuation_seller:
                 from seller_profile import SellerVehicleFrame
                 from valuation import estimate_vehicle_value
-                from vehicle_frame import load_vehicles
+                from vehicle_frame import load_vehicles, load_agent_vehicles
                 vehicle = SellerVehicleFrame.model_validate_json(args.valuation_seller.read_text(encoding='utf-8'))
                 identity = {k: getattr(vehicle, k) for k in ('brand', 'model', 'variant', 'year', 'transmission')}
                 if not any(consultation.current_vehicle.model_dump().values()):
                     consultation = TradeInFrame.model_validate(consultation.model_dump() | {'current_vehicle': identity})
                 path = args.vehicles or Path(__file__).resolve().parent/'data'/'vehicles_real.json'
-                observation = estimate_vehicle_value(vehicle, load_vehicles(path), as_of=as_of, identity_reference_only=True)
+                observation = estimate_vehicle_value(vehicle, load_vehicles(path) if args.vehicles else load_agent_vehicles(), as_of=as_of, identity_reference_only=True)
             result = compare_trade_in(consultation, valuation_result=observation, as_of=as_of if args.valuation_seller else None)
         elif args.value:
             from seller_profile import SellerVehicleFrame, extract_seller_profile
             from valuation import estimate_vehicle_value
-            from vehicle_frame import load_vehicles
+            from vehicle_frame import load_vehicles, load_agent_vehicles
             seller = SellerVehicleFrame.model_validate_json(args.fixture.read_text(encoding='utf-8')) if args.fixture else extract_seller_profile(args.text, args.model)
             path = args.vehicles or Path(__file__).resolve().parent / 'data' / 'vehicles_real.json'
-            result = estimate_vehicle_value(seller, load_vehicles(path), as_of=as_of, illustrative_adjustments=args.illustrative_adjustments)
+            result = estimate_vehicle_value(seller, load_vehicles(path) if args.vehicles else load_agent_vehicles(), as_of=as_of, illustrative_adjustments=args.illustrative_adjustments)
         else:
             profile = BuyerProfileFrame.model_validate_json(args.fixture.read_text(encoding='utf-8')) if args.fixture else extract_profile(args.text, args.model)
         if args.match or args.rank:
-            from vehicle_frame import load_vehicles
+            from vehicle_frame import load_vehicles, load_agent_vehicles
             from matching import filter_vehicles
             path = args.vehicles or Path(__file__).resolve().parent / 'data' / ('vehicles_real.json' if args.rank else 'vehicles_demo.json')
-            result = filter_vehicles(profile, load_vehicles(path))
+            cars = load_agent_vehicles() if args.rank and not args.vehicles else load_vehicles(path)
+            result = filter_vehicles(profile, cars)
             if args.rank:
                 if args.ranking_policy == 'v1':
                     from scoring import rank_vehicles
