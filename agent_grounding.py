@@ -133,10 +133,16 @@ def grounded_value(update, message, state):
         if state.pending_slots == [slot] and evidence.casefold().strip('. ') in ('yes', 'no'):
             return evidence.casefold().startswith('yes')
         raise ValueError('Please state whether everyone travels together; this cannot be inferred from household size alone.')
-    if slot in ('seller.major_accident_reported', 'seller.flood_damage_reported'):
+    if slot.endswith(('.major_accident_reported', '.flood_damage_reported')):
         if not isinstance(value, bool):
             raise ValueError('Damage history must be explicitly true, false or unknown.')
-        field = slot.split('.')[-1]
+        if '?' in scoped or re.search(r'\b(if|hypothetically|example|assuming)\b', scoped, re.I):
+            raise ValueError('A hypothetical question does not establish damage history. State the current vehicle history explicitly.')
+        if not slot.startswith('seller.') and re.search(r'\b(replacement|new car|new vehicle)\b', scoped, re.I):
+            raise ValueError('This history field describes the current/old vehicle. Keep replacement-car history separate.')
+        field = slot.rsplit('.', 1)[-1]
+        if field == 'major_accident_reported' and value is True and not re.search(r'\bmajor\s+accidents?\b', evidence, re.I):
+            raise ValueError('Confirm whether the accident was major; unspecified/minor damage cannot be relabelled as a major accident.')
         checked = ground_seller(evidence, SellerVehicleFrame.model_validate({field: value}))
         answer = getattr(checked, field)
         if answer is None:
@@ -147,6 +153,11 @@ def grounded_value(update, message, state):
         # exception, e.g. "all fees complete, except insurance is unknown".
         if not isinstance(value, bool):
             raise ValueError('Please confirm whether the stated fee total is complete.')
+        if slot.startswith('trade_in.'):
+            from financial_guards import confirmation_scopes
+            targets = confirmation_scopes(state, scoped)
+            if slot not in targets and not (not targets and state.pending_slots == [slot]):
+                raise ValueError('Label which trade-in/private-sale replacement or disposal fees you are confirming; one package cannot confirm another.')
         positive = re.search(r'\b(all|total|complete|confirmed|fully)\b', evidence, re.I)
         negative = re.search(r'\b(not|partial|unknown|unconfirmed|incomplete|no)\b', evidence, re.I)
         exception = re.search(r'\b(not|partial|unknown|unconfirmed|incomplete|except|excluding)\b', scoped, re.I)
@@ -158,6 +169,17 @@ def grounded_value(update, message, state):
             return evidence.lower().startswith('yes')
         raise ValueError('Please explicitly confirm that all applicable fees are included, or state that the amount is partial/unknown.')
     if slot.endswith(('family_size', 'required_seats', 'estimated_completion_days', 'estimated_effort_hours')):
+        if slot.endswith('estimated_completion_days') and re.search(r'\b(hours?|hrs?|weeks?|months?)\b', evidence, re.I):
+            raise ValueError('State estimated completion time in days; other time units are not silently relabelled.')
+        if slot.endswith('estimated_effort_hours') and re.search(r'\b(days?|weeks?|months?)\b', evidence, re.I):
+            raise ValueError('State hands-on effort in hours; elapsed days are not the same as hours of work.')
+        if slot.startswith('trade_in.'):
+            from financial_guards import quoted_scopes
+            scopes = quoted_scopes(scoped)
+            target = slot.split('.')[1]
+            both = bool(re.search(r'\bboth\s+(?:paths|routes|options|alternatives)\b', scoped, re.I))
+            if target not in scopes and not both and not (not scopes and state.pending_slots == [slot]):
+                raise ValueError('Label the time/effort estimate as trade-in or private-sale; estimates cannot be copied between routes.')
         found = [number_value(m.group()) for m in re.finditer(rf'(?<!\w){NUMBER}(?!\w)', evidence, re.I)]
         if len(set(found)) != 1:
             raise ValueError('Please provide one explicit number for this passenger/time requirement.')
@@ -184,6 +206,8 @@ def grounded_value(update, message, state):
 # Merge grounded current-turn updates, invalidate unsafe old facts, recover labelled quotes and
 # record provenance/rules.
 def apply_patch(state, patch, message):
+    from financial_guards import snapshot, apply_guards
+    previous_financial = snapshot(state)
     original_goal = state.goal
     # Record the old identity before patching so changed-vehicle corrections
     # can invalidate dependent quote/loan data after new facts are merged.
@@ -358,10 +382,10 @@ def apply_patch(state, patch, message):
         changed_vehicle = any(previous is not None and str(previous).strip().casefold() != str(getattr(current, field)).strip().casefold() for field, previous in original_identity.items())
         if changed_vehicle:
             if state.goal == 'negotiate':
-                affected = ['negotiation.' + field for field in ('mileage_km', 'asking_price_myr', 'current_offer_myr', 'fees_myr', 'fees_confirmed_complete', 'seller_minimum_net_myr', 'loan_settlement_myr')]
+                affected = ['negotiation.' + field for field in ('mileage_km', 'major_accident_reported', 'flood_damage_reported', 'asking_price_myr', 'current_offer_myr', 'fees_myr', 'fees_confirmed_complete', 'seller_minimum_net_myr', 'loan_settlement_myr')]
                 state.negotiation_from_seller = False
             else:
-                affected = [slot for slot in SLOTS if slot.startswith(('trade_in.trade_in_', 'trade_in.private_sale_'))] + ['trade_in.loan_settlement_myr', 'trade_in.mileage_km']
+                affected = [slot for slot in SLOTS if slot.startswith(('trade_in.trade_in_', 'trade_in.private_sale_'))] + ['trade_in.loan_settlement_myr', 'trade_in.mileage_km', 'trade_in.major_accident_reported', 'trade_in.flood_damage_reported']
                 state.trade_in_from_seller = False
             for slot in affected:
                 if state.provenance.get(slot, {}).get('turn') != state.turn:
@@ -395,12 +419,14 @@ def apply_patch(state, patch, message):
     confirmation = re.search(r'\ball fees\b[^.!?\n]{0,180}\b(?:complete|confirmed)\b', message, re.I)
     confirmation_context = (clause_before(message, confirmation.start()) + re.split(r'(?<=[.!?])\s+|\n', message[confirmation.start():], maxsplit=1)[0]) if confirmation else ''
     if confirmation and not re.search(r'\b(not|partial|unknown|incomplete|except|excluding)\b', confirmation_context, re.I):
-        paths = ['negotiation.fees_confirmed_complete'] if state.goal == 'negotiate' else [f'trade_in.{name}.fees_confirmed_complete' for name in ('trade_in_replacement', 'private_sale_replacement', 'trade_in_quote', 'private_sale_quote')] if state.goal == 'trade_in' else []
+        from financial_guards import confirmation_scopes
+        paths = confirmation_scopes(state, confirmation_context)
         for slot in paths:
             set_slot(state, slot, True)
             state.issues.pop(slot, None)
             state.provenance[slot] = {'turn': state.turn, 'evidence': confirmation.group(), 'source': 'explicit all-fees confirmation rule'}
         if paths:
             state.event('rules', rule_id='INPUT_ALL_FEES_COMPLETE', reason='The user explicitly confirmed all applicable fees; unknown fee amounts are not filled.', slots=paths)
+    apply_guards(state, previous_financial, message)
     state.revision += 1
     return state

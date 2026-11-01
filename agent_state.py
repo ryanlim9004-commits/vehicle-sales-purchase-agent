@@ -145,7 +145,8 @@ def switch_goal(state, goal):
         # Reuse identity only. The from_seller flag tells later tools to carry
         # reported damage history; it does not authorize reuse of old cash quotes.
         identity = {k: getattr(state.seller, k) for k in ('brand', 'model', 'variant', 'year', 'transmission')}
-        state.negotiation = NegotiationFrame.model_validate({'vehicle': identity, 'mileage_km': state.seller.mileage_km})
+        state.negotiation = NegotiationFrame.model_validate({'vehicle': identity, 'mileage_km': state.seller.mileage_km,
+                  'major_accident_reported': state.seller.major_accident_reported, 'flood_damage_reported': state.seller.flood_damage_reported})
         state.negotiation_from_seller = True
         state.event('facts', action='reuse_vehicle_identity', source='previous confirmed seller facts', values=identity)
     if goal == 'negotiate' and selected_identity is not None:
@@ -153,7 +154,8 @@ def switch_goal(state, goal):
         state.event('facts', action='reuse_vehicle_identity', source='previous verified buyer selection', values=selected_identity)
     if goal == 'trade_in' and previous == 'sell':
         identity = {k: getattr(state.seller, k) for k in ('brand', 'model', 'variant', 'year', 'transmission')}
-        state.trade_in = TradeInFrame.model_validate({'current_vehicle': identity, 'mileage_km': state.seller.mileage_km})
+        state.trade_in = TradeInFrame.model_validate({'current_vehicle': identity, 'mileage_km': state.seller.mileage_km,
+                  'major_accident_reported': state.seller.major_accident_reported, 'flood_damage_reported': state.seller.flood_damage_reported})
         state.trade_in_from_seller = True
         state.event('facts', action='reuse_vehicle_identity', source='previous confirmed seller facts', values=identity)
     if goal in ('buy', 'sell', 'trade_in'):

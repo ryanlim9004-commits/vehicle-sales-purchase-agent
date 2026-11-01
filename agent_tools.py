@@ -19,6 +19,7 @@ from valuation import estimate_vehicle_value, key, money
 from negotiation import advise_negotiation
 from trade_in import compare_trade_in
 from question_examples import guided_questions
+from financial_guards import has_damage
 
 
 # Signal a rejected tool request that can be repaired within the controller error budget.
@@ -64,6 +65,20 @@ def identity_complete(frame):
     return all(getattr(frame, name) is not None for name in ('brand', 'model', 'variant', 'year', 'transmission'))
 
 
+def reference_profile(state):
+    """Link current identity/history; support earlier saved seller handoffs."""
+    p = state.negotiation if state.goal == 'negotiate' else state.trade_in
+    current = p.vehicle if state.goal == 'negotiate' else p.current_vehicle
+    identity = current.model_dump()
+    data = identity | {'mileage_km': p.mileage_km}
+    flag = state.negotiation_from_seller if state.goal == 'negotiate' else state.trade_in_from_seller
+    linked = flag and all(key(str(identity[k])) == key(str(getattr(state.seller, k))) for k in identity)
+    for field in ('major_accident_reported', 'flood_damage_reported'):
+        value = getattr(p, field)
+        data[field] = getattr(state.seller, field) if value is None and linked else value
+    return SellerVehicleFrame.model_validate(data)
+
+
 # Return canonical missing/conflicting slot questions for the active goal; known damage follows
 # the inspection path.
 def requirements(state, as_of):
@@ -91,7 +106,9 @@ def requirements(state, as_of):
                 missing['seller.year'] = 'The manufacturing year is after the consultation date. Please confirm it.'
     elif state.goal == 'negotiate':
         p = state.negotiation
-        damaged = state.negotiation_from_seller and (state.seller.major_accident_reported is True or state.seller.flood_damage_reported is True)
+        damaged = has_damage(reference_profile(state))
+        if damaged:
+            return {}  # Inspection-first advice needs no speculative price/fee facts.
         required = [('role', 'Are you the buyer or seller?'), ('current_offer_myr', 'What vehicle price has the other party currently offered, excluding fees? State MYR/RM.'),
                     ('fees_myr', 'What is the applicable total fee amount in MYR? State RM0 only if confirmed.'),
                     ('fees_confirmed_complete', 'Are all applicable fees included? Confirm that all fees are complete, or say they are partial/unknown.')]
@@ -106,8 +123,8 @@ def requirements(state, as_of):
                     missing['negotiation.' + field] = question
     elif state.goal == 'trade_in':
         p = state.trade_in
-        if state.trade_in_from_seller and (state.seller.major_accident_reported is True or state.seller.flood_damage_reported is True):
-            return missing
+        if has_damage(reference_profile(state)):
+            return {}
         if p.loan_settlement_myr is None:
             missing['trade_in.loan_settlement_myr'] = 'What is the current vehicle loan settlement amount in MYR? State RM0 only if confirmed debt-free.'
         for field in ('trade_in_replacement', 'private_sale_replacement', 'trade_in_quote', 'private_sale_quote'):
@@ -186,8 +203,13 @@ def verify_observation(tool, result, state, cars, as_of):
                 check('median_and_range', result['reference']['median_asking_price_myr'] == money(median(prices)) and result['reference']['observed_asking_range_myr'] == [money(min(prices)), money(max(prices))])
         elif tool == 'advise_negotiation':
             p = state.negotiation
+            evidence = result.get('valuation_evidence', {})
+            canonical_reference = None
+            if not has_damage(p) and evidence.get('status') != 'not_provided':
+                canonical_reference = estimate_vehicle_value(reference_profile(state), cars, as_of=as_of, identity_reference_only=True)
+            check('canonical_negotiation_decision_and_reference', result == advise_negotiation(p, as_of=as_of, valuation_result=canonical_reference))
             if status == 'inspection_required':
-                check('inspection_reference', result['valuation_evidence']['status'] == 'inspection_required')
+                check('inspection_reference', has_damage(reference_profile(state)) and result['valuation_evidence']['status'] == 'inspection_required')
             else:
                 check('fees_explicit', p.fees_myr is not None and p.fees_confirmed_complete is True)
                 counter = result['suggested_counter_price_myr']
@@ -215,8 +237,13 @@ def verify_observation(tool, result, state, cars, as_of):
                     check('no_fabricated_market_assessment', status == 'limited_advice' and result['price_position'] == 'not_assessed')
         elif tool == 'compare_trade_in':
             p = state.trade_in
+            evidence = result.get('asking_price_context', {})
+            canonical_reference = None
+            if not has_damage(p) and evidence.get('status') != 'not_provided':
+                canonical_reference = estimate_vehicle_value(reference_profile(state), cars, as_of=as_of, identity_reference_only=True)
+            check('canonical_trade_choice_and_reference', result == compare_trade_in(p, valuation_result=canonical_reference, as_of=as_of))
             if status == 'inspection_required':
-                check('inspection_reference', result['asking_price_context']['status'] == 'inspection_required')
+                check('inspection_reference', has_damage(reference_profile(state)) and result['asking_price_context']['status'] == 'inspection_required')
                 return checks
             historical = result.get('asking_price_context', {}).get('historical_regression')
             if historical:
@@ -252,6 +279,17 @@ class ToolRuntime:
     # validated session facts.
     def __init__(self, state, cars, as_of):
         self.state, self.cars, self.as_of = state, cars, as_of
+        # Earlier saved seller handoffs predate root history slots. Migrate
+        # known damage once so inspection does not deadlock on a price lookup.
+        if state.goal in ('negotiate', 'trade_in'):
+            profile = state.negotiation if state.goal == 'negotiate' else state.trade_in
+            linked = reference_profile(state)
+            for field in ('major_accident_reported', 'flood_damage_reported'):
+                slot = ('negotiation' if state.goal == 'negotiate' else 'trade_in') + '.' + field
+                if getattr(profile, field) is None and getattr(linked, field) is True and slot not in state.provenance:
+                    setattr(profile, field, True)
+                    state.event('facts', action='restore_confirmed_history', slot=slot, value=True,
+                                source='matching saved seller handoff; not a new inferred fact')
         self.reference = None
         self.last_tool = None
         self.last_result = None
@@ -280,7 +318,7 @@ class ToolRuntime:
         # independently rejects a tool incompatible with the active goal.
         choices = ['rank_vehicles', 'estimate_vehicle_value', 'advise_negotiation', 'compare_trade_in']
         identity = self.state.negotiation.vehicle if self.state.goal == 'negotiate' else self.state.trade_in.current_vehicle
-        if self.state.goal in ('negotiate', 'trade_in') and identity_complete(identity) and self.reference is None:
+        if self.state.goal in ('negotiate', 'trade_in') and identity_complete(identity) and self.reference is None and not has_damage(reference_profile(self.state)):
             choices.append('get_price_reference')
         return choices
 
@@ -348,14 +386,7 @@ class ToolRuntime:
             current = self.state.negotiation.vehicle if self.state.goal == 'negotiate' else self.state.trade_in.current_vehicle
             if self.state.goal not in ('negotiate', 'trade_in') or not identity_complete(current):
                 raise ToolError('A price reference requires complete negotiation vehicle identity. Without it, only limited limit-based advice is possible.')
-            identity = current.model_dump()
-            profile = self.state.negotiation if self.state.goal == 'negotiate' else self.state.trade_in
-            identity['mileage_km'] = profile.mileage_km
-            from_seller = self.state.negotiation_from_seller if self.state.goal == 'negotiate' else self.state.trade_in_from_seller
-            linked = from_seller and all(key(str(identity[k])) == key(str(getattr(self.state.seller, k))) for k in ('brand', 'model', 'variant', 'year', 'transmission'))
-            if linked:
-                identity.update(major_accident_reported=self.state.seller.major_accident_reported, flood_damage_reported=self.state.seller.flood_damage_reported)
-            vehicle = SellerVehicleFrame.model_validate(identity)
+            vehicle = reference_profile(self.state)
             self.reference = estimate_vehicle_value(vehicle, self.cars, as_of=self.as_of, identity_reference_only=True)
             slot = ('negotiation' if self.state.goal == 'negotiate' else 'trade_in') + '.mileage_km'
             if self.reference.get('historical_regression', {}).get('needs_mileage') and slot not in self.state.provenance:
@@ -369,11 +400,11 @@ class ToolRuntime:
         elif name == 'estimate_vehicle_value':
             result = estimate_vehicle_value(self.state.seller, self.cars, as_of=self.as_of)
         elif name == 'advise_negotiation':
-            if identity_complete(self.state.negotiation.vehicle) and self.reference is None:
+            if identity_complete(self.state.negotiation.vehicle) and self.reference is None and not has_damage(self.state.negotiation):
                 raise ToolError('Obtain get_price_reference for the known vehicle identity before advising. Do not invent or silently omit available reference evidence.')
             result = advise_negotiation(self.state.negotiation, as_of=self.as_of, valuation_result=self.reference)
         else:
-            if identity_complete(self.state.trade_in.current_vehicle) and self.reference is None:
+            if identity_complete(self.state.trade_in.current_vehicle) and self.reference is None and not has_damage(self.state.trade_in):
                 raise ToolError('Obtain get_price_reference for the stated current vehicle before comparing quotes. It is context, not an inferred trade-in offer.')
             result = compare_trade_in(self.state.trade_in, valuation_result=self.reference, as_of=self.as_of)
         # Any new business observation invalidates the previous check flag.
@@ -383,5 +414,5 @@ class ToolRuntime:
             self.state.ranked_vehicle_ids = [r['vehicle']['vehicle_id'] for r in result['matches']]
         if result['status'] == 'needs_clarification':
             questions = result.get('clarification_questions', result.get('buyer_reasoning', {}).get('clarification_questions', []))
-            self.pending = {f'tool_question_{i}': q for i, q in enumerate(questions)}
+            self.pending = result.get('missing_slots') or {f'tool_question_{i}': q for i, q in enumerate(questions)}
         return result

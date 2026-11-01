@@ -42,6 +42,11 @@ currency needs clarification. Keep evidence with its original currency and dista
 For negotiate, the current vehicle odometer is negotiation.mileage_km; for trade_in,
 the OLD vehicle odometer is trade_in.mileage_km. Keep distance units and never use
 replacement-car mileage. These optional facts support a bounded historical price model.
+For negotiate/trade_in, keep explicit CURRENT/OLD vehicle major_accident_reported and
+flood_damage_reported in that goal's root slots. Hypothetical questions and replacement-car
+history are not current-vehicle facts. Known major damage requires inspection-first advice.
+Current offers and trade-in disposal quotes are bare/gross amounts BEFORE fees and loan settlement.
+An all-in/including-fees quote or net proceeds after settlement needs clarification, not relabelling.
 Manufacturing year differs from registration year. auto -> Automatic; only explicit D-CVT -> D-CVT.
 usage is a list of city_commute / family_travel / long_distance. fuel_priority and space_priority
 are high/medium/low; save fuel means high fuel priority, spacious boot means high space priority.

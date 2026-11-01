@@ -32,6 +32,11 @@ def compare_trade_in(profile: TradeInFrame, *, valuation_result=None, as_of=None
                              'Completion days and effort hours are user-provided estimates, not measured dealer service guarantees.',
                              'No time-to-money conversion, purchase-loan interest or future running costs are assumed.']}
     trace, questions = result['fired_rules'], result['clarification_questions']
+    from financial_guards import has_damage
+    if has_damage(profile):
+        result.update(status='inspection_required', asking_price_context={'status': 'inspection_required', 'reference': None})
+        trace.append({'rule_id': 'TRADE_REPORTED_DAMAGE', 'reason': 'Directly reported old-vehicle accident/flood history requires inspection before ordinary disposal advice.'})
+        return result
     if valuation_result is not None and as_of is None:
         raise ValueError('A consultation date is required when linking a valuation observation.')
     evidence, evidence_questions = asking_evidence(NegotiationFrame(vehicle=profile.current_vehicle, mileage_km=profile.mileage_km), valuation_result, as_of)
@@ -115,7 +120,13 @@ def compare_trade_in(profile: TradeInFrame, *, valuation_result=None, as_of=None
         return result
     metric = 'cash_difference_myr' if profile.priority == 'net_cost' else 'estimated_completion_days' if profile.priority == 'speed' else 'estimated_effort_hours'
     if any(rows[name][metric] is None for name in eligible):
-        result['message'] = f'Cannot assess the requested {profile.priority} priority without estimates for every financially eligible path.'
+        result['status'] = 'needs_clarification'
+        missing = {f'trade_in.{name}_quote.{metric}':
+                   f'What is your estimated {"completion time in days" if profile.priority == "speed" else "hands-on effort in hours"} for {name.replace("_", " ")}? If unknown, change priority to net_cost for a money-only comparison.'
+                   for name in eligible if rows[name][metric] is None}
+        result['missing_slots'] = missing
+        result['clarification_questions'].extend(missing.values())
+        result['message'] = f'The cash comparison is calculated. Your {profile.priority} preference still needs the missing estimates.'
         return result
     selected = min(eligible, key=lambda name: rows[name][metric])
     if len(eligible) == 2 and rows[eligible[0]][metric] == rows[eligible[1]][metric]:

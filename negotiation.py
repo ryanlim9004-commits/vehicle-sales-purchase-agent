@@ -79,14 +79,19 @@ def advise_negotiation(profile: NegotiationFrame, *, as_of: date, valuation_resu
               'action': None, 'suggested_counter_price_myr': None, 'calculations': {},
               'price_position': 'not_assessed', 'fired_rules': [],
               'clarification_questions': list(profile.clarification_notes),
-              'policy': {'version': 'negotiation-v1', 'method': 'Hand-authored decision tree; no trained model.',
+              'policy': {'version': 'negotiation-v1', 'method': 'Hand-authored decision tree; price context may come from exact ads or a separately checked historical Ridge model.',
                          'buyer_limit': 'Total cash price including all stated buyer fees.',
                          'seller_limit': 'Minimum net proceeds after all stated fees and current-loan settlement.',
-                         'counter_anchor': 'Unadjusted asking median when available, bounded by the user limit and stated asking price; otherwise the user limit or stated asking price.'},
+                         'counter_anchor': 'Exact-ad asking median first, otherwise an eligible historical model prediction, always bounded by user limits and stated asking price; without price evidence use only the user limit/asking price.'},
               'limitations': ['Suggestions do not execute, accept or guarantee any deal.',
                              'Asking-price evidence does not establish a fair transaction price or an optimal counter-offer.',
                              'Purchase financing, interest and future ownership costs are not modelled.']}
     questions, trace = result['clarification_questions'], result['fired_rules']
+    from financial_guards import has_damage
+    if has_damage(profile):
+        result.update(status='inspection_required', valuation_evidence={'status': 'inspection_required', 'reference': None})
+        trace.append({'rule_id': 'NEG_REPORTED_DAMAGE', 'reason': 'Directly reported accident/flood history requires independent inspection before ordinary price advice.'})
+        return result
     evidence, evidence_questions = asking_evidence(profile, valuation_result, as_of)
     result['valuation_evidence'] = evidence
     questions.extend(evidence_questions)

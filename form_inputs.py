@@ -56,6 +56,8 @@ def fields_for(goal):
                            FormField('seller.flood_damage_reported', 'Flood damage reported?', 'boolean')]
     if goal == 'negotiate':
         return identity + [FormField('negotiation.mileage_km', 'Odometer reading (for historical estimate)', 'distance'),
+                           FormField('negotiation.major_accident_reported', 'Current vehicle major accident reported?', 'boolean'),
+                           FormField('negotiation.flood_damage_reported', 'Current vehicle flood damage reported?', 'boolean'),
                            FormField('negotiation.role', 'Your negotiation role', 'choice', ('buyer', 'seller')),
                            FormField('negotiation.current_offer_myr', 'Other party vehicle quote / bid, excluding fees (MYR)', 'money'),
                            FormField('negotiation.asking_price_myr', 'Stated asking price, if known (MYR)', 'money'),
@@ -64,7 +66,9 @@ def fields_for(goal):
                            FormField('negotiation.buyer_total_budget_myr', 'Buyer total budget including fees (MYR)', 'money'),
                            FormField('negotiation.seller_minimum_net_myr', 'Seller minimum NET proceeds (MYR)', 'money'),
                            FormField('negotiation.loan_settlement_myr', 'Seller old-loan settlement (MYR)', 'money')]
-    fields = identity + [FormField('trade_in.mileage_km', 'Old-vehicle odometer reading (for historical estimate)', 'distance')]
+    fields = identity + [FormField('trade_in.mileage_km', 'Old-vehicle odometer reading (for historical estimate)', 'distance'),
+                         FormField('trade_in.major_accident_reported', 'Old vehicle major accident reported?', 'boolean'),
+                         FormField('trade_in.flood_damage_reported', 'Old vehicle flood damage reported?', 'boolean')]
     for path, title in [('trade_in_replacement', 'Trade-in replacement purchase'), ('trade_in_quote', 'Trade-in disposal offer'),
                         ('private_sale_replacement', 'Private-sale replacement purchase'), ('private_sale_quote', 'Private-sale disposal offer')]:
         prefix = 'trade_in.' + path
@@ -122,6 +126,11 @@ def evidence_for(field, value, raw, unit):
         return 'A major accident was reported.' if value else 'No major accident.'
     if path.endswith('flood_damage_reported'):
         return 'Flood damage was reported.' if value else 'No flood damage.'
+    if path.startswith('trade_in.') and path.endswith('fees_confirmed_complete'):
+        scope = path.split('.')[1]
+        route = 'trade-in' if scope.startswith('trade_in') else 'private-sale'
+        role = 'replacement' if scope.endswith('replacement') else 'disposal'
+        return f'The {route} {role} fees are ' + ('confirmed complete.' if value else 'incomplete.')
     if field.kind == 'boolean':
         return label.rstrip('?') + (' All applicable fees are confirmed complete.' if value else ' Fees are incomplete.')
     if path.endswith('family_size'):
@@ -141,6 +150,10 @@ def evidence_for(field, value, raw, unit):
         return label.split(' (')[0] + f' is RM{value:.2f}.'
     if path.endswith('.year'):
         return f'The manufacturing year is {value}.'
+    if path.startswith('trade_in.') and path.endswith(('estimated_completion_days', 'estimated_effort_hours')):
+        route = 'trade-in' if path.split('.')[1].startswith('trade_in') else 'private-sale'
+        return (f'The {route} estimated completion time is {value} days.' if path.endswith('estimated_completion_days')
+                else f'The {route} estimated hands-on effort is {value} hours.')
     return label + ' is ' + str(value) + '.'
 
 
