@@ -74,7 +74,8 @@ def repository_identity(root=ROOT):
     names = {p.name for p in root.glob('*.py')}
     names.update(('requirements-lock.txt', '.streamlit/config.toml',
                   'data/vehicles_real.json', 'data/vehicles_simulation.json', 'data/historical_simulation_source.json',
-                  'data/model_evidence_v2.json', 'data/regression_manifest.json'))
+                  'data/model_evidence_v2.json', 'data/regression_manifest.json',
+                  'data/historical_price_model.json'))
     hashes = {name: hashlib.sha256((root/name).read_bytes()).hexdigest()
               for name in sorted(names) if (root/name).is_file()}
     digest = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()

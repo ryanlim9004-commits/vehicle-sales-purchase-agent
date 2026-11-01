@@ -55,7 +55,8 @@ def fields_for(goal):
                            FormField('seller.major_accident_reported', 'Major accident reported?', 'boolean'),
                            FormField('seller.flood_damage_reported', 'Flood damage reported?', 'boolean')]
     if goal == 'negotiate':
-        return identity + [FormField('negotiation.role', 'Your negotiation role', 'choice', ('buyer', 'seller')),
+        return identity + [FormField('negotiation.mileage_km', 'Odometer reading (for historical estimate)', 'distance'),
+                           FormField('negotiation.role', 'Your negotiation role', 'choice', ('buyer', 'seller')),
                            FormField('negotiation.current_offer_myr', 'Other party vehicle quote / bid, excluding fees (MYR)', 'money'),
                            FormField('negotiation.asking_price_myr', 'Stated asking price, if known (MYR)', 'money'),
                            FormField('negotiation.fees_myr', 'Applicable fee total (MYR)', 'money'),
@@ -63,7 +64,7 @@ def fields_for(goal):
                            FormField('negotiation.buyer_total_budget_myr', 'Buyer total budget including fees (MYR)', 'money'),
                            FormField('negotiation.seller_minimum_net_myr', 'Seller minimum NET proceeds (MYR)', 'money'),
                            FormField('negotiation.loan_settlement_myr', 'Seller old-loan settlement (MYR)', 'money')]
-    fields = identity
+    fields = identity + [FormField('trade_in.mileage_km', 'Old-vehicle odometer reading (for historical estimate)', 'distance')]
     for path, title in [('trade_in_replacement', 'Trade-in replacement purchase'), ('trade_in_quote', 'Trade-in disposal offer'),
                         ('private_sale_replacement', 'Private-sale replacement purchase'), ('private_sale_quote', 'Private-sale disposal offer')]:
         prefix = 'trade_in.' + path

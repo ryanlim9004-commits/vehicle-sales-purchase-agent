@@ -1,0 +1,378 @@
+{
+  "model_id": "historical-ridge-95635901ebdf9c17",
+  "scope": "historical_simulation_only",
+  "market_validated": false,
+  "dataset_sha256": "e9ca8add0866d082ad77f2a4279c936a2a422b563754cbe7386ce2619674c79e",
+  "policy": {
+    "version": "historical-ridge-v1",
+    "ridge_alpha": 1.0,
+    "minimum_model_groups": 5,
+    "maximum_mae_fraction": 0.2,
+    "maximum_relative_error": 0.4,
+    "target": "Historical illustrative advertised vehicle price in MYR, excluding fees",
+    "mileage_proxy": "Interval midpoint for model features only; source intervals are preserved",
+    "evaluation": "Leave one conservative source group out; transforms fitted on each training fold",
+    "authorization": "User explicitly requested combining confirmed and historical simulation data on 31 Oct 2026"
+  },
+  "model_evaluation": {
+    "perodua|alza|automatic": {
+      "group_count": 7,
+      "mae_myr": 15174.813664162784,
+      "rmse_myr": 23348.257494756646,
+      "baseline_mae_myr": 12926.857142857143,
+      "mae_fraction_of_mean": 0.2848003508245557,
+      "maximum_relative_error": 0.9819100899455993,
+      "eligible_for_historical_demo": false,
+      "predictions": [
+        {
+          "row_id": "CL18249652",
+          "held_out_group": "a24c201c3b679c38c925",
+          "actual_price_myr": 65800.0,
+          "prediction_myr": 56687.43359686453,
+          "baseline_myr": 51400.0,
+          "training_group_digest": "b50ac2ac7418242b47f873fbd92e4db003da7e900b2e47d5f4e4cd4bf883f181"
+        },
+        {
+          "row_id": "CL18624149",
+          "held_out_group": "9fe94ea41f3cc0d5f2e3",
+          "actual_price_myr": 58888.0,
+          "prediction_myr": 116710.72137671645,
+          "baseline_myr": 51400.0,
+          "training_group_digest": "9b12f32f39e2c0b61d10ef7dbafa20bb0f12f3fa8d98a557c5966c106b5514d3"
+        },
+        {
+          "row_id": "CL18751444",
+          "held_out_group": "599ad65629e53e1cd866",
+          "actual_price_myr": 64800.0,
+          "prediction_myr": 76271.99526208156,
+          "baseline_myr": 51400.0,
+          "training_group_digest": "32585f1d68b7cf776be92495ad784a823e12320af9299a3b34d814fcfc2cd88d"
+        },
+        {
+          "row_id": "CL18807978",
+          "held_out_group": "4b23ffdcef868b55bf7a",
+          "actual_price_myr": 57800.0,
+          "prediction_myr": 60030.373977933166,
+          "baseline_myr": 51944.0,
+          "training_group_digest": "b783cc35b0488bb36ff755bdf39164f5e19855d7f4a90d6b3f5c259cfd3fce37"
+        },
+        {
+          "row_id": "CL18923892",
+          "held_out_group": "c22558148d6c81442ee5",
+          "actual_price_myr": 35888.0,
+          "prediction_myr": 48967.107635227025,
+          "baseline_myr": 58344.0,
+          "training_group_digest": "777018a46a4357e00aa757e164a71b3a9dc07f98c17052e0899c8b9506eb5be4"
+        },
+        {
+          "row_id": "CL19122669",
+          "held_out_group": "5f1a61849c188eabaf51",
+          "actual_price_myr": 45000.0,
+          "prediction_myr": 40093.0041602392,
+          "baseline_myr": 58344.0,
+          "training_group_digest": "66739f1729c1b912563df4de435ea2e97f9afb400eed9462170b9d3487a10952"
+        },
+        {
+          "row_id": "CL19418670",
+          "held_out_group": "58b9fc22de64adfe15bc",
+          "actual_price_myr": 44800.0,
+          "prediction_myr": 37200.06484571496,
+          "baseline_myr": 58344.0,
+          "training_group_digest": "e5783c726d09845e2a077054c06732b47327b6b02b6e47d18b06b3feb8cf5fe6"
+        }
+      ]
+    },
+    "toyota|vellfire|automatic": {
+      "group_count": 6,
+      "mae_myr": 35073.64943823067,
+      "rmse_myr": 40256.18276205533,
+      "baseline_mae_myr": 24114.166666666668,
+      "mae_fraction_of_mean": 0.23297371666270045,
+      "maximum_relative_error": 0.5072399227514672,
+      "eligible_for_historical_demo": false,
+      "predictions": [
+        {
+          "row_id": "SIM-MRC-V1-0014",
+          "held_out_group": "81905fa918b0f1134f0b",
+          "actual_price_myr": 155800.0,
+          "prediction_myr": 182336.9554971947,
+          "baseline_myr": 157999.0,
+          "training_group_digest": "cb5af79fae961965169520f093b934f5218e7ee961bc520790fa7e3d6a5c7994"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0089",
+          "held_out_group": "2b4b9480a0ab5c5521ab",
+          "actual_price_myr": 183800.0,
+          "prediction_myr": 127169.50416959869,
+          "baseline_myr": 155800.0,
+          "training_group_digest": "71e722cc3c105fd801c6b50891ea40277533ed258463019ab9d338b822a29d0f"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0534",
+          "held_out_group": "c91e854c7e121c20de77",
+          "actual_price_myr": 157999.0,
+          "prediction_myr": 136264.86162473707,
+          "baseline_myr": 155800.0,
+          "training_group_digest": "a8b1b7198f6bbd205a0625d8636de320c9c753bcb9e158f3c2881a99693410b6"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0600",
+          "held_out_group": "faffdd18309ab86cfc2c",
+          "actual_price_myr": 119999.0,
+          "prediction_myr": 122382.98280529804,
+          "baseline_myr": 157999.0,
+          "training_group_digest": "e67f3c2153dc8cd0a3ab7e7cd4e5c63e44239bcd1c899caf6b6b6704d3da81c0"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0611",
+          "held_out_group": "aff743eb41489034c9e3",
+          "actual_price_myr": 106800.0,
+          "prediction_myr": 160973.2237498567,
+          "baseline_myr": 157999.0,
+          "training_group_digest": "0579246d160873d17eee9bf519f82092e2f8e1c39b05e85e8559bb42b9806360"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0925",
+          "held_out_group": "8beeae88deaa678df32d",
+          "actual_price_myr": 178888.0,
+          "prediction_myr": 129904.89962862968,
+          "baseline_myr": 155800.0,
+          "training_group_digest": "f339e06a562b2bdfc2b1c16c2b42d3b02069ec26a3d53f9e9fefc85fd90e37c8"
+        }
+      ]
+    },
+    "toyota|alphard|automatic": {
+      "group_count": 9,
+      "mae_myr": 22945.92016674307,
+      "rmse_myr": 27571.433158113836,
+      "baseline_mae_myr": 34722.5,
+      "mae_fraction_of_mean": 0.1267265187492177,
+      "maximum_relative_error": 0.2762716932388572,
+      "eligible_for_historical_demo": true,
+      "predictions": [
+        {
+          "row_id": "SIM-MRC-V1-0015",
+          "held_out_group": "434411a3c0322dcd5d26",
+          "actual_price_myr": 155800.0,
+          "prediction_myr": 192908.75050507791,
+          "baseline_myr": 188300.0,
+          "training_group_digest": "008f7e1a6c5651dfa222b26761112803f0b8f3833295493ea1882808bddf7e7b"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0032",
+          "held_out_group": "6f7075a7c5e260694206",
+          "actual_price_myr": 181999.0,
+          "prediction_myr": 158522.9778013551,
+          "baseline_myr": 188300.0,
+          "training_group_digest": "e82bb94dcd5a412eac74de080bc3d8305df73b0364a1e102ed449b7a428a08c6"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0033",
+          "held_out_group": "a79d3f75f4a0e5a17fc2",
+          "actual_price_myr": 242999.0,
+          "prediction_myr": 239286.75551257914,
+          "baseline_myr": 184399.5,
+          "training_group_digest": "4f996b909e292ce5b823fbacd86197cdb5e36c34fe93824ba5929ed8b660e74e"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0090",
+          "held_out_group": "14da15cafcd19d1eb4d2",
+          "actual_price_myr": 239800.0,
+          "prediction_myr": 216812.30486648445,
+          "baseline_myr": 184399.5,
+          "training_group_digest": "cfdb7ba577ed7708c646a93fe93f926b84dd2656d4dec0f09cb0691be2329b84"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0114",
+          "held_out_group": "fda05ee2e81c395a87fd",
+          "actual_price_myr": 196800.0,
+          "prediction_myr": 168891.30522081032,
+          "baseline_myr": 184399.5,
+          "training_group_digest": "08e9fe72707e55bf9d3d96d75199f84bf3e32625369a068bf7e235664ea00711"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0115",
+          "held_out_group": "ccfed00d23701c1713b8",
+          "actual_price_myr": 186800.0,
+          "prediction_myr": 135192.44770298147,
+          "baseline_myr": 185899.5,
+          "training_group_digest": "8362e35cf7ce83ad485ea54ffce5695b0211bcc5e51f3ae41d5473fc257cc7a9"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0384",
+          "held_out_group": "46e57a6af47ad45094a1",
+          "actual_price_myr": 109800.0,
+          "prediction_myr": 110474.00295515485,
+          "baseline_myr": 188300.0,
+          "training_group_digest": "67a84213799e87b1574da61943dc6b194c137fce9464e1db67abf0679115d97a"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0739",
+          "held_out_group": "ba69efb86c920c1153de",
+          "actual_price_myr": 189800.0,
+          "prediction_myr": 179406.99266599916,
+          "baseline_myr": 184399.5,
+          "training_group_digest": "f22483aa1b8cad001de5659f1eaec24f1bd8f3ecfc781114d13b5f4bcf4b3aa7"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0762",
+          "held_out_group": "619ceb89a9c4aa91a49e",
+          "actual_price_myr": 125800.0,
+          "prediction_myr": 154445.31181066454,
+          "baseline_myr": 188300.0,
+          "training_group_digest": "370413611e5592c1f213277d6e6634fc7b0a1e4e97af971e218e7b6ad3cd7c2b"
+        }
+      ]
+    },
+    "toyota|harrier|automatic": {
+      "group_count": 5,
+      "mae_myr": 11493.55641680469,
+      "rmse_myr": 15334.121475878137,
+      "baseline_mae_myr": 13459.9,
+      "mae_fraction_of_mean": 0.10790085971787998,
+      "maximum_relative_error": 0.21591682237942356,
+      "eligible_for_historical_demo": true,
+      "predictions": [
+        {
+          "row_id": "SIM-MRC-V1-0198",
+          "held_out_group": "44d4406fe1fc014e235a",
+          "actual_price_myr": 92999.0,
+          "prediction_myr": 91920.2085635557,
+          "baseline_myr": 102499.5,
+          "training_group_digest": "5dd678ecf574b23dfbd7c06bc8a22c42f0de4d58b6a24dbe92639a15acb68919"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0361",
+          "held_out_group": "070958fecd612b7aa948",
+          "actual_price_myr": 94800.0,
+          "prediction_myr": 99732.5178926014,
+          "baseline_myr": 102499.5,
+          "training_group_digest": "c5af9197e478972adae0fb7e763a60aaa190e15c2679b617314bab9c9c5c0152"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0376",
+          "held_out_group": "a552d59a005261d67146",
+          "actual_price_myr": 104999.0,
+          "prediction_myr": 91833.11572982372,
+          "baseline_myr": 97400.0,
+          "training_group_digest": "4a754351e395d1278f9a586555c485dd6253099043c2d530cbcd63d6432008c6"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0405",
+          "held_out_group": "73e4fdcbbd32dee63e18",
+          "actual_price_myr": 100000.0,
+          "prediction_myr": 108105.41671615806,
+          "baseline_myr": 99899.5,
+          "training_group_digest": "de4d2b7035fe28e2abbea08229e9a47d869e12cd4e3d8be4f3ef767046c64aa4"
+        },
+        {
+          "row_id": "SIM-MRC-V1-0591",
+          "held_out_group": "b370263bd559df9860f5",
+          "actual_price_myr": 139800.0,
+          "prediction_myr": 109614.82823135659,
+          "baseline_myr": 97400.0,
+          "training_group_digest": "c53700f291f021decc0e59ee794ca9c772015dd20a3ce48eebc01b5bad54bbf5"
+        }
+      ]
+    }
+  },
+  "input_records": 114,
+  "training_rows": 111,
+  "provenance_counts": {
+    "saved_asking_snapshot": 16,
+    "historical_simulation": 95
+  },
+  "exclusions": [
+    {
+      "vehicle_id": "CL18603852",
+      "reason": "Mileage bounds or transmission unknown; no mileage invented."
+    },
+    {
+      "vehicle_id": "SIM-MRC-V1-0443",
+      "reason": "Possible repeated vehicle signature; one stable representative retained.",
+      "retained_row_id": "SIM-MRC-V1-0399"
+    },
+    {
+      "vehicle_id": "SIM-MRC-V1-0854",
+      "reason": "Possible repeated vehicle signature; one stable representative retained.",
+      "retained_row_id": "SIM-MRC-V1-0250"
+    }
+  ],
+  "eligible_models": [
+    "toyota|alphard|automatic",
+    "toyota|harrier|automatic"
+  ],
+  "sparse_models": {
+    "perodua|myvi|d-cvt": 2,
+    "perodua|myvi|automatic": 2,
+    "perodua|bezza|automatic": 4,
+    "toyota|avanza|automatic": 2,
+    "bmw|528i|automatic": 1,
+    "bmw|x1|automatic": 2,
+    "mercedes-benz|c200k|automatic": 1,
+    "porsche|macan|automatic": 1,
+    "honda|civic|automatic": 1,
+    "mercedes-benz|cla180|automatic": 2,
+    "mercedes-benz|g350|automatic": 1,
+    "lexus|lx570|automatic": 2,
+    "mercedes-benz|cla250|automatic": 2,
+    "maxus|g10|automatic": 1,
+    "mercedes-benz|a180|automatic": 1,
+    "mitsubishi|triton|automatic": 2,
+    "kia|rio|automatic": 1,
+    "mercedes-benz|c43 amg|automatic": 1,
+    "mercedes-benz|gla200|automatic": 1,
+    "mercedes-benz|glc200|automatic": 1,
+    "mercedes-benz|c300|automatic": 2,
+    "honda|hr-v|automatic": 1,
+    "bmw|x6|automatic": 1,
+    "mercedes-benz|c250|automatic": 1,
+    "mercedes-benz|a45 amg|automatic": 2,
+    "mercedes-benz|a250|automatic": 1,
+    "peugeot|5008|automatic": 1,
+    "volkswagen|jetta|automatic": 4,
+    "bmw|530i|automatic": 1,
+    "mercedes-benz|c200|automatic": 1,
+    "mazda|cx-3|automatic": 1,
+    "mini|3 door|automatic": 2,
+    "lexus|is250|automatic": 1,
+    "lexus|rx200t|automatic": 2,
+    "audi|q3|automatic": 1,
+    "honda|accord|automatic": 1,
+    "land rover|range rover sport|automatic": 1,
+    "volkswagen|golf|automatic": 1,
+    "proton|perdana|automatic": 1,
+    "proton|x70|automatic": 1,
+    "isuzu|d-max|manual": 1,
+    "nissan|navara|automatic": 2,
+    "porsche|cayenne|automatic": 1,
+    "honda|city|automatic": 1,
+    "land rover|range rover|automatic": 1,
+    "bmw|320i|automatic": 2,
+    "mercedes-benz|amg gle43|automatic": 1,
+    "ford|mustang|automatic": 2,
+    "mercedes-benz|s500l|automatic": 1,
+    "ford|ranger|manual": 1,
+    "audi|a5|automatic": 1,
+    "mercedes-benz|e200|automatic": 1,
+    "toyota|corolla altis|automatic": 1,
+    "mercedes-benz|glc300|automatic": 1,
+    "porsche|718|automatic": 1,
+    "mercedes-benz|e250|automatic": 1,
+    "mazda|2|automatic": 1,
+    "land rover|range rover evoque|automatic": 1,
+    "toyota|estima|automatic": 2,
+    "hyundai|grand starex|automatic": 1,
+    "ford|fiesta|automatic": 1,
+    "mercedes-benz|a200|automatic": 1
+  },
+  "limitations": [
+    "Historical prices with unknown dates cannot establish current market value.",
+    "Manufacturing year, interval midpoint and displacement are features; causal depreciation/mileage effects are not established.",
+    "Generation/trim equipment, condition and damage are not learned. Seen variants and numeric ranges constrain use.",
+    "Source-signature grouping is conservative, not verified cross-site VIN deduplication.",
+    "Grouped leave-one-out development evaluation is not independent or chronological market validation.",
+    "MAE is an average error, not a confidence interval or guaranteed bound.",
+    "Sold/reserved advertisements remain asking labels; no transaction/dealer-offer training labels exist."
+  ]
+}

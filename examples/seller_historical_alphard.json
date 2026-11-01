@@ -1,0 +1,11 @@
+{
+  "brand": "Toyota",
+  "model": "Alphard",
+  "variant": "2.5 G S C Package",
+  "year": 2018,
+  "transmission": "Automatic",
+  "mileage_km": 65000,
+  "condition": "good",
+  "major_accident_reported": false,
+  "flood_damage_reported": false
+}

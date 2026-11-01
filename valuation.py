@@ -114,6 +114,20 @@ def estimate_vehicle_value(seller: SellerVehicleFrame, vehicles: list[PassengerC
         # Three is a teaching-policy minimum, not a statistical guarantee.
         result['status'] = 'insufficient_evidence'
         result['message'] = f'Need at least {policy.minimum_comparables} comparable listings; found {len(comps)}. No price estimate is returned.'
+        if not illustrative_adjustments:
+            # Historical Ridge is an explicitly separate fallback. Never fill
+            # the real-source comparable median/range with a model prediction.
+            from historical_price_regression import estimate
+            prediction = estimate(seller, vehicles)
+            result['historical_regression'] = prediction
+            if prediction['status'] == 'historical_prediction':
+                result['status'] = 'historical_reference'
+                result['message'] = 'Exact listed comparables are insufficient. A bounded historical regression reference is available; it is not a current market valuation.'
+                result['limitations'].extend(prediction['limitations'])
+                trace.append({'rule_id': 'VAL_HISTORICAL_RIDGE', 'reason': 'Historical model passes the fixed per-model development error policy and input-scope checks.',
+                              'model_id': prediction['model_id']})
+            else:
+                result['message'] = f'Need at least {policy.minimum_comparables} eligible exact comparables; found {len(comps)}. Historical regression: ' + prediction['reason']
         return result
     prices = [c['asking_price_myr'] for c in comps]
     # Median is the middle price (or mean of the two middle prices); min/max

@@ -34,8 +34,15 @@ def compare_trade_in(profile: TradeInFrame, *, valuation_result=None, as_of=None
     trace, questions = result['fired_rules'], result['clarification_questions']
     if valuation_result is not None and as_of is None:
         raise ValueError('A consultation date is required when linking a valuation observation.')
-    evidence, evidence_questions = asking_evidence(NegotiationFrame(vehicle=profile.current_vehicle), valuation_result, as_of)
+    evidence, evidence_questions = asking_evidence(NegotiationFrame(vehicle=profile.current_vehicle, mileage_km=profile.mileage_km), valuation_result, as_of)
     result['asking_price_context'] = evidence
+    historical = evidence.get('historical_regression')
+    if historical:
+        result['limitations'].extend(historical['limitations'])
+        result['historical_quote_context'] = {
+            'estimated_historical_asking_price_myr': historical['estimated_asking_price_myr'],
+            'trade_in_offer_difference_myr': money(decimal(historical['estimated_asking_price_myr']) - decimal(profile.trade_in_quote.price_myr)) if profile.trade_in_quote.price_myr is not None else None,
+            'meaning': 'Historical predicted asking price minus user-stated dealer offer; this is not guaranteed extra private-sale income or a learned trade-in discount.'}
     result['limitations'].append('A linked asking-price reference is context only, never an inferred dealer trade-in cash offer or guaranteed private-sale proceeds.')
     questions.extend(evidence_questions)
     if evidence_questions:

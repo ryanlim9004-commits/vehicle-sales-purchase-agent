@@ -50,6 +50,8 @@ class NegotiationFrame(MoneyFrame):
     currency: Literal['MYR'] = 'MYR'
     role: Literal['buyer', 'seller'] | None = None
     vehicle: VehicleIdentityFrame = Field(default_factory=VehicleIdentityFrame)
+    # Optional for exact-ad context; needed for a historical Ridge fallback.
+    mileage_km: float | None = Field(default=None, ge=0, le=2000000)
     asking_price_myr: float | None = Field(default=None, gt=0)
     # Latest price proposed by the OTHER party: seller's quote for a buyer,
     # buyer's bid for a seller. Fees are separate from the vehicle price.
@@ -86,6 +88,7 @@ class TradeInFrame(MoneyFrame):
     # current_vehicle is the old vehicle. The four quote objects below refer
     # to two purchase packages and two disposal alternatives, not four cars.
     current_vehicle: VehicleIdentityFrame = Field(default_factory=VehicleIdentityFrame)
+    mileage_km: float | None = Field(default=None, ge=0, le=2000000)
     trade_in_replacement: ReplacementQuoteFrame = Field(default_factory=ReplacementQuoteFrame)
     private_sale_replacement: ReplacementQuoteFrame = Field(default_factory=ReplacementQuoteFrame)
     trade_in_quote: DisposalQuoteFrame = Field(default_factory=DisposalQuoteFrame)

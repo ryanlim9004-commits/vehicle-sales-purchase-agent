@@ -109,7 +109,9 @@ def grounded_value(update, message, state):
         return amount
     if slot.endswith('_myr'):
         return money_from_evidence(evidence, slot)
-    if slot == 'seller.mileage_km':
+    if slot.endswith('.mileage_km'):
+        if slot == 'trade_in.mileage_km' and re.search(r'\b(replacement|new car|new vehicle)\b', scoped, re.I) and not re.search(r'\b(old|current)\b', scoped, re.I):
+            raise ValueError('Please state the OLD vehicle odometer, separately from replacement-car mileage.')
         mileage, _, issue = mileage_from_text(scoped)
         if issue:
             raise ValueError(issue)
@@ -337,6 +339,18 @@ def apply_patch(state, patch, message):
                     or accepted_priority_updates and re.search(r'\b(?:save fuel|fuel[- ]economy|fuel[- ]efficient|fuel priority|safety preference|safety priority|vehicle safety|safety[- ]equipment)\b', message, re.I)):
                 state.issues.pop('buyer.fuel_safety_wording', None)
                 state.provenance.pop('buyer.fuel_safety_wording', None)
+    # A direct reply to the sole odometer question must not depend on the
+    # small LLM remembering which of the two vehicle roles it describes.
+    mileage_slot = ('negotiation' if state.goal == 'negotiate' else 'trade_in') + '.mileage_km'
+    if state.goal in ('negotiate', 'trade_in') and state.pending_slots == [mileage_slot]:
+        unknown = bool(re.fullmatch(r"\s*(?:unknown|not sure|don't know|do not know)[.!]?\s*", message, re.I))
+        value, _, issue = mileage_from_text(message)
+        replacement_reading = bool(re.search(r'\b(replacement|new car|new vehicle)\b', message, re.I))
+        if unknown or (issue is None and not replacement_reading):
+            set_slot(state, mileage_slot, None if unknown else value)
+            state.issues.pop(mileage_slot, None)
+            state.provenance[mileage_slot] = {'turn': state.turn, 'evidence': message, 'source': 'direct answer to sole odometer question'}
+            state.event('rules', rule_id='REFERENCE_ODOMETER_ANSWER', reason='Only the pending current/old-vehicle odometer is updated, with explicit units or Unknown.', slot=mileage_slot)
     if state.goal == original_goal and state.goal in ('negotiate', 'trade_in'):
         # Old-vehicle quotes depend on identity. Preserve only amounts that
         # were explicitly refreshed in this same turn, plus user budget limits.
@@ -344,14 +358,16 @@ def apply_patch(state, patch, message):
         changed_vehicle = any(previous is not None and str(previous).strip().casefold() != str(getattr(current, field)).strip().casefold() for field, previous in original_identity.items())
         if changed_vehicle:
             if state.goal == 'negotiate':
-                affected = ['negotiation.' + field for field in ('asking_price_myr', 'current_offer_myr', 'fees_myr', 'fees_confirmed_complete', 'seller_minimum_net_myr', 'loan_settlement_myr')]
+                affected = ['negotiation.' + field for field in ('mileage_km', 'asking_price_myr', 'current_offer_myr', 'fees_myr', 'fees_confirmed_complete', 'seller_minimum_net_myr', 'loan_settlement_myr')]
                 state.negotiation_from_seller = False
             else:
-                affected = [slot for slot in SLOTS if slot.startswith(('trade_in.trade_in_', 'trade_in.private_sale_'))] + ['trade_in.loan_settlement_myr']
+                affected = [slot for slot in SLOTS if slot.startswith(('trade_in.trade_in_', 'trade_in.private_sale_'))] + ['trade_in.loan_settlement_myr', 'trade_in.mileage_km']
                 state.trade_in_from_seller = False
             for slot in affected:
                 if state.provenance.get(slot, {}).get('turn') != state.turn:
                     set_slot(state, slot, None)
+                    if slot.endswith('.mileage_km'):
+                        state.provenance.pop(slot, None)
                     state.event('facts', action='invalidate_vehicle_dependent_fact', slot=slot, reason='The vehicle identity changed; no old quote or fee is silently reused.')
             state.selected_vehicle_id = None
     if state.goal == 'trade_in':

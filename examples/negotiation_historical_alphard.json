@@ -1,0 +1,12 @@
+{
+  "role": "buyer",
+  "vehicle": {
+    "brand": "Toyota", "model": "Alphard", "variant": "2.5 G S C Package",
+    "year": 2018, "transmission": "Automatic"
+  },
+  "mileage_km": 65000,
+  "current_offer_myr": 230000,
+  "fees_myr": 1000,
+  "fees_confirmed_complete": true,
+  "buyer_total_budget_myr": 300000
+}

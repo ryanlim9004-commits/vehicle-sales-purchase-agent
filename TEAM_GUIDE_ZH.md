@@ -1,5 +1,7 @@
 # 组员从 GitHub 到实际测试：手把手指南
 
+**2026-10-31后续更新：**历史Regression已经训练并连接到Sell／Negotiation／Trade-In的限定车型范围，无须新装套件；更新代码后重启Streamlit，在新咨询测试。模型文件随项目保存，启动时不必重训。示例、误差、失败组和重训命令见[历史Regression说明](HISTORICAL_REGRESSION_GUIDE_ZH.md)。下文原始安装流程仍可使用，旧日期的测试数量保留为历史记录。
+
 更新：2026-10-26。适用：Windows 10 22H2／Windows 11、普通64-bit Python 3.13、PowerShell。本次先验证 Windows x64；其他系统的实际结果需要另外记录。最新重复追问修复见[说明](BUY_FOLLOWUP_FIX_20261026_ZH.md)，数据接入方式见[说明](DATA_IMPORT_PLAN_ZH.md)；本机改动是否已推送以实际Git版本为准。
 
 **组员先看本文件。网页启动入口是 `streamlit_app.py`。** GitHub 保存代码；每个人下载到自己的电脑，启动自己的 Ollama 和网页服务，再用浏览器测试。Ryan 电脑上的 `127.0.0.1` 地址在另一台电脑上不会连接到 Ryan。

@@ -1,5 +1,7 @@
 # Report notes: historical scenario extension
 
+Later on 31 October, the user authorised a separate combined historical Ridge experiment. It is trained and integrated within evaluated model/variant/year/mileage bounds; see `HISTORICAL_REGRESSION_REPORT_NOTES.md`. The original integration-only statement below that no regression was trained is historical. Simulation rows remain excluded from real comparable evidence and the market-approved manifest.
+
 ## Methodology: dataset and assumptions
 
 The prototype loads 17 saved asking-price advertisement snapshots and 97 user-completed historical simulation records. The simulation extension was derived from the slash-year subset of Malaysia_Resale_Carlist, rather than all 974 original CSV rows. It contains 21 makes and 62 make/model combinations. Each source advertisement contributes at most one simulation record. Within this simulation, a leading YYYY/YYYY is interpreted as manufacturing year followed by registration year. This is an assumption, not a vehicle-specific verification. The latest supplied file supersedes the earlier two-alternative year review representation.

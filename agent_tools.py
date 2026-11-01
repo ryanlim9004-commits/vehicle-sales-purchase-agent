@@ -39,8 +39,8 @@ class SelectArgs(StrictFrame):
 DESCRIPTIONS = {
     'inspect_requirements': 'Check active goal facts and missing requirements; always do this before a business tool.',
     'rank_vehicles': 'For buy: hard-filter saved vehicle snapshots, then compute explainable lifestyle ranking from current buyer facts.',
-    'estimate_vehicle_value': 'For sell: use current seller facts and saved comparable asking-price listings; no invented market prices.',
-    'get_price_reference': 'For negotiate or trade_in with complete current-vehicle identity: obtain actual unadjusted asking-price context before advice. This is never a trade-in cash offer.',
+    'estimate_vehicle_value': 'For sell: use exact listed asking comparables first; if insufficient, try the evaluated historical Ridge fallback within its supported scope. Never invent current market prices.',
+    'get_price_reference': 'For negotiate or trade_in with complete current-vehicle identity: obtain exact listed asking context or a checked historical Ridge reference. Historical Ridge needs stated mileage and is never a trade-in offer.',
     'advise_negotiation': 'For negotiate: run the buyer/seller decision tree using known quotes/fees/limits and the obtained reference. If no vehicle identity exists, only limited budget/reserve advice is possible.',
     'compare_trade_in': 'For trade_in: compare explicit user quotes, complete fees, old-loan settlement, estimated time/effort and cash limits.',
     'select_vehicle': 'Select a vehicle ID only from the current verified buying candidates; use it as the identity for subsequent negotiation.',
@@ -166,6 +166,12 @@ def verify_observation(tool, result, state, cars, as_of):
                 check('damage_report_exists', state.seller.major_accident_reported is True or state.seller.flood_damage_reported is True)
             elif status == 'insufficient_evidence':
                 check('no_invented_price', result['reference'] is None and len(result['comparables']) < result['policy']['minimum_comparables'])
+            elif status == 'historical_reference':
+                from historical_price_regression import estimate, verify_prediction
+                prediction = result.get('historical_regression', {})
+                check('historical_not_a_comparable_median', result['reference'] is None and result['adjusted_scenario'] is None and len(result['comparables']) < result['policy']['minimum_comparables'])
+                check('historical_recomputed_for_current_seller', prediction == estimate(state.seller, cars) and verify_prediction(prediction, cars))
+                check('historical_not_market_validated', prediction.get('market_validated') is False)
             else:
                 comps = result['comparables']
                 by_id = {v.vehicle_id: v for v in cars}
@@ -194,13 +200,31 @@ def verify_observation(tool, result, state, cars, as_of):
                     check('seller_net_arithmetic', result['calculations']['offered_net_proceeds_myr'] == money(expected))
                     if counter is not None:
                         check('counter_meets_net_floor', Decimal(str(counter)) - Decimal(str(p.fees_myr)) - Decimal(str(p.loan_settlement_myr)) >= Decimal(str(p.seller_minimum_net_myr)))
-                if result['valuation_evidence']['reference'] is None:
+                historical = result['valuation_evidence'].get('historical_regression')
+                if historical:
+                    from historical_price_regression import verify_prediction
+                    check('historical_reference_recomputed', verify_prediction(historical, cars))
+                    check('historical_identity_matches', historical['input'] == p.vehicle.model_dump() | {'mileage_km': p.mileage_km})
+                    linked = {'status': 'historical_reference', 'seller_profile': p.vehicle.model_dump(),
+                              'as_of': as_of.isoformat(), 'historical_regression': historical}
+                    canonical = advise_negotiation(p, as_of=as_of, valuation_result=linked)
+                    check('historical_tree_matches', result == canonical)
+                    check('historical_no_current_market_assessment', result['price_position'] == 'not_assessed' and status == 'historical_advice')
+                elif result['valuation_evidence']['reference'] is None:
                     check('no_fabricated_market_assessment', status == 'limited_advice' and result['price_position'] == 'not_assessed')
         elif tool == 'compare_trade_in':
             p = state.trade_in
             if status == 'inspection_required':
                 check('inspection_reference', result['asking_price_context']['status'] == 'inspection_required')
                 return checks
+            historical = result.get('asking_price_context', {}).get('historical_regression')
+            if historical:
+                from historical_price_regression import verify_prediction
+                check('historical_reference_recomputed', verify_prediction(historical, cars))
+                check('historical_identity_matches', historical['input'] == p.current_vehicle.model_dump() | {'mileage_km': p.mileage_km})
+                linked = {'status': 'historical_reference', 'seller_profile': p.current_vehicle.model_dump(),
+                          'as_of': as_of.isoformat(), 'historical_regression': historical}
+                check('historical_trade_calculation_matches', result == compare_trade_in(p, as_of=as_of, valuation_result=linked))
             for name, row in result['paths'].items():
                 disposal, replacement = getattr(p, name + '_quote'), getattr(p, name + '_replacement')
                 if row['status'] != 'calculated':
@@ -290,6 +314,7 @@ class ToolRuntime:
             self.state.negotiation_from_seller = False
             data = self.state.negotiation.model_dump()
             data['vehicle'] = {k: getattr(car, k) for k in ('brand', 'model', 'variant', 'year', 'transmission')}
+            data['mileage_km'] = car.mileage_km
             self.state.negotiation = NegotiationFrame.model_validate(data)
             self.checked = False
             return {'selected_vehicle_id': car.vehicle_id, 'vehicle_identity': data['vehicle'], 'asking_price_myr': car.price_myr, 'notice': 'Saved asking price is not automatically a current seller offer.'}
@@ -323,12 +348,18 @@ class ToolRuntime:
             if self.state.goal not in ('negotiate', 'trade_in') or not identity_complete(current):
                 raise ToolError('A price reference requires complete negotiation vehicle identity. Without it, only limited limit-based advice is possible.')
             identity = current.model_dump()
+            profile = self.state.negotiation if self.state.goal == 'negotiate' else self.state.trade_in
+            identity['mileage_km'] = profile.mileage_km
             from_seller = self.state.negotiation_from_seller if self.state.goal == 'negotiate' else self.state.trade_in_from_seller
-            linked = from_seller and all(key(str(identity[k])) == key(str(getattr(self.state.seller, k))) for k in identity)
+            linked = from_seller and all(key(str(identity[k])) == key(str(getattr(self.state.seller, k))) for k in ('brand', 'model', 'variant', 'year', 'transmission'))
             if linked:
                 identity.update(major_accident_reported=self.state.seller.major_accident_reported, flood_damage_reported=self.state.seller.flood_damage_reported)
             vehicle = SellerVehicleFrame.model_validate(identity)
             self.reference = estimate_vehicle_value(vehicle, self.cars, as_of=self.as_of, identity_reference_only=True)
+            slot = ('negotiation' if self.state.goal == 'negotiate' else 'trade_in') + '.mileage_km'
+            if self.reference.get('historical_regression', {}).get('needs_mileage') and slot not in self.state.provenance:
+                self.pending = {slot: 'What is the old/current vehicle odometer reading, with a distance unit? It enables a historical regression reference. Say Unknown to continue without that reference.'}
+                self.state.pending_slots = list(self.pending)
             return self.reference
         if name != expected:
             raise ToolError('The selected business tool does not match the active consultation goal.')

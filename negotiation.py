@@ -36,6 +36,18 @@ def asking_evidence(profile, valuation_result, as_of):
         questions.append('Recalculate the valuation for this consultation date before using its price reference.')
     status = valuation_result.get('status')
     evidence = {'status': status, 'reference': None, 'as_of': valuation_result.get('as_of')}
+    if status == 'historical_reference' and not questions:
+        from historical_price_regression import verify_prediction
+        historical = valuation_result.get('historical_regression') or {}
+        model_input = historical.get('input', {})
+        same_identity = all(key(str(model_input.get(k))) == key(str(getattr(profile.vehicle, k)))
+                            for k in ('brand', 'model', 'variant', 'year', 'transmission'))
+        if not verify_prediction(historical) or not same_identity or model_input.get('mileage_km') != profile.mileage_km:
+            return evidence, ['The historical model result/mileage does not match the confirmed facts. Re-run the reference tool with the odometer reading.']
+        evidence.update(status='historical_model_reference', historical_regression=historical,
+                        sources=historical['sources'],
+                        note='Historical illustrative model context only; not a current market quote, comparable median or transaction price.')
+        return evidence, []
     if questions or status not in ('reference_only', 'illustrative_scenario'):
         return evidence, questions
     reference = valuation_result.get('reference') or {}
@@ -101,12 +113,18 @@ def advise_negotiation(profile: NegotiationFrame, *, as_of: date, valuation_resu
         return result
     offer, fees = decimal(profile.current_offer_myr), decimal(profile.fees_myr)
     ref = evidence['reference']
-    anchor = decimal(ref['median_asking_price_myr']) if ref else None
+    historical = evidence.get('historical_regression')
+    anchor = decimal(ref['median_asking_price_myr']) if ref else decimal(historical['estimated_asking_price_myr']) if historical else None
     if ref:
         low, high = map(decimal, ref['observed_asking_range_myr'])
         result['price_position'] = 'below_observed_asking_range' if offer < low else 'above_observed_asking_range' if offer > high else 'within_observed_asking_range'
-    result['status'] = 'advice_ready' if ref else 'limited_advice'
-    if not ref:
+    if historical:
+        low, high = map(decimal, historical['illustrative_error_band_myr'])
+        result['historical_price_position'] = 'below_historical_error_guide' if offer < low else 'above_historical_error_guide' if offer > high else 'within_historical_error_guide'
+        result['limitations'].extend(historical['limitations'])
+        result['limitations'].append(historical['error_band_basis'])
+    result['status'] = 'advice_ready' if ref else 'historical_advice' if historical else 'limited_advice'
+    if not ref and not historical:
         result['limitations'].append('No usable linked valuation reference: advice concerns the stated budget/reserve only; price fairness is not assessed.')
 
     # Write one chosen action/counter and its rule explanation into the result, consistently
@@ -131,13 +149,17 @@ def advise_negotiation(profile: NegotiationFrame, *, as_of: date, valuation_resu
             if profile.asking_price_myr is not None:
                 counter = min(counter, decimal(profile.asking_price_myr))
             decision('NEG_BUY_BUDGET', 'counter_offer', 'The current total exceeds the budget. The proposed vehicle price plus fees stays within the budget.', counter)
-        elif ref and offer > high:
+        elif (ref or historical) and offer > high:
             counter = min(cap, anchor)
             if profile.asking_price_myr is not None:
                 counter = min(counter, decimal(profile.asking_price_myr))
-            decision('NEG_BUY_REFERENCE', 'counter_offer', 'The quote fits the budget but exceeds the observed asking range. The asking median is a discussion anchor, not a proven fair price.', counter)
-        elif ref and offer < low:
-            decision('NEG_BUY_LOW_REFERENCE', 'verify_listing_details', 'The quote is below the observed asking range. Check condition, specification and fee differences before judging it.')
+            decision('NEG_BUY_REFERENCE', 'counter_offer',
+                     'The quote fits the budget but exceeds the historical model error guide. The prediction is a scenario discussion anchor, not current market evidence.' if historical else
+                     'The quote fits the budget but exceeds the observed asking range. The asking median is a discussion anchor, not a proven fair price.', counter)
+        elif (ref or historical) and offer < low:
+            decision('NEG_BUY_LOW_REFERENCE', 'verify_listing_details',
+                     'The quote is below the historical model error guide. Verify vehicle differences; historical prices cannot establish a current bargain.' if historical else
+                     'The quote is below the observed asking range. Check condition, specification and fee differences before judging it.')
         else:
             decision('NEG_BUY_WITHIN_LIMIT', 'review_offer', 'The quote fits the stated budget. Review the vehicle and terms; no deal is automatically accepted.')
     else:
@@ -161,8 +183,10 @@ def advise_negotiation(profile: NegotiationFrame, *, as_of: date, valuation_resu
         target = max(floor, target)
         if net < minimum:
             decision('NEG_SELL_RESERVE', 'counter_offer', 'The bid leaves less than the required net proceeds. The counter covers the stated reserve, fees and settlement.', target)
-        elif ref and offer < low and target > offer:
-            decision('NEG_SELL_REFERENCE', 'counter_offer', 'The bid meets the reserve but is below the observed asking range. A bounded asking-reference anchor can be discussed.', target)
+        elif (ref or historical) and offer < low and target > offer:
+            decision('NEG_SELL_REFERENCE', 'counter_offer',
+                     'The bid meets the reserve but is below the historical model error guide. A bounded historical scenario counter can be discussed; current market fairness is unknown.' if historical else
+                     'The bid meets the reserve but is below the observed asking range. A bounded asking-reference anchor can be discussed.', target)
         else:
             decision('NEG_SELL_WITHIN_LIMIT', 'review_offer', 'The bid meets the stated minimum net proceeds. Review the remaining terms; no sale is automatically accepted.')
     return result

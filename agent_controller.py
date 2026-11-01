@@ -39,6 +39,9 @@ buyer.budget_myr is a total vehicle-price budget, not monthly instalments. negot
 includes fees. seller_minimum_net_myr is NET after fees and old-loan settlement. current_offer_myr
 is the OTHER party's bare vehicle quote/bid, separate from fees. Currency is MYR; foreign/unspecified
 currency needs clarification. Keep evidence with its original currency and distance unit.
+For negotiate, the current vehicle odometer is negotiation.mileage_km; for trade_in,
+the OLD vehicle odometer is trade_in.mileage_km. Keep distance units and never use
+replacement-car mileage. These optional facts support a bounded historical price model.
 Manufacturing year differs from registration year. auto -> Automatic; only explicit D-CVT -> D-CVT.
 usage is a list of city_commute / family_travel / long_distance. fuel_priority and space_priority
 are high/medium/low; save fuel means high fuel priority, spacious boot means high space priority.
@@ -77,7 +80,9 @@ For buy choose rank_vehicles; sell choose estimate_vehicle_value; trade_in choos
 For negotiate with complete vehicle identity, get_price_reference first, then advise_negotiation.
 If identity is unknown, advise_negotiation gives only limited budget/reserve advice.
 For trade_in with complete current_vehicle identity, get_price_reference first, then compare_trade_in.
-The reference is only asking-price context; never use it as a missing dealer/private-sale offer.
+The reference may be exact asking context or a checked historical Ridge prediction.
+Historical predictions are illustrative, not current market prices. Never use either
+kind as a missing dealer/private-sale offer. If a reference asks for mileage, ask_user.
 If the user selects a previously ranked car, select_vehicle using its exact ID from candidates;
 this supplies identity, not a fabricated current offer. Do not choose arbitrary IDs.
 After the active goal business tool, call check_result. Only if checks pass, finish. If a tool
@@ -231,6 +236,7 @@ def context_for(state, cars, missing=None):
                   for v in cars if v.vehicle_id == identity]
     return compact({'active_goal': state.goal, 'confirmed_facts': active.model_dump() if active else {},
                     'pending': dict(list((missing or {}).items())[:3]), 'previously_ranked_candidates': candidates,
+                    'previous_pending_slots': list(state.pending_slots),
                     'selected_vehicle_id': state.selected_vehicle_id,
                     'negotiation_identity_complete': identity_complete(state.negotiation.vehicle)})
 
@@ -242,7 +248,7 @@ def observation_summary(name, result):
         return {k: result[k] for k in ('status', 'matched_count', 'top_vehicle_ids', 'scoring_notes')} | {
             'candidates': [{'vehicle_id': r['vehicle']['vehicle_id'], 'price_myr': r['vehicle']['price_myr'], 'score': r['score']} for r in result['matches'][:10]]}
     if name in ('get_price_reference', 'estimate_vehicle_value'):
-        return {k: result.get(k) for k in ('status', 'reference', 'clarification_questions', 'limitations')}
+        return {k: result.get(k) for k in ('status', 'reference', 'historical_regression', 'clarification_questions', 'limitations')}
     if name == 'advise_negotiation':
         return {k: result.get(k) for k in ('status', 'action', 'suggested_counter_price_myr', 'calculations', 'clarification_questions', 'limitations')}
     if name == 'compare_trade_in':
@@ -270,6 +276,12 @@ def render_result(goal, result):
             lines.extend('   ' + line + '  ' for line in vehicle_information_lines(v))
         return '\n'.join(lines)
     if goal == 'sell':
+        if status == 'historical_reference':
+            model = result['historical_regression']
+            return (f"Historical regression reference: MYR {model['estimated_asking_price_myr']:,.2f}. "
+                    f"The model's development average absolute error for this model group is MYR {model['evaluation']['mae_myr']:,.2f}. "
+                    'Exact listed comparables are insufficient; this prediction uses historical ads and simulation records. '
+                    'It is not current market value, a guaranteed sale price or a condition-adjusted appraisal. See result details for scope and sources.')
         reference = result['reference']
         low, high = reference['observed_asking_range_myr']
         return (f"The {reference['comparable_count']} eligible comparable listing snapshots have a median asking price of MYR {reference['median_asking_price_myr']:,.2f} and observed range MYR {low:,.2f}–{high:,.2f}. "
@@ -284,7 +296,11 @@ def render_result(goal, result):
         if 'offered_net_proceeds_myr' in calculations:
             lines.append(f"Current net proceeds after stated fees/settlement: MYR {calculations['offered_net_proceeds_myr']:,.2f}; minimum net MYR {calculations['minimum_net_proceeds_myr']:,.2f}.")
         reference = result['valuation_evidence']['reference']
-        lines.append(f"The linked median asking-price reference is MYR {reference['median_asking_price_myr']:,.2f}; it is not a proven fair transaction price." if reference else 'No usable linked market reference is available. This is limited budget/reserve advice; price fairness is not assessed.')
+        historical = result['valuation_evidence'].get('historical_regression')
+        if historical:
+            lines.append(f"Historical model discussion anchor: MYR {historical['estimated_asking_price_myr']:,.2f}. It is illustrative historical context; current market fairness is not assessed.")
+        else:
+            lines.append(f"The linked median asking-price reference is MYR {reference['median_asking_price_myr']:,.2f}; it is not a proven fair transaction price." if reference else 'No usable linked market reference is available. This is limited budget/reserve advice; price fairness is not assessed.')
         lines.append('This is a bounded decision-tree suggestion, not an optimal offer or an executed deal.')
         return '\n'.join(lines)
     lines = []
@@ -297,6 +313,8 @@ def render_result(goal, result):
     context = result.get('asking_price_context', {})
     if context.get('reference'):
         lines.append(f"Old-vehicle asking-price context: median MYR {context['reference']['median_asking_price_myr']:,.2f}; this is not a trade-in cash offer.")
+    elif context.get('historical_regression'):
+        lines.append(f"Old-vehicle historical model reference: MYR {context['historical_regression']['estimated_asking_price_myr']:,.2f}. This is neither a dealer trade-in offer nor guaranteed private-sale proceeds; it does not replace your stated quotes.")
     return '\n'.join(lines)
 
 
@@ -408,7 +426,7 @@ class AgentController:
             allowed = [slot for slot in SLOTS if prefix is None or slot.startswith(prefix)]
             patch_schema = TurnPatch.model_json_schema()
             patch_schema['$defs']['SlotUpdate']['properties']['slot']['enum'] = allowed
-            patch_schema['properties']['updates']['maxItems'] = 16
+            patch_schema['properties']['updates']['maxItems'] = 32
             if hint:
                 patch_schema['properties']['goal'] = {'enum': [hint, None]}
             # Restrict the schema to the active goal's leaf slots. Passing this

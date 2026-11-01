@@ -1,5 +1,7 @@
 # 历史模拟车辆资料接入（2026-10-31）
 
+**同日后续授权：**用户随后明确要求已确认资料和历史模拟资料一起用于Regression。现在已另外训练历史教学Ridge并接入Sell／Negotiation／Trade-In限定范围；模拟记录仍不进入真实可比广告中位数或市场批准训练清单。详见[最新Regression说明](HISTORICAL_REGRESSION_GUIDE_ZH.md)。下文“未用于训练”保留为初次接入阶段记录。
+
 **最新显示调整：**按用户要求，聊天回复和主推荐卡片只显示排名、车型、参考价格、座位、变速箱、里程及已知油耗参考。技术编号移至可展开的Vehicle details and sources及Evidence & checks；聊天／主卡片不再重复模拟资料与评分过程说明。数据本身的模拟标记及本文件／英文报告中的用途说明继续保留，价格资料性质和估价规则不因显示调整而改变。下面涉及SIMULATION聊天标签的验收描述是调整前的历史记录。
 
 Agent／Streamlit 默认读取两份资料：原有 `data/vehicles_real.json` 的17条挂牌广告快照，加上 `data/vehicles_simulation.json` 的97条历史模拟记录，共114条。默认读取函数是 `vehicle_frame.load_agent_vehicles()`，`main.py --rank`也使用同一份组合资料。两份文件分别保存，运行时合并，方便识别来源和复现。

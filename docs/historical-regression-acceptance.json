@@ -1,0 +1,180 @@
+{
+  "recorded_on": "2026-10-31",
+  "scope": "Development acceptance, not independent/current-market accuracy or new real-browser acceptance",
+  "source": {
+    "git_commit": "7ee4af17777eb9fafe78732a30d39f53522d2fa3",
+    "tracked_changes": true,
+    "code_and_data_sha256": "abe64ef0f1f24f344c61851a4970293d780b387b79d7bbf243db68dad0154a4c",
+    "file_sha256": {
+      ".streamlit/config.toml": "856cf7e3ffac05ef05f0ff0ff2ab63c9f41dfbb56b34382861b4018daf5d3d9a",
+      "agent_cli.py": "c0daefddcb8a2f9b64998fc525e21f5e35e8b81219d971c9db917abccdb09e57",
+      "agent_controller.py": "c76f619554da6dd32f76ba1a2a7d0b7418f765da92ffd3001f5b082ad5395973",
+      "agent_grounding.py": "d0023a7b189668d4a1de27f2d3f95d42d17ca1a8165ebadede473a2e8024f50c",
+      "agent_state.py": "b3e469de5d9a817a161c37ceeb53f7e0d8738026d68f8fb9a72ebbfaa2473ee4",
+      "agent_tools.py": "5a8e83420b2b01370f1deb48df677234fea99a5a8e3051dfa93f0600404f493e",
+      "audit_input_cases.py": "c571856ded739ac342a2042fc4108c5ade04289c1a620dad0bf7ae963f95f0c0",
+      "audit_v2.py": "ad945b87270a47f9b65e17cd9477545665eee9549a648a79f1eaec23095b5dc1",
+      "build_simulation_data.py": "f600a7a687070e0d8ef22d1ec668261f7de52b840440ea8c840b9f9db1174160",
+      "buyer_profile.py": "5f5d95408bf85610abac5994ace3db68b150ad4126cbd83a8e71b22f027a8aa1",
+      "buyer_usage.py": "873c4a30f3480646bd2deb57f006767a36e6742376c4058c8dce776133535d58",
+      "check_data_quality.py": "8d7ae4710b74598c035465c419df5e751beebbd8a4548c78e6a9709b5033e7f6",
+      "consultation_frames.py": "3685f3616ebebc5fa67c0b2dd85ecff964206f41455937b8d7a9cd63c30bb001",
+      "data/historical_price_model.json": "124c9aaeff8519b91834de233e3160924d35b10bc2e2b417076bf988bbb74439",
+      "data/historical_simulation_source.json": "963bf642a66d40bdc7e6961bfec7b7642a7d84dc53f8d10b261b9fc11e8720da",
+      "data/model_evidence_v2.json": "eebc1918231d69891a3423c26ff8043438ec5461697ad2a1546517575733bde5",
+      "data/regression_manifest.json": "750364697ba30d1d92c0f49509932f9256f6cf75ebaf5ed5200001f028b4aaed",
+      "data/vehicles_real.json": "87fdd93730d22499a8fcdacee1e76c684d82e9c1c295d30f7ad0a9852110c0f1",
+      "data/vehicles_simulation.json": "db47b9473d51b1751fa0c4855e554319d9b9b263e3e1ccb008b9c3c4a7999ab5",
+      "evaluate_agent.py": "c51aad93100deac0aa60e15ec3d0647eb9dda9afe44c66e190fd8dd8055c837e",
+      "evaluate_extraction.py": "b89b951c4b7d4bd837b8107e391b74c917cb22a8f3eec5bf981e1e8235488ef5",
+      "evaluate_historical_live.py": "e568be2307a45cb5f13d0436c3f0d5bec53b346e38aa87bb593c5c4113683792",
+      "evaluate_input_fix.py": "87ad15861999de02a5d7802569ef9059e1212cfd1c84c2c9a529ecbee42cfa89",
+      "evaluate_negotiation.py": "9af31b1fad3b525122e5646987369aa36604e7f440662bae896f0779266c091b",
+      "evaluate_ranking.py": "0af46a442adf5543eca083056cbdae7372841784077ad063a077fd93f74bec40",
+      "evaluate_stage5_stage6.py": "1da574f430cfb04d7aae94b7659d78220928092206c3ec6edd6a0f99e1d807d7",
+      "evaluate_v2_live.py": "92fa32e6abe4f9a9c4673b294d9a6f48eaec383f63309510170a782650f5b149",
+      "evaluate_valuation.py": "3ab2f083f7031c7f5ecffee1ffa733b91dbff25b4d9f5114e336bde4e6d7b565",
+      "form_inputs.py": "57e74e47580e451b7724e50b6a2985ccb3285c9cfc698ceb91f112267512e384",
+      "fuzzy_lifestyle.py": "5165c1860f76053d59f3c858bbdbe29249e2061f5b51ab4144aca73683c6904d",
+      "historical_price_regression.py": "0a52e0269514c18cbc65c18ee7625ccd7238317f0df5a1dff978db0a2544bd82",
+      "input_grounding.py": "acfdd80e3df30bd004783be237660041f11e5e76b9a1eb0eb1e715e452e7334c",
+      "lifestyle_v2.py": "6c92cfd9ae4281bbfa3b70f7d21aadf0cfa7ae8d5d6de20a31e73bcb6753018c",
+      "main.py": "bce974859acdc131cc8db72ad5161028f534507b3018e8359da62af1e5f7717e",
+      "matching.py": "f449aea9f11aeea2d53a60ee405858ad19cc128b7d4266d3f886a3ca11046753",
+      "negotiation.py": "fd8b889651b3cb6b0c8c748130c71d3af3127c32ab3ec1370ee1cf63442bf53d",
+      "price_regression.py": "65e75dfff168519411c9bb56178d9e69855ec2dcbf800dd7c8c9fc9a335ed6b2",
+      "requirements-lock.txt": "e55e4e13c13ad59bf89c2efeb2e3fc7102348857cc56b87f84cdc572d25d373b",
+      "run_team_tests.py": "ce4674372e3887ce2e2d789e5fb3145f2993c7fcca1e0af3f82fa3730cfd6820",
+      "scoring.py": "52d2048b5bacec4be3ac0c7f25538923e2bcf74f5cbf882c807e2ba6ff94650e",
+      "seller_profile.py": "24335545ab51c7aa828992b0bab47b70b1fce6efe01eeccdbbcac7a4440271f9",
+      "streamlit_app.py": "23cc512f74e8305e5d26b75a4144c4742501f0c58a806f45f87b5767b1c34b19",
+      "team_check.py": "81c9b35b421af52d2261fbd50affd693386238a9b249a168b4437736f204312c",
+      "test_agent.py": "12e301bc02b6b5b795d109b3295bd689b481b7376b005f5820203807d2fada24",
+      "test_budget_input.py": "26610189e8423abfb0713d43a25a0e2690e8bb1eed35569d1f5d40439c398fee",
+      "test_buy_followup.py": "3ebd06ae9226a3a29874d9c31ee7eb23ee6e99422706e3960a3d71f3706a319d",
+      "test_buyer_usage.py": "8628ca402fff039e0a7c84f67776622b94933d0eeb8476f165f67254bddbec8b",
+      "test_cancellation.py": "569f2571301f2acdbf27824c0a508d9d27835e861667bb3452fb2c16ff862973",
+      "test_historical_regression.py": "8c2d453d182104b676835b3b6cba0a8a97a5fcfead4c34daacfb069aa6593ff6",
+      "test_input_grounding.py": "36f204c27b930d8fd4b833861c491d62e4fc1dee0126b26a4455fda270f30b59",
+      "test_matching.py": "dc1629c704fc762bef6759c7a4c5d80148d9da4ace1d1d9bf83dd97265ec5889",
+      "test_negotiation.py": "bf4d58ad639b03319b1f2c8190d0345e287fc78d3c00f24e9b862da4b14a4626",
+      "test_price_regression.py": "962eb305b4b32453c720e21a4035bbef4ac6ff4ca64273ce85aca18bdc3fb763",
+      "test_profile.py": "98d312bd3f221406fd4ac427e0b3adbf7bd767ff8d8ee8b54d7c96fb08d81659",
+      "test_scoring.py": "2112972f4c4a1203e9df07e248d17a22c8dfadd5d896b0141fec2934e227952a",
+      "test_simulation_data.py": "84ea9c1c9afc25d6b896f70a4754c6dfb70025a480f327444852dbad656cf3cf",
+      "test_stage5_audit.py": "75779c178d17f117a51db3065c57c89ac6f58de2b2f353f906b033d1e2cdd482",
+      "test_streamlit_ui.py": "36d06c84081e8e4d4074e2f91aa5bc89a4c7b7d25af5a7bc6192bbc55d510d16",
+      "test_team_tools.py": "c03a1b6f52205f715e906742132614be2a041a512411e3ce394236118f2070b9",
+      "test_v2.py": "01247bd26caf066c444162abc1f6b36c234f607ec83ea4894c79e4dbc5da2d34",
+      "test_valuation.py": "432792ff4b2dbe56b62a5f0836ce8830f0740967713b1bfb2304b46d7cb4f348",
+      "trade_in.py": "18f43e72c7390c839dd27626bc67de486496ff767c7536c56e13d42efc802cbf",
+      "ui_session.py": "a1cbd9d3d7d82dee05423a9f66b7c377591ab09edec700512153a8841bf85b86",
+      "valuation.py": "c6067b65627bb1d04075e656818e69c3d67ca29535449ef5906746997e1410bd",
+      "vehicle_evidence.py": "1c02d4861286e825a13641826273e99eca3e9b1847d682c40dff0a3865a04a0d",
+      "vehicle_frame.py": "7f26a1bafa460e636c917b2f5e83fc3c885c3570641b2eae29d3d9f6dc6fbb6a",
+      "vehicle_presentation.py": "db3c63593df65530423c9b7704ad62331d655611cc3691dc23637fca8aee1032"
+    }
+  },
+  "model_id": "historical-ridge-95635901ebdf9c17",
+  "model_file_sha256": "124c9aaeff8519b91834de233e3160924d35b10bc2e2b417076bf988bbb74439",
+  "offline": {
+    "tests_run": 274,
+    "passed": true,
+    "elapsed_seconds": 21.949,
+    "failures": [],
+    "errors": [],
+    "skipped": []
+  },
+  "live": {
+    "passed": true,
+    "run_on": "2026-10-31T22:47:49.266860+08:00",
+    "runtime_code_unchanged_since_live_run": true,
+    "turns": [
+      {
+        "goal": "sell",
+        "input": "I want to sell my Toyota Alphard 2.5 G S C Package. Manufacturing year is 2018. Transmission is Automatic. Odometer is 65000 km. Condition is good. No major accident and no flood damage.",
+        "structured_form": false,
+        "elapsed_seconds": 58.37,
+        "checks": {
+          "complete": true,
+          "expected_result": true,
+          "historical_scope": true,
+          "actual_tool_checks": true,
+          "confirmed_odometer": true
+        },
+        "passed": true,
+        "message": "Historical regression reference: MYR 187,371.70. The model's development average absolute error for this model group is MYR 22,945.92. Exact listed comparables are insufficient; this prediction uses historical ads and simulation records. It is not current market value, a guaranteed sale price or a condition-adjusted appraisal. See result details for scope and sources.",
+        "result_status": "historical_reference",
+        "tool_sequence": [
+          "inspect_requirements",
+          "estimate_vehicle_value",
+          "check_result",
+          "finish"
+        ]
+      },
+      {
+        "goal": "negotiate",
+        "input": "I want to negotiate as the buyer of a Toyota Alphard 2.5 G S C Package. Manufacturing year is 2018. Transmission is Automatic. Odometer is 65000 km. The seller current offer is RM230000 excluding fees. Total applicable fees are RM1000 and all fees are complete. My maximum total purchase budget including fees is RM300000.",
+        "structured_form": false,
+        "elapsed_seconds": 53.78,
+        "checks": {
+          "complete": true,
+          "expected_result": true,
+          "historical_scope": true,
+          "actual_tool_checks": true,
+          "confirmed_odometer": true,
+          "counter_within_budget": true
+        },
+        "passed": true,
+        "message": "Decision: counter offer.\nSuggested bare vehicle-price counter: MYR 187,371.70.\nCurrent offer including stated fees: MYR 231,000.00; total budget MYR 300,000.00.\nHistorical model discussion anchor: MYR 187,371.70. It is illustrative historical context; current market fairness is not assessed.\nThis is a bounded decision-tree suggestion, not an optimal offer or an executed deal.",
+        "result_status": "historical_advice",
+        "tool_sequence": [
+          "inspect_requirements",
+          "get_price_reference",
+          "advise_negotiation",
+          "check_result",
+          "finish"
+        ]
+      },
+      {
+        "goal": "trade_in",
+        "input": "I want to compare trade-in with private sale.\nBrand is Toyota.\nModel is Alphard.\nExact variant is 2.5 G S C Package.\nThe manufacturing year is 2018.\nTransmission is Automatic.\nThe odometer reading is 65000 km.\nThe trade-in replacement price is RM250000.00.\nThe trade-in replacement fees is RM1000.00.\nAre these fees complete All applicable fees are confirmed complete.\nThe trade-in disposal gross offer is RM160000.00.\nThe trade-in disposal fees is RM500.00.\nAre these fees complete All applicable fees are confirmed complete.\nEstimated completion (days) is 2.0.\nEstimated effort (hours) is 2.0.\nThe private-sale replacement price is RM250000.00.\nThe private-sale replacement fees is RM1000.00.\nAre these fees complete All applicable fees are confirmed complete.\nThe private-sale disposal gross offer is RM180000.00.\nThe private-sale disposal fees is RM1000.00.\nAre these fees complete All applicable fees are confirmed complete.\nEstimated completion (days) is 21.0.\nEstimated effort (hours) is 12.0.\nOld-vehicle loan settlement is RM10000.00.\nAvailable additional cash is RM110000.00.\nYour comparison priority is net_cost.",
+        "structured_form": true,
+        "elapsed_seconds": 26.06,
+        "checks": {
+          "complete": true,
+          "expected_result": true,
+          "historical_scope": true,
+          "actual_tool_checks": true,
+          "confirmed_odometer": true,
+          "user_quotes_preserved": true
+        },
+        "passed": true,
+        "message": "trade in: net proceeds MYR 149,500.00; signed cash difference MYR 101,500.00.\nprivate sale: net proceeds MYR 169,000.00; signed cash difference MYR 82,000.00.\nPositive cash difference needs additional cash; negative means a surplus. Prices, fees and time estimates are user-provided quotes/scenarios.\nConditional path for your stated priority: private sale.\nA conditional suggestion based on the stated priority and known quotes; verify terms before deciding.\nOld-vehicle historical model reference: MYR 187,371.70. This is neither a dealer trade-in offer nor guaranteed private-sale proceeds; it does not replace your stated quotes.",
+        "result_status": "comparison_ready",
+        "tool_sequence": [
+          "inspect_requirements",
+          "get_price_reference",
+          "compare_trade_in",
+          "check_result",
+          "finish"
+        ]
+      }
+    ]
+  },
+  "tool_examples_checked": [
+    "historical_reference",
+    "historical_advice",
+    "comparison_ready"
+  ],
+  "verification_notes": [
+    "First restricted-environment UI/temp-file run hit Windows temporary-folder permissions; authorised rerun of all 15 initial historical tests passed.",
+    "Initial full 273 tests passed; final 274 passed after adding a direct odometer/Unknown/replacement-car boundary test and including the fitted model in source fingerprints.",
+    "Live two natural-language inputs and one explicit form used actual local qwen3:4b; no independent market labels, teammate cases or new real-browser run claimed."
+  ],
+  "limitations": [
+    "Only Alphard/Harrier groups meet fixed historical development policy; variant/year/mileage scope remains bounded.",
+    "MAE is not a confidence interval; mileage midpoints and unknown ad dates remain limitations.",
+    "Strict market manifest still has zero approved rows."
+  ]
+}

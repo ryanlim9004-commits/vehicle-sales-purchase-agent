@@ -214,10 +214,27 @@ def render_buy(result):
 
 
 # The UI never fabricates an adjustment table when default valuation is unadjusted.
+def render_historical_reference(model):
+    """Keep the learned historical prediction visibly distinct from real quotes."""
+    st.markdown('**Historical regression reference**')
+    st.metric('Estimated historical asking price', display_money(model['estimated_asking_price_myr']))
+    st.caption('Historical ads + simulation data. Not current market value, a dealer offer or guaranteed sale proceeds.')
+    score = model['evaluation']
+    st.write('Development average absolute error: ' + display_money(score['mae_myr']) +
+             f" across {score['group_count']} held-out source groups.")
+    low, high = model['illustrative_error_band_myr']
+    st.caption('Illustrative error guide: ' + display_money(low) + ' – ' + display_money(high) +
+               '. Prediction ± average development error; not a confidence interval or guaranteed range.')
+    with st.expander('Historical model scope, inputs and sources'):
+        st.json(model)
+
+
 def render_value(result):
     st.subheader('Asking-price reference')
     reference = result.get('reference')
-    if not reference:
+    if result.get('status') == 'historical_reference':
+        render_historical_reference(result['historical_regression'])
+    elif not reference:
         st.info(result.get('message', 'No numeric reference is available for this outcome.'))
     else:
         left, right = st.columns(2)
@@ -244,7 +261,9 @@ def render_value(result):
 # Show reference provenance separately from the user's current quote/bid.
 def render_asking_context(evidence):
     reference = (evidence or {}).get('reference')
-    if reference:
+    if (evidence or {}).get('historical_regression'):
+        render_historical_reference(evidence['historical_regression'])
+    elif reference:
         st.markdown('**Linked website asking-price context**')
         st.write('Median: ' + display_money(reference['median_asking_price_myr']))
         st.caption('Saved asking prices are context, not a dealer cash offer or guaranteed sale proceeds.')
@@ -324,7 +343,7 @@ def render_form(ui, goal, busy):
                         entries[field.path] = st.text_input(field.label, key=key, help=help_text, disabled=busy, max_chars=160,
                                                            placeholder=placeholder)
                 index += 1
-            unit = st.selectbox('Odometer unit', ['km', 'm', 'miles'], disabled=busy) if goal == 'sell' else 'km'
+            unit = st.selectbox('Odometer unit', ['km', 'm', 'miles'], disabled=busy) if goal != 'buy' else 'km'
             submitted = st.form_submit_button('Submit details to Agent', type='primary', disabled=busy)
         if submitted:
             try:
