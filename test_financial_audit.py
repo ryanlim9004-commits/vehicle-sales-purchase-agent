@@ -36,6 +36,129 @@ class FinancialAuditTests(unittest.TestCase):
     def trade(self):
         return SessionState(goal='trade_in', trade_in=fixture('trade_in.json', TradeInFrame))
 
+    def test_n10_misfiled_asking_price_recovers_actual_current_offer_and_regression(self):
+        state = SessionState(goal='negotiate')
+        text = ('I want to negotiate as the buyer of a Toyota Alphard 2.5 G S C Package. '
+                'Manufacturing year is 2018. Transmission is Automatic. Odometer is 65000 km. '
+                'The seller current vehicle offer is RM230000 excluding fees. Total applicable fees are RM1000. '
+                'All fees are complete. My maximum total purchase budget including fees is RM300000.')
+        patch(state, text,
+              ('negotiation.role', 'buyer', 'buyer'),
+              ('negotiation.vehicle.brand', 'Toyota', 'Toyota'),
+              ('negotiation.vehicle.model', 'Alphard', 'Alphard'),
+              ('negotiation.vehicle.variant', '2.5 G S C Package', '2.5 G S C Package'),
+              ('negotiation.vehicle.year', 2018, 'Manufacturing year is 2018'),
+              ('negotiation.vehicle.transmission', 'Automatic', 'Transmission is Automatic'),
+              ('negotiation.mileage_km', 65000., 'Odometer is 65000 km'),
+              # This is the actual model misclassification from the screenshot replay.
+              ('negotiation.asking_price_myr', 230000., 'The seller current vehicle offer is RM230000 excluding fees'),
+              ('negotiation.fees_myr', 1000., 'Total applicable fees are RM1000'),
+              ('negotiation.buyer_total_budget_myr', 300000., 'My maximum total purchase budget including fees is RM300000'))
+        self.assertEqual(state.negotiation.current_offer_myr, 230000.)
+        self.assertIsNone(state.negotiation.asking_price_myr)
+        self.assertEqual(state.negotiation.fees_myr, 1000.)
+        self.assertEqual(state.negotiation.buyer_total_budget_myr, 300000.)
+        runtime = ToolRuntime(state, load_agent_vehicles(), AS_OF)
+        self.assertEqual(runtime.call('inspect_requirements', {})['status'], 'ready')
+        runtime.call('get_price_reference', {})
+        result = runtime.call('advise_negotiation', {})
+        self.assertEqual(result['status'], 'historical_advice')
+        self.assertEqual(result['suggested_counter_price_myr'], 187371.70)
+        self.assertTrue(runtime.call('check_result', {})['passed'])
+
+    def test_explicit_counterpart_quote_is_recovered_when_model_omits_it(self):
+        state = self.buyer()
+        state.negotiation.current_offer_myr = None
+        patch(state, 'The seller current vehicle offer is RM230000 excluding fees. My total budget is RM300000. Fees are RM1000.')
+        self.assertEqual(state.negotiation.current_offer_myr, 230000.)
+        self.assertEqual(state.negotiation.asking_price_myr, 47000.)
+
+    def test_budget_fees_asking_own_counter_and_hypotheticals_are_not_counterpart_quotes(self):
+        for text in ('My budget is RM300000. Fees are RM1000.',
+                     'The seller asking price is RM230000.',
+                     'My current offer is RM200000.',
+                     'The buyer current offer is RM200000.',
+                     'Is the seller current vehicle offer RM230000?',
+                     'What if the seller current offer is RM230000?',
+                     'The seller current offer is not RM230000.'):
+            with self.subTest(text=text):
+                state = self.buyer()
+                state.negotiation.current_offer_myr = None
+                patch(state, text)
+                self.assertIsNone(state.negotiation.current_offer_myr)
+
+    def test_seller_role_recovers_buyers_bid_not_sellers_own_offer(self):
+        state = self.buyer()
+        state.negotiation.role = 'seller'
+        state.negotiation.current_offer_myr = None
+        patch(state, 'The seller current offer is RM45000. The buyer current gross bid is RM40000.')
+        self.assertEqual(state.negotiation.current_offer_myr, 40000.)
+
+    def test_source_recovered_inclusive_and_net_quotes_still_require_clarification(self):
+        for text in ('The seller current vehicle offer is RM230000 including all fees.',
+                     'The seller current net offer is RM230000 after fees and loan settlement.'):
+            with self.subTest(text=text):
+                state = self.buyer()
+                patch(state, text)
+                self.assertIsNone(state.negotiation.current_offer_myr)
+                self.assertIn('negotiation.current_offer_myr', state.issues)
+
+    def test_conflicting_and_unsupported_currency_counterpart_quotes_do_not_get_guessed(self):
+        for text in ('The seller current offer is RM230000. The seller current offer is RM240000.',
+                     'The seller current offer is USD230000.'):
+            with self.subTest(text=text):
+                state = self.buyer()
+                patch(state, text)
+                self.assertIsNone(state.negotiation.current_offer_myr)
+                self.assertIn('negotiation.current_offer_myr', state.issues)
+
+    def test_later_fee_and_budget_labels_do_not_inherit_counterpart_quote_label(self):
+        state = self.buyer()
+        patch(state, 'The seller current offer is RM230000 excluding fees and total fees are RM1000 and my budget is RM300000.')
+        self.assertEqual(state.negotiation.current_offer_myr, 230000.)
+
+    def test_misfiled_offer_does_not_replace_previously_stated_listing_asking_price(self):
+        state = self.buyer()
+        text = 'The seller current vehicle offer is RM46000 excluding fees.'
+        patch(state, text, ('negotiation.asking_price_myr', 46000., text))
+        self.assertEqual(state.negotiation.asking_price_myr, 47000.)
+        self.assertEqual(state.negotiation.current_offer_myr, 46000.)
+
+    def test_unstated_optional_asking_and_history_do_not_poison_a_quote_correction(self):
+        state = self.buyer()
+        state.negotiation.asking_price_myr = None
+        text = 'The seller current vehicle offer is RM46000 including all fees. All fees are complete.'
+        patch(state, text,
+              ('negotiation.asking_price_myr', 46000., 'The seller asking price is RM46000'),
+              ('negotiation.major_accident_reported', False, 'No major accident.'),
+              ('negotiation.flood_damage_reported', False, 'No flood damage.'))
+        self.assertEqual(set(state.issues), {'negotiation.current_offer_myr'})
+        self.assertIsNone(state.negotiation.major_accident_reported)
+        self.assertIsNone(state.negotiation.flood_damage_reported)
+        patch(state, 'The seller current vehicle offer is RM44500 excluding fees. Fees are RM1500. All fees are complete.')
+        self.assertFalse(state.issues)
+        self.assertEqual(requirements(state, AS_OF), {})
+        runtime = ToolRuntime(state, load_agent_vehicles(), AS_OF)
+        runtime.call('inspect_requirements', {})
+        runtime.call('get_price_reference', {})
+        self.assertEqual(runtime.call('advise_negotiation', {})['status'], 'advice_ready')
+        self.assertTrue(runtime.call('check_result', {})['passed'])
+
+    def test_string_null_is_omission_and_cannot_create_irrelevant_questions_or_erase_memory(self):
+        state = self.buyer()
+        state.negotiation.loan_settlement_myr = 5000.
+        patch(state, 'The seller current vehicle offer is RM46000 excluding fees.',
+              ('negotiation.seller_minimum_net_myr', 'null', 'Not provided'),
+              ('negotiation.loan_settlement_myr', 'null', 'Not provided'),
+              ('negotiation.asking_price_myr', 'None', 'Not provided'))
+        self.assertFalse(state.issues)
+        self.assertEqual(state.negotiation.loan_settlement_myr, 5000.)
+        self.assertEqual(state.negotiation.asking_price_myr, 47000.)
+        self.assertEqual(requirements(state, AS_OF), {})
+        patch(state, 'My old-loan settlement is unknown.',
+              ('negotiation.loan_settlement_myr', 'null', 'My old-loan settlement is unknown'))
+        self.assertIsNone(state.negotiation.loan_settlement_myr)
+
     def test_updated_fee_or_other_party_offer_requires_new_fee_confirmation(self):
         for field, value, text in [('fees_myr', 2500., 'The applicable fee total is RM2500.'),
                                    ('current_offer_myr', 48000., 'The seller current offer is RM48000 excluding fees.')]:

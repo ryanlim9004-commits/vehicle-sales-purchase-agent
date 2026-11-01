@@ -206,7 +206,7 @@ def grounded_value(update, message, state):
 # Merge grounded current-turn updates, invalidate unsafe old facts, recover labelled quotes and
 # record provenance/rules.
 def apply_patch(state, patch, message):
-    from financial_guards import snapshot, apply_guards
+    from financial_guards import snapshot, apply_guards, explicit_current_offers
     previous_financial = snapshot(state)
     original_goal = state.goal
     # Record the old identity before patching so changed-vehicle corrections
@@ -226,6 +226,11 @@ def apply_patch(state, patch, message):
     prefixes = {'buy': ('buyer.',), 'sell': ('seller.',), 'negotiate': ('negotiation.',), 'trade_in': ('trade_in.',)}
     for update in patch.updates:
         slot = update.slot
+        # Some small-model responses use the string "null" instead of JSON
+        # null. Treat it as an omitted value; only explicit user wording below
+        # can authorise clearing a previously confirmed fact.
+        if isinstance(update.value, str) and update.value.strip().casefold() in ('null', 'none'):
+            update.value = None
         if ambiguous_fuel and slot in ('buyer.fuel_priority', 'buyer.safety_priority'):
             state.event('facts', action='defer_ambiguous_fuel_safety', slot=slot,
                         reason="'safe fuel' does not establish either preference; ask what the user means.")
@@ -248,7 +253,23 @@ def apply_patch(state, patch, message):
         if slot == 'buyer.required_seats' and re.search(r'\b(family|household)\b', update.evidence, re.I) and not re.search(r'\b(seats?|seaters?|passengers?)\b', update.evidence, re.I):
             state.event('facts', action='ignored_inferred_seats', reason='A household count is not an explicitly stated seat requirement; Python rules derive it.')
             continue
+        # Reject invented optional topics without creating questions the user
+        # never introduced. Existing confirmed facts/conflicts stay unchanged.
+        topic = (r'\baccidents?\b' if slot.endswith('.major_accident_reported') else
+                 r'\bflood(?:ing|ed| damage)?\b' if slot.endswith('.flood_damage_reported') else
+                 r'\basking\b|\blist(?:ed|ing)?\s+(?:vehicle\s+)?price\b' if slot == 'negotiation.asking_price_myr' else None)
+        if topic and not re.search(topic, message, re.I) and state.pending_slots != [slot]:
+            state.event('facts', action='ignored_unstated_optional_fact', slot=slot,
+                        reason='The current message does not introduce this optional topic; do not infer it or turn a model guess into a user clarification.')
+            continue
         try:
+            if slot == 'negotiation.asking_price_myr' and update.evidence.casefold() in message.casefold():
+                position = message.casefold().find(update.evidence.casefold())
+                source = clause_before(message, position) + update.evidence + clause_after(message, position + len(update.evidence))
+                if any(amount == update.value for amount, _ in explicit_current_offers(source)):
+                    state.event('facts', action='defer_misfiled_current_offer', slot=slot,
+                                reason='The source names a counterpart offer, not a listing asking price; the quote rule will check its actual role.')
+                    continue
             value = grounded_value(update, message, state)
             if slot == 'buyer.usage' and value == [] and update.value != []:
                 state.event('facts', action='ignored_prior_usage_context', slot=slot,

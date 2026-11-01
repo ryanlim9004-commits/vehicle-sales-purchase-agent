@@ -10,6 +10,75 @@ from seller_profile import SellerVehicleFrame
 HISTORY = ('major_accident_reported', 'flood_damage_reported')
 QUOTES = ('trade_in_replacement', 'private_sale_replacement', 'trade_in_quote', 'private_sale_quote')
 
+# A counterpart quote is different from a listing's asking price or our own
+# proposed counter. Keep the party label, rather than trusting an LLM's slot.
+OFFER_LABEL = re.compile(
+    r"\b(?P<party>seller|buyer|other\s+party|my|our)(?:['’]s)?\s+"
+    r'(?:(?:current|latest|new|vehicle|gross|bare|cash|net)\s+)*'
+    r'(?:offer|bid|quote)\b', re.I)
+
+
+def explicit_current_offers(message, role=None):
+    """Read bounded, explicitly attributed quotes from this message only.
+
+    None role is used only to detect an asking-price misclassification. For
+    recovery, buyer requires a seller quote and seller requires a buyer bid.
+    Unlabelled amounts, our counters, budgets and hypothetical quotes stay out.
+    """
+    records = []
+    for match in MONEY.finditer(message):
+        # The bounded clause helpers remove punctuation; inspect the original
+        # sentence tail as well so a question cannot become a reported quote.
+        sentence_tail = re.split(r'(?<=[.!?])\s+|\n', message[match.end():], maxsplit=1)[0]
+        if '?' in sentence_tail:
+            continue
+        before, after = clause_before(message, match.start()), clause_after(message, match.end())
+        labels = list(OFFER_LABEL.finditer(before))
+        if not labels:
+            continue
+        label = labels[-1]
+        party = label['party'].casefold()
+        if party in ('my', 'our') or (role == 'buyer' and party == 'buyer') or (role == 'seller' and party == 'seller'):
+            continue
+        if role not in (None, 'buyer', 'seller'):
+            continue
+        # A later money label changes the subject of the amount. Do not carry
+        # "seller offer" into "fees RM1000" or "budget RM300000".
+        tail = before[label.end():]
+        if re.search(r'\b(fees?|budget|settlement|asking|listed|minimum|reserve|deposit|instalments?|installments?)\b', tail, re.I):
+            continue
+        context = before + match.group() + after
+        if ('?' in context or re.search(r'\b(if|hypothetically|example|assuming|suppose|might|could|would)\b', before, re.I)
+                or re.search(r'\b(not|no|never|withdrawn|previous|old|former|rejected|around|about|approximately|between)\b', before, re.I)):
+            continue
+        currency = (match['currency'] or match['suffix_currency']).upper()
+        amount = float(money_number_value(match['number'] or match['suffix_number']))
+        records.append((amount if currency in ('RM', 'MYR', 'RINGGIT') else None, context))
+    return records
+
+
+def recover_current_offer(state, message):
+    """Repair omitted/misfiled counterpart quotes without a market estimate."""
+    if state.goal != 'negotiate' or state.negotiation.role is None:
+        return
+    from agent_state import set_slot
+    records = explicit_current_offers(message, state.negotiation.role)
+    if not records:
+        return
+    slot = 'negotiation.current_offer_myr'
+    amounts = {amount for amount, _ in records}
+    value = records[0][0] if len(amounts) == 1 else None
+    if value is not None and value <= 0:
+        value = None
+    set_slot(state, slot, value)
+    state.issues.pop(slot, None)
+    if value is None:
+        state.issues[slot] = 'State one positive current quote from the other party in RM/MYR; conflicting or unsupported-currency quotes cannot be used.'
+    state.provenance[slot] = {'turn': state.turn, 'evidence': ' '.join(text for _, text in records),
+                              'source': 'explicit counterpart-quote rule; not an asking-price or model estimate'}
+    state.event('rules', rule_id='NEG_CURRENT_OFFER_SOURCE', slot=slot, value=value,
+                reason='An explicitly attributed counterpart quote owns the current-offer slot; preserve the source amount, not an LLM slot guess.')
+
 
 def snapshot(state):
     if state.goal not in ('negotiate', 'trade_in'):
@@ -113,6 +182,7 @@ def apply_guards(state, previous, message):
     if state.goal not in ('negotiate', 'trade_in'):
         return
     from agent_state import set_slot
+    recover_current_offer(state, message)
     root = 'negotiation' if state.goal == 'negotiate' else 'trade_in'
     profile = getattr(state, root)
     old = previous['profile'] if previous and previous['goal'] == state.goal else None
