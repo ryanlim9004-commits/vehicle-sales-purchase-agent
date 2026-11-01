@@ -18,6 +18,7 @@ from fuzzy_lifestyle import POLICY_VERSION
 from valuation import estimate_vehicle_value, key, money
 from negotiation import advise_negotiation
 from trade_in import compare_trade_in
+from question_examples import guided_questions
 
 
 # Signal a rejected tool request that can be repaired within the controller error budget.
@@ -293,14 +294,14 @@ class ToolRuntime:
             self.inspected = True
             self.pending = requirements(self.state, self.as_of)
             self.state.pending_slots = list(self.pending)
-            return {'status': 'needs_clarification' if self.pending else 'ready', 'missing_slots': list(self.pending), 'questions': list(self.pending.values())[:3]}
+            return {'status': 'needs_clarification' if self.pending else 'ready', 'missing_slots': list(self.pending), 'questions': guided_questions(self.pending, self.state, self.cars)}
         if name == 'ask_user':
             self.pending = self.pending or requirements(self.state, self.as_of)
             if not self.pending:
                 raise ToolError('No missing requirements are pending. Execute the active goal tool rather than asking invented questions.')
             self.state.pending_slots = list(self.pending)
             self.done = 'needs_clarification'
-            return {'questions': list(dict.fromkeys(self.pending.values()))[:3]}
+            return {'questions': guided_questions(self.pending, self.state, self.cars)}
         if name == 'select_vehicle':
             if self.state.goal not in ('buy', 'negotiate') or args.vehicle_id not in self.state.ranked_vehicle_ids:
                 raise ToolError('Select only a vehicle from the current verified buying candidates.')

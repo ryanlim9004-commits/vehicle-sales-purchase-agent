@@ -9,6 +9,7 @@ from form_inputs import GOALS, USAGES, fields_for, current_value, prepare_form
 from ui_session import UISession, display_money, source_url, verified_result
 from vehicle_evidence import load_catalogue, evidence_for_vehicle
 from vehicle_presentation import vehicle_information_lines, mileage_text, fuel_reference_text
+from question_examples import form_guidance, catalogue_notice
 
 
 # Store explicit submissions for one run, rather than run on every widget edit.
@@ -318,6 +319,9 @@ def render_form(ui, goal, busy):
     with st.expander('Add or update details with a form', expanded=False):
         st.caption('Blank = keep confirmed facts. Enter Unknown to clear a value. Enter 0 only for a confirmed zero; prices must be positive.')
         st.caption('Driving use: selected uses replace confirmed uses. Empty keeps them; Unknown alone clears them. Brand lists replace the previous list.')
+        notice = catalogue_notice(ui.controller.state, ui.controller.cars, goal=goal)
+        if notice:
+            st.info(notice)
         with st.form(f'details_{goal}_{ui.generation}'):
             entries, previous_group = {}, None
             columns = None
@@ -329,6 +333,9 @@ def render_form(ui, goal, busy):
                     columns = st.columns(2)
                 current = current_value(ui.controller.state, field.path)
                 help_text = 'Confirmed: ' + str(current if current is not None else 'Unknown') + '. Blank keeps this fact.'
+                example, placeholder = form_guidance(field, ui.controller.state, ui.controller.cars, goal=goal)
+                if example:
+                    help_text += ' Example guidance: ' + example
                 key = f'field_{goal}_{ui.generation}_{field.path}'
                 with columns[index % 2]:
                     if field.kind == 'usage':
@@ -339,9 +346,10 @@ def render_form(ui, goal, busy):
                         entries[field.path] = st.selectbox(field.label, options, key=key, help=help_text, disabled=busy,
                                                           format_func=lambda value: 'Keep / not provided' if value == '' else value)
                     else:
-                        placeholder = 'e.g. 60000, 60k or 1 million' if field.kind == 'money' else ''
                         entries[field.path] = st.text_input(field.label, key=key, help=help_text, disabled=busy, max_chars=160,
                                                            placeholder=placeholder)
+                    if example:
+                        st.caption(example)
                 index += 1
             unit = st.selectbox('Odometer unit', ['km', 'm', 'miles'], disabled=busy) if goal != 'buy' else 'km'
             submitted = st.form_submit_button('Submit details to Agent', type='primary', disabled=busy)
