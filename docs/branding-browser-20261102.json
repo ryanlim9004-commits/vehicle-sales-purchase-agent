@@ -1,0 +1,23 @@
+{
+  "avatar": [
+    {
+      "complete": true,
+      "height": 36,
+      "naturalWidth": 1254,
+      "src": "http://127.0.0.1:8502/media/63e1166ab4fb01e529460e4b88575c42.png",
+      "width": 36
+    }
+  ],
+  "conversation": [
+    "face\nI want to buy a car.",
+    "What is your maximum total purchase budget in MYR?\nHow many seats do you need at minimum?\nWill you mainly use the car for city commuting, family travel, or long-distance driving?\n\nStatus: needs_clarification"
+  ],
+  "logo": [
+    {
+      "alt": "Vehicle Agent logo",
+      "complete": true,
+      "naturalWidth": 1254,
+      "src": "http://127.0.0.1:8502/media/63e1166ab4fb01e529460e4b88575c42.png"
+    }
+  ]
+}

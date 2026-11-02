@@ -4,12 +4,17 @@ Run: .\.venv\Scripts\python.exe -m streamlit run streamlit_app.py
 Only explicit submit events run a turn. Browsing/rendering never calls a model.
 """
 from uuid import uuid4
+from pathlib import Path
 import streamlit as st
 from form_inputs import GOALS, USAGES, fields_for, current_value, prepare_form
 from ui_session import UISession, display_money, source_url, verified_result
 from vehicle_evidence import load_catalogue, evidence_for_vehicle
 from vehicle_presentation import vehicle_information_lines, mileage_text, fuel_reference_text
 from question_examples import form_guidance, catalogue_notice
+
+
+# Resolve the supplied brand asset independently of the launch directory.
+AGENT_LOGO = Path(__file__).resolve().parent / 'assets' / 'vehicle-agent-logo.png'
 
 
 # Store explicit submissions for one run, rather than run on every widget edit.
@@ -363,7 +368,7 @@ def render_form(ui, goal, busy):
 
 # A rerun with no queued submit only renders stored evidence; it makes no API call.
 def main():
-    st.set_page_config(page_title='Vehicle Consultation Agent', page_icon='🚗', layout='wide')
+    st.set_page_config(page_title='Vehicle Consultation Agent', page_icon=str(AGENT_LOGO), layout='wide')
     # The requested four-color palette uses red for actions, brown for headings,
     # and neutral greys for surfaces. White keeps form fields easy to distinguish.
     st.markdown('''<style>
@@ -376,6 +381,35 @@ def main():
         color: #6B2B06;
     }
     [data-testid="stCaptionContainer"] {color: #6B2B06;}
+    /* A small transparent brand mark belongs beside the sidebar name. Keep
+       the main consultation heading clear and the supplied palette intact. */
+    .st-key-sidebar_brand [data-testid="stHeadingWithActionElements"] h1 {
+        font-size: 1.35rem;
+        line-height: 1.25;
+        letter-spacing: -.02em;
+        padding: 0;
+    }
+    .st-key-sidebar_brand [data-testid="stHorizontalBlock"] {gap: .75rem;}
+    .st-key-sidebar_brand [data-testid="stColumn"] {min-width: 0;}
+    .st-key-sidebar_brand [data-testid="stColumn"]:first-child {flex: 0 0 56px;}
+    .st-key-sidebar_brand [data-testid="stColumn"]:last-child {flex: 1 1 0;}
+    .st-key-brand_logo {
+        width: 56px;
+        height: 56px;
+        max-width: 100%;
+        background: transparent;
+        overflow: hidden;
+        border-radius: 16px;
+    }
+    .st-key-brand_logo img {display: block; object-fit: contain; transform: scale(1.18);}
+    [data-testid="stChatMessageAvatarImage"] {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        object-fit: contain;
+        background: transparent;
+        clip-path: inset(9% round 25%);
+    }
     .st-key-message_composer {
         background: #FFFFFF;
         border: 2px solid #B80C09;
@@ -407,7 +441,12 @@ def main():
     # facts. Disable new edits so retry cannot later overwrite newer facts.
     busy = executing or bool(st.session_state.get('blocked_turn'))
     with st.sidebar:
-        st.title('Vehicle Agent')
+        with st.container(key='sidebar_brand'):
+            mark, name = st.columns([1, 3], gap='small', vertical_alignment='center', wrap=False)
+            with mark, st.container(key='brand_logo'):
+                st.image(str(AGENT_LOGO), width='stretch', alt='Vehicle Agent logo')
+            with name:
+                st.title('Vehicle Agent', anchor=False)
         st.caption('Malaysia · Used vehicles · MYR')
         goal = st.selectbox('Consultation area', list(GOALS), format_func=GOALS.get, key='task_area', disabled=busy)
         st.caption('Browsing areas keeps facts unchanged. Submitting starts or switches the consultation.')
@@ -456,7 +495,7 @@ def main():
         for item in ui.history:
             with st.chat_message('user'):
                 st.text(item['user'])
-            with st.chat_message('assistant'):
+            with st.chat_message('assistant', avatar=str(AGENT_LOGO)):
                 st.text(item['response']['message'])
                 st.caption('Status: ' + item['response']['status'])
         budget_source = ui.controller.state.provenance.get('buyer.budget_myr', {})
