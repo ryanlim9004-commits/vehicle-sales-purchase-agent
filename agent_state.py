@@ -131,6 +131,7 @@ def switch_goal(state, goal):
         return
     previous = state.goal
     selected_identity = state.negotiation.vehicle.model_dump() if previous == 'buy' and state.selected_vehicle_id else None
+    selected_mileage = state.negotiation.mileage_km if selected_identity else None
     # Starting a different task clears the destination profile, preventing
     # unrelated stale amounts from becoming a new customer's requirements.
     mapping = {'buy': ('buyer', BuyerProfileFrame), 'sell': ('seller', SellerVehicleFrame),
@@ -150,7 +151,7 @@ def switch_goal(state, goal):
         state.negotiation_from_seller = True
         state.event('facts', action='reuse_vehicle_identity', source='previous confirmed seller facts', values=identity)
     if goal == 'negotiate' and selected_identity is not None:
-        state.negotiation = NegotiationFrame.model_validate({'vehicle': selected_identity})
+        state.negotiation = NegotiationFrame.model_validate({'vehicle': selected_identity, 'mileage_km': selected_mileage})
         state.event('facts', action='reuse_vehicle_identity', source='previous verified buyer selection', values=selected_identity)
     if goal == 'trade_in' and previous == 'sell':
         identity = {k: getattr(state.seller, k) for k in ('brand', 'model', 'variant', 'year', 'transmission')}

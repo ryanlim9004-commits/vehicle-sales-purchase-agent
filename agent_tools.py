@@ -20,6 +20,7 @@ from negotiation import advise_negotiation
 from trade_in import compare_trade_in
 from question_examples import guided_questions
 from financial_guards import has_damage
+from vehicle_selection import Selection, resolve_selection
 
 
 # Signal a rejected tool request that can be repaired within the controller error budget.
@@ -277,7 +278,7 @@ def verify_observation(tool, result, state, cars, as_of):
 class ToolRuntime:
     # Start each turn with no trusted observation or cached completion flag; share only the
     # validated session facts.
-    def __init__(self, state, cars, as_of):
+    def __init__(self, state, cars, as_of, *, message=None):
         self.state, self.cars, self.as_of = state, cars, as_of
         # Earlier saved seller handoffs predate root history slots. Migrate
         # known damage once so inspection does not deadlock on a price lookup.
@@ -298,18 +299,23 @@ class ToolRuntime:
         self.pending = {}
         self.done = None
         self.selection_done = False
+        self.message = message
+        self.selection = Selection()
 
     # Constrain the next action by inspection, missing facts, requested selection and
     # check/finish state.
     def available_tools(self, message):
         """Expose only state-valid actions, rather than unrelated task tools."""
+        if self.message is None:
+            self.message = message
         if not self.inspected:
             return ['inspect_requirements']
+        # Resolve the customer's option before financial clarification so the
+        # next question already refers to the selected vehicle.
+        if self.selection.vehicle_id and not self.selection_done:
+            return ['select_vehicle']
         if self.pending or requirements(self.state, self.as_of):
             return ['ask_user']
-        requested_selection = re.search(r'\b(first|second|third|select|choose|that one|this one)\b', message, re.I)
-        if requested_selection and self.state.ranked_vehicle_ids and not self.selection_done and self.state.goal in ('buy', 'negotiate'):
-            return ['select_vehicle']
         if self.last_result is not None:
             if not self.checked:
                 return ['check_result']
@@ -330,10 +336,16 @@ class ToolRuntime:
         args = (SelectArgs if name == 'select_vehicle' else EmptyArgs).model_validate(arguments)
         if name == 'inspect_requirements':
             self.inspected = True
+            self.selection = resolve_selection(self.state, self.cars, self.message or '')
+            self.state.issues.pop('vehicle_selection', None)
+            if self.selection.question:
+                self.state.issues['vehicle_selection'] = self.selection.question
             self.pending = requirements(self.state, self.as_of)
             self.state.pending_slots = list(self.pending)
             return {'status': 'needs_clarification' if self.pending else 'ready', 'missing_slots': list(self.pending), 'questions': guided_questions(self.pending, self.state, self.cars)}
         if name == 'ask_user':
+            if self.selection.vehicle_id and not self.selection_done:
+                raise ToolError('Select the explicitly requested recommendation before asking about its missing financial facts.')
             self.pending = self.pending or requirements(self.state, self.as_of)
             if not self.pending:
                 raise ToolError('No missing requirements are pending. Execute the active goal tool rather than asking invented questions.')
@@ -341,27 +353,62 @@ class ToolRuntime:
             self.done = 'needs_clarification'
             return {'questions': guided_questions(self.pending, self.state, self.cars)}
         if name == 'select_vehicle':
+            if not self.inspected:
+                raise ToolError('Inspect requirements before selecting a vehicle.')
+            if self.message is not None and (not self.selection.vehicle_id or args.vehicle_id != self.selection.vehicle_id):
+                raise ToolError('Select only the exact option resolved from the current user message; do not substitute another candidate.')
             if self.state.goal not in ('buy', 'negotiate') or args.vehicle_id not in self.state.ranked_vehicle_ids:
                 raise ToolError('Select only a vehicle from the current verified buying candidates.')
             eligible = {r['vehicle']['vehicle_id'] for r in filter_vehicles(self.state.buyer, self.cars)['matches']}
             if args.vehicle_id not in eligible:
                 raise ToolError('The vehicle no longer satisfies the current buyer facts. Rank again.')
             car = next(v for v in self.cars if v.vehicle_id == args.vehicle_id)
+            old_identity = self.state.negotiation.vehicle.model_dump()
+            identity = {k: getattr(car, k) for k in ('brand', 'model', 'variant', 'year', 'transmission')}
+            changed_vehicle = old_identity != identity or self.state.selected_vehicle_id != car.vehicle_id
+            # New selections cannot inherit the previous car's offer/history.
+            # Keep financial facts supplied explicitly in this same turn.
+            if changed_vehicle:
+                for field in ('mileage_km', 'major_accident_reported', 'flood_damage_reported',
+                              'asking_price_myr', 'current_offer_myr', 'fees_myr',
+                              'fees_confirmed_complete', 'loan_settlement_myr'):
+                    slot = 'negotiation.' + field
+                    if self.state.provenance.get(slot, {}).get('turn') != self.state.turn:
+                        setattr(self.state.negotiation, field, None)
+                        self.state.provenance.pop(slot, None)
+                        self.state.issues.pop(slot, None)
             self.state.selected_vehicle_id = car.vehicle_id
             self.selection_done = True
             self.reference = None
             self.state.negotiation_from_seller = False
             data = self.state.negotiation.model_dump()
-            data['vehicle'] = {k: getattr(car, k) for k in ('brand', 'model', 'variant', 'year', 'transmission')}
-            data['mileage_km'] = car.mileage_km
+            data['vehicle'] = identity
+            # A listing mileage interval is not an exact odometer reading.
+            # Retain an explicitly supplied current odometer; otherwise use
+            # only a saved exact point, never the interval midpoint.
+            if changed_vehicle and self.state.provenance.get('negotiation.mileage_km', {}).get('turn') != self.state.turn:
+                data['mileage_km'] = car.mileage_km
+            for field, value in identity.items():
+                slot = 'negotiation.vehicle.' + field
+                self.state.issues.pop(slot, None)
+                self.state.provenance[slot] = {'turn': self.state.turn, 'source': 'checked buyer recommendation selection',
+                                              'vehicle_id': car.vehicle_id, 'value': value}
             self.state.negotiation = NegotiationFrame.model_validate(data)
             self.checked = False
+            self.pending = requirements(self.state, self.as_of)
+            self.state.pending_slots = list(self.pending)
+            self.state.event('facts', action='select_checked_recommendation', option_number=self.selection.position,
+                             vehicle_id=car.vehicle_id, values=identity)
             return {'selected_vehicle_id': car.vehicle_id, 'vehicle_identity': data['vehicle'], 'asking_price_myr': car.price_myr, 'notice': 'Saved asking price is not automatically a current seller offer.'}
         if name == 'check_result':
             if self.last_result is None:
                 raise ToolError('No business observation exists to check.')
             checks = verify_observation(self.last_tool, self.last_result, self.state, self.cars, self.as_of)
             self.checked = bool(checks) and all(c['passed'] for c in checks)
+            if self.last_tool == 'rank_vehicles':
+                # Only a passed result may become next turn's option order.
+                self.state.ranked_vehicle_ids = ([r['vehicle']['vehicle_id'] for r in self.last_result['matches']]
+                                                 if self.checked else [])
             for item in checks:
                 self.state.event('checks', tool=self.last_tool, **item)
             return {'passed': self.checked, 'checks': checks}
@@ -377,6 +424,8 @@ class ToolRuntime:
             return {'status': 'complete', 'outcome': self.last_result['status']}
         if not self.inspected:
             raise ToolError('Call inspect_requirements before running a business tool.')
+        if self.selection.requested and not self.selection_done:
+            raise ToolError('Resolve the requested recommendation before giving advice; do not silently continue without the selected vehicle.')
         if requirements(self.state, self.as_of):
             raise ToolError('Required facts are missing or conflicting. Use ask_user and wait for the reply.')
         expected = {'buy': 'rank_vehicles', 'sell': 'estimate_vehicle_value', 'negotiate': 'advise_negotiation', 'trade_in': 'compare_trade_in'}.get(self.state.goal)
@@ -411,7 +460,7 @@ class ToolRuntime:
         # This forces check_result to verify the exact result that will be shown.
         self.last_tool, self.last_result, self.checked = name, result, False
         if name == 'rank_vehicles':
-            self.state.ranked_vehicle_ids = [r['vehicle']['vehicle_id'] for r in result['matches']]
+            self.state.ranked_vehicle_ids = []
         if result['status'] == 'needs_clarification':
             questions = result.get('clarification_questions', result.get('buyer_reasoning', {}).get('clarification_questions', []))
             self.pending = result.get('missing_slots') or {f'tool_question_{i}': q for i, q in enumerate(questions)}

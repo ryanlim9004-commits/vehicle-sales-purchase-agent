@@ -199,4 +199,6 @@ Original lecture slides, course guide PDFs, uploaded attachments, local chat con
 
 ## Team workflow
 
+**4 Nov recommendation-memory fix:** Buy and Negotiation share the current tab's session, but the old numeric `option 1` wording could skip vehicle selection. Numbered/ordinal references now resolve against the checked ranking, and the tool validates the exact requested ID before advice. Unknown/conflicting selections ask for clarification; reference prices never become user quotes. **335 offline tests passed**, including Streamlit navigation/task-switch checks. See the [Chinese reproduction and recording guide](BUY_NEGOTIATION_MEMORY_FIX_20261104_ZH.md) and [acceptance evidence](docs/buy-negotiation-memory-20261104.json) for real Ollama runs and their precise source versions. Data, model coefficients and dependencies are unchanged.
+
 Use a feature branch for each change, run the relevant tests, then open a pull request for review before merging into `main`. Record actual responsibilities and evidence in the assignment workload matrix; commit counts alone do not measure individual contributions.

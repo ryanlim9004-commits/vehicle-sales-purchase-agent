@@ -339,6 +339,7 @@ class AgentLoopTests(unittest.TestCase):
         runtime.call('inspect_requirements', {})
         result = runtime.call('rank_vehicles', {})
         selected = result['top_vehicle_ids'][0]
+        runtime.call('check_result', {})
         runtime.call('select_vehicle', {'vehicle_id': selected})
         self.assertEqual(state.selected_vehicle_id, selected)
         self.assertEqual(state.negotiation.vehicle.model, 'Bezza')
