@@ -100,7 +100,7 @@ def ollama_metadata():
         with opener.open('http://127.0.0.1:11434/api/' + endpoint, timeout=4) as response:
             return json.load(response)
     version, tags = read('version'), read('tags')
-    model = next((m for m in tags.get('models', []) if m.get('name', m.get('model')) == MODEL), None)
+    model = next((m for m in tags.get('models', []) if m.get('name', m.get('model', '')).lower() == MODEL.lower()), None)
     return {'server_version': version.get('version'), 'required_model': MODEL,
             'model_present': model is not None, 'model_digest': model.get('digest') if model else None}
 
